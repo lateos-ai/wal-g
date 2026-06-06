@@ -1,18 +1,17 @@
 package statistics
 
 import (
-	"time"
-	"strconv"
 	"fmt"
+	"strconv"
+	"time"
 
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	dto "github.com/prometheus/client_model/go"
-	"github.com/spf13/viper"
-	"github.com/wal-g/tracelog"
 	"github.com/cactus/go-statsd-client/v5/statsd"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
-
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 type metrics struct {

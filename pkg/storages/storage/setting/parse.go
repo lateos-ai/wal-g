@@ -1,8 +1,8 @@
 package setting
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 )
 
 // TODO: Instead of reading settings from viper as strings and then parsing them here, read them already parsed using

@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/lateos-ai/wal-g/utility"
 	"github.com/wal-g/tracelog"
 	"golang.org/x/time/rate"
-
-	"github.com/lateos-ai/wal-g/utility"
 )
 
 type Reader struct {
