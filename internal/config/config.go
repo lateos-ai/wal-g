@@ -1,25 +1,25 @@
 package config
 
 import (
-	"strconv"
-	"sort"
-	"time"
-	"strings"
-	"runtime"
-	"fmt"
 	"bytes"
-	"os/user"
+	"fmt"
 	"os"
+	"os/user"
+	"runtime"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
 
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 
-	"github.com/lateos-ai/wal-g/internal/webserver"
 	"github.com/lateos-ai/wal-g/internal/logging"
+	"github.com/lateos-ai/wal-g/internal/webserver"
 )
 
 const (
