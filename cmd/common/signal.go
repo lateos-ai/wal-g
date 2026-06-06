@@ -1,11 +1,11 @@
 package common
 
 import (
-	"os/signal"
-	"syscall"
-	"os"
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/spf13/cobra"
 )
