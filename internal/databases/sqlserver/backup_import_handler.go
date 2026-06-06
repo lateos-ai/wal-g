@@ -1,19 +1,19 @@
 package sqlserver
 
 import (
-	"os"
-	"strings"
-	"syscall"
-	"net/http"
 	"context"
 	"crypto/tls"
 	"fmt"
+	"net/http"
+	"os"
+	"strings"
+	"syscall"
 
 	"github.com/wal-g/tracelog"
 
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func prepareBackupImportSpec(externalStorage storage.Folder, d map[string]string) ([]string, map[string][]storage.Object, error) {
@@ -62,21 +62,7 @@ func resolveExternalStorageFiles(externalFolder storage.Folder, fileNames []stri
 	return objects, nil
 }
 
-func HandleBackupimport (
-	"os"
-	"strings"
-	"syscall"
-	"net/http"
-	"context"
-	"crypto/tls"
-	"fmt"
-
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/internal"
-) {
+func HandleBackupImport(externalConfig string, importDatabases map[string]string) {
 	ctx, cancel := context.WithCancel(context.Background())
 	signalHandler := utility.NewSignalHandler(ctx, cancel, []os.Signal{syscall.SIGINT, syscall.SIGTERM})
 	defer func() { _ = signalHandler.Close() }()
