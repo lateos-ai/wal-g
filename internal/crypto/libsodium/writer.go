@@ -1,3 +1,6 @@
+//go:build libsodium
+// +build libsodium
+
 package libsodium
 
 // #cgo CFLAGS: -I../../../tmp/libsodium/include
