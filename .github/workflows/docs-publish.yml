@@ -1,0 +1,15 @@
+﻿name: Publish Docs
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs-publish.yml'
+    branches: [ main ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build docs
+      run: echo "Docs build placeholder"

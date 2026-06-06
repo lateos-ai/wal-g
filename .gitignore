@@ -1,0 +1,34 @@
+﻿# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+wal-g
+
+# Test binaries
+*.test
+
+# Coverage
+*.out
+coverage.html
+
+# Dependencies
+vendor/
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+
+# Temp
+/tmp/
