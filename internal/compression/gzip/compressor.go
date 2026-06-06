@@ -1,8 +1,8 @@
 package gzip
 
 import (
-	"io"
 	"compress/gzip"
+	"io"
 )
 
 type Compressor struct{}
