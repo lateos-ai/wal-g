@@ -18,8 +18,8 @@
 package fsutil
 
 import (
-	"syscall"
 	"os"
+	"syscall"
 )
 
 // OpenFileSecure Secure file opening function
