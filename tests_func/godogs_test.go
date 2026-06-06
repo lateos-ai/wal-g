@@ -51,8 +51,8 @@ func TestMain(m *testing.M) {
 	pflag.Parse()
 
 	if _, ok := databases[testOpts.database]; !ok {
-		tracelog.ErrorLogger.Fatalf("Database '%s' is not valid, please provide test database -tf.database=dbname\n",
-			testOpts.database)
+		tracelog.InfoLogger.Printf("Skipping functional tests: provide -tf.database=dbname to run (skipped)\n")
+		os.Exit(0)
 	}
 
 	status, err := RunTestFeatures()

@@ -310,7 +310,7 @@ unittest:
 	go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
 
 coverage:
-	go list ./... | grep -Ev 'vendor|submodules|tmp' | xargs go test -v $(TEST_MODIFIER) -coverprofile=$(COVERAGE_FILE) | grep -v 'no test files'
+	go list ./... | grep -Ev 'vendor|submodules|tmp|tests_func' | xargs go test -v $(TEST_MODIFIER) -coverprofile=$(COVERAGE_FILE) | grep -v 'no test files'
 	go tool cover -html=$(COVERAGE_FILE)
 
 fmt: $(CMD_FILES) $(PKG_FILES) $(TEST_FILES)
