@@ -4,8 +4,8 @@
 package fsutil
 
 import (
-	"errors"
-	"io"
+	"os"
+	"syscall"
 )
 
 func isEOFError(err error) bool {
