@@ -9,12 +9,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal/compression"
-	"github.com/wal-g/wal-g/internal/compression/lz4"
-	"github.com/wal-g/wal-g/internal/databases/postgres"
-	"github.com/wal-g/wal-g/pkg/storages/memory"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/compression/lz4"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 // MockWalShowOutputWriter is used to capture wal-show command output

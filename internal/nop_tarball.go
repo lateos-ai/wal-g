@@ -5,7 +5,7 @@ import (
 	"io"
 	"sync/atomic"
 
-	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 // NOPTarBall mocks a tarball. Used for prefault logic.

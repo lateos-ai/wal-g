@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/multistorage"
-	"github.com/wal-g/wal-g/internal/multistorage/consts"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func OnAllStorages(fn func(folder storage.Folder) error) error {

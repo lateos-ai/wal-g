@@ -3,12 +3,12 @@ package redis
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/databases/redis"
-	"github.com/wal-g/wal-g/internal/databases/redis/archive"
-	client "github.com/wal-g/wal-g/internal/databases/redis/client"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/redis"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	client "github.com/lateos-ai/wal-g/internal/databases/redis/client"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 var (

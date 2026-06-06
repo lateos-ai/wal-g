@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const PatternTimelineAndLogSegNo = "[0-9A-F]{24}"

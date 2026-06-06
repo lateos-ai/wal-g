@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/ioextensions"
-	"github.com/wal-g/wal-g/utility"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type ConcurrentUploader struct {

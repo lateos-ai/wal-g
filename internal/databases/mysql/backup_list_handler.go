@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/printlist"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 type BackupDetail struct {
@@ -22,7 +22,7 @@ type BackupDetail struct {
 	StopLocalTime  time.Time `json:"stop_local_time"`
 
 	// these fields were introduced in
-	// https://github.com/wal-g/wal-g/pull/930
+	// https://github.com/lateos-ai/wal-g/pull/930
 	// so some old sentinels may not contain them
 	UncompressedSize int64  `json:"uncompressed_size,omitempty"`
 	CompressedSize   int64  `json:"compressed_size,omitempty"`

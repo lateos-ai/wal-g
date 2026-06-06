@@ -7,13 +7,13 @@ import (
 	"path"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/asm"
-	"github.com/wal-g/wal-g/internal/ioextensions"
-	"github.com/wal-g/wal-g/internal/multistorage"
-	"github.com/wal-g/wal-g/internal/multistorage/policies"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/asm"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 // WalUploader extends uploader with wal specific functionality.

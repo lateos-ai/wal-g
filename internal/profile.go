@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/spf13/viper"
-	conf "github.com/wal-g/wal-g/internal/config"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type ProfileStopper interface {

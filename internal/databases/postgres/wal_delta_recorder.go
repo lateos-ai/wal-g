@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 type WalDeltaRecorder struct {

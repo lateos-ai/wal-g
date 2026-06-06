@@ -8,11 +8,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/copy"
-	"github.com/wal-g/wal-g/internal/databases/postgres"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/testtools"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/copy"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func TestStartCopy_WhenThereAreNoObjectsToCopy(t *testing.T) {

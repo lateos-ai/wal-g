@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/ncw/swift/v2"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 var _ storage.HashableStorage = &Storage{}

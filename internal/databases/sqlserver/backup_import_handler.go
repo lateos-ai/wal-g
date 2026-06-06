@@ -10,9 +10,9 @@ import (
 	"syscall"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func prepareBackupImportSpec(externalStorage storage.Folder, d map[string]string) ([]string, map[string][]storage.Object, error) {

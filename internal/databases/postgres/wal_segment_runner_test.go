@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 // TestWalSegmentRunner_AllExists tests the case when all segments exists

@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/wal-g/wal-g/internal/contextio"
+	"github.com/lateos-ai/wal-g/internal/contextio"
 )
 
 func TestWriter(t *testing.T) {

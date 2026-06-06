@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
-	conf "github.com/wal-g/wal-g/internal/config"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const (

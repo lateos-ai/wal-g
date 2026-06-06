@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func addTablespaces(spec *TablespaceSpec, strs []TablespaceLocation) {

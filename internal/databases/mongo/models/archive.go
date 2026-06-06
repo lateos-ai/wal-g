@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 // Archive path constants.

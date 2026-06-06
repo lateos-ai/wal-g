@@ -1,6 +1,6 @@
 package postgres
 
-import "github.com/wal-g/wal-g/utility"
+import "github.com/lateos-ai/wal-g/utility"
 
 type ScannedSegmentStatus int
 

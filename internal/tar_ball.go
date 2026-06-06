@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/pkg/errors"
-	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 // A TarBall represents one tar file.

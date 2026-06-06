@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const MetadataDatetimeFormat = "%Y-%m-%dT%H:%M:%S.%fZ"

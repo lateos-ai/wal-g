@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal/databases/mongo/common"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 func TestNewStorageMetadataCollector_Initialization(t *testing.T) {

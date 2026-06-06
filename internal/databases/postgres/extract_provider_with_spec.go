@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (

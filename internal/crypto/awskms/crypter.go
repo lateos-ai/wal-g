@@ -6,8 +6,8 @@ import (
 
 	"github.com/minio/sio"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/crypto"
-	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 // Crypter is AWS KMS Crypter implementation

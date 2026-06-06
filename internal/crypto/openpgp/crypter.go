@@ -9,8 +9,8 @@ import (
 
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/pkg/errors"
-	"github.com/wal-g/wal-g/internal/crypto"
-	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 // Crypter incapsulates specific of cypher method

@@ -13,9 +13,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/statistics"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/statistics"
 )
 
 type CantOverwriteWalFileError struct {
@@ -50,7 +50,7 @@ func HandleWALPush(ctx context.Context, uploader *WalUploader, walFilePath strin
 	}
 
 	totalBgUploadedLimit := viper.GetInt32(conf.TotalBgUploadedLimit)
-	// .history files must not be overwritten, see https://github.com/wal-g/wal-g/issues/420
+	// .history files must not be overwritten, see https://github.com/lateos-ai/wal-g/issues/420
 	preventWalOverwrite := viper.GetBool(conf.PreventWalOverwriteSetting) || strings.HasSuffix(walFilePath, ".history")
 	readyRename := viper.GetBool(conf.PgReadyRename)
 

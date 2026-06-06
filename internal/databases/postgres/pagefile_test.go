@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const (
@@ -170,7 +170,7 @@ func TestReadIncrementFileHeader_Valid(t *testing.T) {
 // when reading increment file with invalid header
 func TestReadIncrementFileHeader_InvalidIncrementFileHeaderError(t *testing.T) {
 	// Valid WAL-G increment header should start with "wi(some digit)SignatureMagicNumber"
-	// more info: https://github.com/wal-g/wal-g/blob/01911090ba1eef305aa87f06d3f8cf20e3524d9a/internal/incremental_page_reader.go#L16
+	// more info: https://github.com/lateos-ai/wal-g/blob/01911090ba1eef305aa87f06d3f8cf20e3524d9a/internal/incremental_page_reader.go#L16
 	dataArray := [][]byte{
 		{'w', 'i', '1', 0x56},
 		{'x', 'i', '1', SignatureMagicNumber},

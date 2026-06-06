@@ -10,7 +10,7 @@ import (
 
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 var _ storage.Folder = &Folder{}

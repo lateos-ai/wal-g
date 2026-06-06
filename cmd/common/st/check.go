@@ -3,9 +3,9 @@ package st
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/multistorage/exec"
-	"github.com/wal-g/wal-g/internal/storagetools"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/exec"
+	"github.com/lateos-ai/wal-g/internal/storagetools"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 var checkCmd = &cobra.Command{

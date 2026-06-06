@@ -3,7 +3,7 @@ package memory
 import (
 	"testing"
 
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func TestMemoryFolder(t *testing.T) {

@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	testifymock "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	archivepkg "github.com/wal-g/wal-g/internal/databases/mongo/archive"
-	archivemocks "github.com/wal-g/wal-g/internal/databases/mongo/archive/mocks"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	archivepkg "github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	archivemocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 func TestResolveOplogReplaySequenceFallsBackToFullList(t *testing.T) {

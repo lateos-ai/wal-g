@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 func LoadBackups(downloader archive.Downloader) ([]*models.Backup, error) {

@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
-	"github.com/wal-g/wal-g/internal/databases/mongo/client"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	walgs3 "github.com/wal-g/wal-g/pkg/storages/s3"
+	walgs3 "github.com/lateos-ai/wal-g/pkg/storages/s3"
 )
 
 type MockS3ClientSSEC struct {

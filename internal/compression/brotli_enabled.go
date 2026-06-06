@@ -5,7 +5,7 @@
 
 package compression
 
-import "github.com/wal-g/wal-g/internal/compression/brotli"
+import "github.com/lateos-ai/wal-g/internal/compression/brotli"
 
 func init() {
 	Decompressors = append(Decompressors, brotli.Decompressor{})

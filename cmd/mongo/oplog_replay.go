@@ -3,9 +3,9 @@ package mongo
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/databases/mongo"
-	"github.com/wal-g/wal-g/internal/databases/mongo/binary"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
 )
 
 const (

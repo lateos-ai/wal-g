@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type ReadSeekCloser interface {

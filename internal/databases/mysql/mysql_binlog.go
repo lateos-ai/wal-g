@@ -15,9 +15,9 @@ import (
 	"github.com/go-mysql-org/go-mysql/replication"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const BinlogSentinelPath = "binlog_sentinel_" + utility.VersionStr + ".json"

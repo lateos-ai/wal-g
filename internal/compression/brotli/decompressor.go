@@ -7,7 +7,7 @@ import (
 	"io"
 
 	"github.com/google/brotli/go/cbrotli"
-	"github.com/wal-g/wal-g/internal/compression/computils"
+	"github.com/lateos-ai/wal-g/internal/compression/computils"
 )
 
 type Decompressor struct{}

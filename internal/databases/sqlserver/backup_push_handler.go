@@ -8,9 +8,9 @@ import (
 	"syscall"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/databases/sqlserver/blob"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver/blob"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func HandleBackupPush(dbnames []string, updateLatest bool) {

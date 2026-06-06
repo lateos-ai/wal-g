@@ -3,7 +3,7 @@ package st
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/storagetools/transfer"
+	"github.com/lateos-ai/wal-g/internal/storagetools/transfer"
 )
 
 const filesShortDescription = "Moves all files by a prefix from one storage to another without any special treatment"
