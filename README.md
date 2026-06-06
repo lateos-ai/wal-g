@@ -87,6 +87,14 @@ We maintain WAL-G because PostgreSQL backups are critical infrastructure:
 - **100% test coverage** — All changes tested against v0.14.1
 - **Transparency** — [View weekly metrics](https://github.com/lateos-ai/wal-g/actions)
 
+## Contributing Notice
+
+Thank you for your interest in this project. Please note that we are 
+currently not accepting any external code contributions, pull requests, 
+bug fixes, or feature submissions at this time. 
+
+Any pull requests opened will be automatically closed without review.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
