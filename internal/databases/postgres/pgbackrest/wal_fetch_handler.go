@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func HandleWalFetch(folder storage.Folder, stanza string, walFileName string, location string) error {

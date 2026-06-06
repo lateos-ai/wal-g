@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/test/mocks"
-	"github.com/lateos-ai/wal-g/testtools"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/multistorage"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/test/mocks"
+	"github.com/wal-g/wal-g/testtools"
+	"github.com/wal-g/wal-g/utility"
 	"go.uber.org/mock/gomock"
 )
 

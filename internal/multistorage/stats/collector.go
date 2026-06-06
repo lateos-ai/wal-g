@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats/cache"
+	"github.com/wal-g/wal-g/internal/multistorage/stats/cache"
 )
 
 // Collector collects information about the success of operations performed with some storages, and answers which

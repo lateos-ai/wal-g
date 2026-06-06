@@ -6,16 +6,16 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/discovery"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stats"
-	"github.com/lateos-ai/wal-g/internal/webserver"
+	"github.com/wal-g/wal-g/internal"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/mongo"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client"
+	"github.com/wal-g/wal-g/internal/databases/mongo/discovery"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stats"
+	"github.com/wal-g/wal-g/internal/webserver"
 )
 
 // oplogPushCmd represents the continuous oplog archiving procedure

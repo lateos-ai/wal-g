@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 module github.com/lateos-ai/wal-g
+=======
+module github.com/wal-g/wal-g
+>>>>>>> original/master
 
 go 1.25.7
 

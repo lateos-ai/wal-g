@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 )
 
 func shuffledArchives(s []models.Archive) []models.Archive {

@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/internal/ioextensions"
 )
 
 func RepairSparse(file *os.File) error {

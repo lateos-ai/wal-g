@@ -9,9 +9,9 @@ import (
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
-	"github.com/lateos-ai/wal-g/internal/crypto/envelope/mocks"
+	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/internal/crypto/envelope"
+	"github.com/wal-g/wal-g/internal/crypto/envelope/mocks"
 )
 
 const (

@@ -1,34 +1,53 @@
-﻿# Binaries
-*.exe
-*.dll
-*.so
-*.dylib
-wal-g
-
-# Test binaries
-*.test
-
-# Coverage
-*.out
-coverage.html
-
-# Dependencies
+# external libs
 vendor/
-go.work
-
-# IDE
 .idea/
-.vscode/
-*.swp
-*.swo
-*~
 
-# OS
+# bin
+bin/
+main/fdb/wal-g
+main/sqlserver/wal-g
+main/pg/wal-g
+main/mysql/wal-g
+main/redis/wal-g
+main/mongo/wal-g
+main/gp/wal-g
+main/etcd/wal-g
+
+# tests
+test/testdata/00000*
+test/testdata/broken_wals/
+coverage.out
 .DS_Store
-Thumbs.db
+tests_func/staging
+tests_func/wal-g
 
-# Build
-dist/
+tmp/
+*.xml
+*.iml
+*.so
+.session_conf.sav
+__pycache__/
+venv/
 
-# Temp
-/tmp/
+### VisualStudioCode ###
+.vscode/*
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+#Ctags tags file
+tags
+
+
+# AI tools files and directories
+.claude
+AGENTS.md
+.mcp.json

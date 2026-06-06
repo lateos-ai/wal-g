@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	archiveMocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	archiveMocks "github.com/wal-g/wal-g/internal/databases/mongo/archive/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 )
 
 // TODO: test archive timeout

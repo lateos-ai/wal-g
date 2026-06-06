@@ -10,7 +10,7 @@ import (
 
 	"github.com/ncw/directio"
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	conf "github.com/wal-g/wal-g/internal/config"
 )
 
 const directIOBlockCount = 32

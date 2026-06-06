@@ -12,11 +12,11 @@ import (
 
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/xbstream"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/mysql/xbstream"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (
@@ -99,11 +99,11 @@ func enrichBackupArgs(backupCmd *exec.Cmd, xtrabackupExtraDirectory string, isFu
 	if prevBackupInfo == nil {
 		tracelog.ErrorLogger.Fatalf("PrevBackupInfo is null")
 	}
-	// -â€“extra-lsndir=DIRECTORY - save an extra copy of the xtrabackup_checkpoints and xtrabackup_info files in this directory.
+	// -–extra-lsndir=DIRECTORY - save an extra copy of the xtrabackup_checkpoints and xtrabackup_info files in this directory.
 	injectCommandArgument(backupCmd, "--extra-lsndir="+xtrabackupExtraDirectory)
 
 	if !isFullBackup && (*prevBackupInfo != PrevBackupInfo{} && prevBackupInfo.sentinel.LSN != nil) {
-		// â€“-incremental-lsn=LSN
+		// –-incremental-lsn=LSN
 		injectCommandArgument(backupCmd, "--incremental-lsn="+prevBackupInfo.sentinel.LSN.String())
 	}
 }

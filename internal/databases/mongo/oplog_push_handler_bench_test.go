@@ -9,12 +9,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	mongoMocks "github.com/lateos-ai/wal-g/internal/databases/mongo/client/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/wal-g/wal-g/internal/compression"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client"
+	mongoMocks "github.com/wal-g/wal-g/internal/databases/mongo/client/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages"
 )
 
 // TODO: fix duplicates piece from fetcher_test

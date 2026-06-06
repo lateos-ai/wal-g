@@ -5,8 +5,8 @@ import (
 	"path"
 
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/utility"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const SegmentsFolderPath = "segments_" + utility.VersionStr + "/"

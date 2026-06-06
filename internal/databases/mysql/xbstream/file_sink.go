@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/wal-g/internal/compression"
+	"github.com/wal-g/wal-g/internal/databases/mysql/innodb"
 )
 
 var ErrSinkEOF = errors.New("ErrSinkEOF")

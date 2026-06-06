@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/ulikunitz/xz/lzma"
-	"github.com/lateos-ai/wal-g/internal/compression/computils"
+	"github.com/wal-g/wal-g/internal/compression/computils"
 )
 
 type Decompressor struct{}

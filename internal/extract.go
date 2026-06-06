@@ -11,10 +11,10 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/compression"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/utility"
 	"golang.org/x/sync/semaphore"
 )
 

@@ -1,30 +1,102 @@
-﻿name: Release
+name: Release workflow for tagged versions
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*'
+      - 'v*' # Push events to matching v*, i.e. v0.2.19, v0.2.14a
+
+env:
+  GO_VERSION: "1.25"
+  USE_BROTLI: 1
+  USE_LIBSODIUM: 1
+  USE_LZO: 1
+  DEBIAN_FRONTEND: noninteractive
 
 jobs:
-  release:
+  # Prevents race conditions by creating the release only once before uploads.
+  create-release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-go@v4
-      with:
-        go-version: '1.23'
-    - name: Build binaries
-      run: |
-        mkdir -p dist
-        GOOS=linux GOARCH=amd64 go build -o dist/wal-g-linux-amd64 .
-        GOOS=linux GOARCH=arm64 go build -o dist/wal-g-linux-arm64 .
-        GOOS=darwin GOARCH=amd64 go build -o dist/wal-g-darwin-amd64 .
-        GOOS=darwin GOARCH=arm64 go build -o dist/wal-g-darwin-arm64 .
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-ubuntu:
+    needs: create-release
+    strategy:
+      matrix:
+        os: [20.04, 22.04, 24.04]
+        db: [pg, mysql, sqlserver, redis, mongo, fdb, gp]
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+      fail-fast: false
+    runs-on: ${{ matrix.runner }}
+    name: wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ contains(matrix.runner, 'arm') &&'aarch64' || 'amd64' }}
+    container:
+      image: ubuntu:${{ matrix.os }}
+    steps:
+
+      - name: Determine arch
+        id: determine-arch
+        run: |
+          case $(uname -m) in
+            'aarch64') arch='aarch64' ;;
+            'x86_64')  arch='amd64' ;;
+            *) arch='unknown' ;;
+          esac
+          echo "arch=$arch" >> $GITHUB_OUTPUT
+
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y liblzo2-dev brotli libsodium-dev curl git cmake build-essential tzdata
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GO_VERSION }}
+        id: go
+
+      - name: Get dependencies
+        run: go get -v -t ./...
+
+      - name: Mark repo and submodule as safe
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config --global --add safe.directory $GITHUB_WORKSPACE/submodules/brotli
+ 
+      - name: Make deps
+        run: make deps
+
+      - name: Build WAL-G
+        run: make ${{ matrix.db }}_build
+
+      - name: Rename WAL-G binary
+        run: mv main/${{ matrix.db }}/wal-g wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}
+
+      - name: Compress WAL-G binary
+        run: tar --owner=0 --group=0 -zcvf wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}
+
+      - name: Calculate checksum
+        run: sha256sum wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }} > wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.sha256
+
+      - name: Calculate checksum for the compressed binary
+        run: sha256sum wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz > wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz.sha256
+
+      - name: Upload WAL-G binary
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}
+            wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz
+            wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.sha256
+            wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

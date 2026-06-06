@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/oplog"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages"
 	"golang.org/x/sync/errgroup"
 )
 

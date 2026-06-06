@@ -10,8 +10,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/pkg/storages/memory"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/pkg/storages/memory"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func TestBackupFileLister_ListFilesToMove(t *testing.T) {

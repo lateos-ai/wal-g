@@ -3,7 +3,7 @@ package compression
 import (
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/internal/ioextensions"
 )
 
 type Compressor interface {

@@ -5,7 +5,7 @@ import (
 	"io"
 	"sync/atomic"
 
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
+	"github.com/wal-g/wal-g/internal/multistorage/stats"
 )
 
 var _ io.ReadCloser = &reportReadCloser{}

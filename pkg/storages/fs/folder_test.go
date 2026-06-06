@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func TestFSFolder(t *testing.T) {
@@ -31,7 +31,7 @@ func TestDeleteObjectsRemovesEmptyDirs(t *testing.T) {
 	root := st.RootFolder()
 
 	// Simulate a real backup layout:
-	//   backup_001.json.lz4          â€” sentinel at root level
+	//   backup_001.json.lz4          — sentinel at root level
 	//   backup_001/pg_data/global/pg_control
 	//   backup_001/pg_data/base/1/1259
 	err = root.PutObject("backup_001.json.lz4", strings.NewReader("{}"))

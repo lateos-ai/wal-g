@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"github.com/spf13/cobra"
-	db "github.com/lateos-ai/wal-g/internal/databases/mysql"
+	db "github.com/wal-g/wal-g/internal/databases/mysql"
 )
 
 const (

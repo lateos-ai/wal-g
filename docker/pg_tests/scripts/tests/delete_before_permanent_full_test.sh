@@ -1,0 +1,48 @@
+#!/bin/sh
+set -e -x
+
+. /tmp/tests/test_functions/prepare_config.sh
+prepare_config "/tmp/configs/delete_before_permanent_full_test_config.json"
+
+initdb ${PGDATA}
+
+echo "archive_mode = on" >> ${PGDATA}/postgresql.conf
+echo "archive_command = '/usr/bin/timeout 600 /usr/bin/wal-g --config=${TMP_CONFIG} wal-push %p'" >> ${PGDATA}/postgresql.conf
+echo "archive_timeout = 600" >> ${PGDATA}/postgresql.conf
+
+pg_ctl -D ${PGDATA} -w start
+
+wal-g --config=${TMP_CONFIG} delete everything FORCE --confirm
+
+# push first backup as permanent
+pgbench -i -s 1 postgres &
+sleep 1
+wal-g --config=${TMP_CONFIG} backup-push --permanent ${PGDATA}
+wal-g --config=${TMP_CONFIG} backup-list
+permanent_backup_name=`wal-g --config=${TMP_CONFIG} backup-list | tail -n 1 | cut -f 1 -d " "`
+
+# push a few more impermanent backups
+for _ in 2 3 4
+do
+    pgbench -i -s 1 postgres &
+    sleep 1
+    wal-g --config=${TMP_CONFIG} backup-push ${PGDATA}
+done
+wal-g --config=${TMP_CONFIG} backup-list
+
+# delete all backups
+last_backup_name=`wal-g --config=${TMP_CONFIG} backup-list | tail -n 1 | cut -f 1 -d " "`
+wal-g --config=${TMP_CONFIG} delete before $last_backup_name --confirm
+wal-g --config=${TMP_CONFIG} backup-list
+
+# check that permanent backup still exists
+first_backup_name=`wal-g --config=${TMP_CONFIG} backup-list | sed '2q;d' | cut -f 1 -d " "`
+if [ $first_backup_name != $permanent_backup_name ];
+then
+    echo $permanent_backup_name > /tmp/before_mark
+    echo $first_backup_name > /tmp/after_mark
+    echo "permanent backup does not exist after deletion"
+    diff /tmp/before_mark /tmp/after_mark
+fi
+/tmp/scripts/drop_pg.sh
+rm ${TMP_CONFIG}

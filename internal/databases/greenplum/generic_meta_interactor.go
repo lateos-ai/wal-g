@@ -2,8 +2,8 @@ package greenplum
 
 import (
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 type GenericMetaInteractor struct {

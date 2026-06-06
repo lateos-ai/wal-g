@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/utility"
 )
 
 func FatalOnUnrecoverableMetadataError(backupTime BackupTime, err error) {

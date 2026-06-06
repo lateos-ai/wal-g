@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/printlist"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

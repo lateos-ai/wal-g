@@ -9,7 +9,7 @@ import (
 	time "time"
 
 	gomock "go.uber.org/mock/gomock"
-	storage "github.com/lateos-ai/wal-g/pkg/storages/storage"
+	storage "github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 // MockLogFetchSettings is a mock of LogFetchSettings interface

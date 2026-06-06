@@ -8,11 +8,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/compression/lz4"
-	"github.com/lateos-ai/wal-g/testtools"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/compression"
+	"github.com/wal-g/wal-g/internal/compression/lz4"
+	"github.com/wal-g/wal-g/testtools"
+	"github.com/wal-g/wal-g/utility"
 )
 
 func GetLz4Compressor() compression.Compressor {

@@ -9,7 +9,7 @@ import (
 	"io"
 	"sync/atomic"
 
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type Reader struct {

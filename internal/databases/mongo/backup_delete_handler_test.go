@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	mocks "github.com/wal-g/wal-g/internal/databases/mongo/archive/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 )
 
 func TestHandleBackupDelete(t *testing.T) {

@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal"
-	client "github.com/lateos-ai/wal-g/internal/databases/redis/client"
-	"github.com/lateos-ai/wal-g/internal/printlist"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	client "github.com/wal-g/wal-g/internal/databases/redis/client"
+	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (

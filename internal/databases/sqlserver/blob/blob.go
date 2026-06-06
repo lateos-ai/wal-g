@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 const IndexFileName = "__blob_index.json"

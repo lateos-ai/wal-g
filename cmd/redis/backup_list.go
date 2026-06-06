@@ -3,9 +3,9 @@ package redis
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/redis"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/redis"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (

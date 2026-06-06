@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/databases/mongo/common"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 // HandleBackupShow prints sentinel contents.

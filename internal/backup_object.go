@@ -3,9 +3,9 @@ package internal
 import (
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/multistorage/consts"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/utility"
 )
 
 func NewDefaultBackupObject(object storage.Object) BackupObject {

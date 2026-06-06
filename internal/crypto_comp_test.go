@@ -13,9 +13,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/compression/lzo"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/internal/crypto/openpgp"
+	"github.com/wal-g/wal-g/internal/compression/lzo"
+	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/internal/crypto/openpgp"
 )
 
 const (

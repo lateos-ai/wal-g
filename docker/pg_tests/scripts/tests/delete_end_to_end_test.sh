@@ -1,0 +1,61 @@
+#!/bin/sh
+set -e -x
+
+. /tmp/tests/test_functions/prepare_config.sh
+prepare_config "/tmp/configs/delete_end_to_end_test_config.json"
+
+initdb ${PGDATA}
+
+echo "archive_mode = on" >> ${PGDATA}/postgresql.conf
+echo "archive_command = '/usr/bin/timeout 600 /usr/bin/wal-g --config=${TMP_CONFIG} wal-push %p'" >> ${PGDATA}/postgresql.conf
+echo "archive_timeout = 600" >> ${PGDATA}/postgresql.conf
+
+pg_ctl -D ${PGDATA} -w start
+
+wal-g --config=${TMP_CONFIG} delete everything FORCE --confirm
+
+pgbench -c 2 -T 100000000 -S || true &
+
+for i in $(seq 1 9);
+do
+    pgbench -i -s 2 postgres
+    if [ "$i" -eq 4 ] || [ "$i" -eq 9 ];
+    then
+        pg_dumpall -f "/tmp/dump${i}"
+    fi
+    sleep 1
+    if [ $((i%2)) -eq 0 ]
+    then target_storage="default"
+    else target_storage="good_failover"
+    fi
+    wal-g --config=${TMP_CONFIG} backup-push ${PGDATA} --target-storage ${target_storage}
+done
+
+wal-g --config=${TMP_CONFIG} backup-list
+
+target_backup_name=`wal-g --config=${TMP_CONFIG} backup-list | tail -n 6 | head -n 1 | cut -f 1 -d " "`
+
+wal-g --config=${TMP_CONFIG} delete before FIND_FULL $target_backup_name --confirm
+
+wal-g --config=${TMP_CONFIG} backup-list
+
+FIRST=`wal-g --config=${TMP_CONFIG} backup-list | head -n 2 | tail -n 1 | cut -f 1 -d " "`
+
+for i in ${FIRST} LATEST
+do
+/tmp/scripts/drop_pg.sh
+    wal-g --config=${TMP_CONFIG} backup-fetch ${PGDATA} ${i}
+    echo "restore_command = 'echo \"WAL file restoration: %f, %p\"&& /usr/bin/wal-g --config=${TMP_CONFIG} wal-fetch \"%f\" \"%p\"'" > ${PGDATA}/recovery.conf
+    pg_ctl -D ${PGDATA} -w start
+    /tmp/scripts/wait_while_pg_not_ready.sh
+    wal-g --config=${TMP_CONFIG} backup-list
+    sleep 10
+    pg_dumpall -f /tmp/dump${i}
+done
+
+diff /tmp/dump4 /tmp/dump${FIRST}
+diff /tmp/dump9 /tmp/dumpLATEST
+/tmp/scripts/drop_pg.sh
+rm ${TMP_CONFIG}
+echo $target_backup_name
+echo $FIRST

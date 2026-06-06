@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type SegConfigMaker interface {

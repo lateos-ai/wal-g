@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/wal-g/wal-g/internal/databases/greenplum"
+	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
 )
 
 const aoSegmentFileName = "../../../test/testdata/gp_ao_file.bin"

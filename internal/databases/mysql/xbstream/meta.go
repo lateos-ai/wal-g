@@ -2,7 +2,7 @@ package xbstream
 
 import (
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/wal-g/internal/databases/mysql/innodb"
 	"gopkg.in/ini.v1"
 )
 

@@ -8,11 +8,11 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/mongo/common"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type BackupService struct {

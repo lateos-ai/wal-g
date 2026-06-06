@@ -19,7 +19,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 	"gopkg.in/yaml.v3"
 )
 

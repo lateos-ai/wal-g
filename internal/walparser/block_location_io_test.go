@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/internal/walparser"
 )
 
 var locations = []walparser.BlockLocation{

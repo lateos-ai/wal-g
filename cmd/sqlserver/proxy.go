@@ -3,8 +3,8 @@ package sqlserver
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/sqlserver"
 )
 
 const proxyShortDescription = "Run local azure blob emulator"

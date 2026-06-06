@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/multistorage/consts"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func TestGetStorage(t *testing.T) {

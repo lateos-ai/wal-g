@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/utility"
 )
 
 // HandleBackupPush starts backup procedure.

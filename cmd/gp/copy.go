@@ -3,11 +3,11 @@ package gp
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/greenplum"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/databases/postgres/orioledb"
+	"github.com/wal-g/wal-g/internal/walparser"
 )
 
 const (

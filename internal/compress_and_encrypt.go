@@ -6,9 +6,9 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/compression"
+	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/utility"
 )
 
 // CompressAndEncryptError is used to catch specific errors from CompressAndEncrypt

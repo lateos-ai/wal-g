@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/internal/crypto"
 	"golang.org/x/sync/errgroup"
 )
 

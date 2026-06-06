@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	conf "github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/mongo/binary"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type HandleBinaryBackupPushArgs struct {

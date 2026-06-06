@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func HandleWalShow(rootFolder storage.Folder, stanza string, outputWriter postgres.WalShowOutputWriter) error {

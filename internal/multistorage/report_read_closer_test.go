@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
+	"github.com/wal-g/wal-g/internal/multistorage/stats"
 )
 
 func Test_reportReadCloser(t *testing.T) {

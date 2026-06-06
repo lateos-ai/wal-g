@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	archivemocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	archivemocks "github.com/wal-g/wal-g/internal/databases/mongo/archive/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

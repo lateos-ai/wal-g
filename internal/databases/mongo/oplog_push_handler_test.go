@@ -10,12 +10,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
-	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/stages/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stats"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages"
+	mocks "github.com/wal-g/wal-g/internal/databases/mongo/stages/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stats"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

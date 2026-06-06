@@ -5,7 +5,7 @@ import (
 
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
+	"github.com/wal-g/wal-g/internal/databases/greenplum"
 )
 
 func TestGeneratePgHbaConf(t *testing.T) {

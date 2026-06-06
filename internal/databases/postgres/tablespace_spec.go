@@ -9,7 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (

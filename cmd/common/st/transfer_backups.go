@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/storagetools/transfer"
+	"github.com/wal-g/wal-g/internal/storagetools/transfer"
 )
 
 const backupsShortDescription = "Moves all backups from one storage to another"

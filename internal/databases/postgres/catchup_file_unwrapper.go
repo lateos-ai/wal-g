@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 )
 
 // CatchupFileUnwrapper is used for catchup (catchup-push) backups

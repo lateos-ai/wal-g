@@ -3,7 +3,7 @@ package sh
 import (
 	"fmt"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 // TODO: Merge the settings and their default values with ones defined in internal/config.go

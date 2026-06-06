@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
 )
 
 func TestFindLastCommonPoint_SameTimeline(t *testing.T) {

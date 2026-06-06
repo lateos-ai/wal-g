@@ -3,7 +3,7 @@ package binary
 import (
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/wal-g/wal-g/internal"
 )
 
 const (

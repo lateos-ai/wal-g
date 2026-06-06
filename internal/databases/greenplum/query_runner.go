@@ -10,8 +10,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/walparser"
 )
 
 // GpQueryRunner is implementation for controlling Greenplum

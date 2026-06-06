@@ -4,9 +4,9 @@ import (
 	"container/heap"
 
 	"github.com/mongodb/mongo-tools/common/util"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo/common"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

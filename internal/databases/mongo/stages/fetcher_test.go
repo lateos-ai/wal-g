@@ -12,11 +12,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	archiveMocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	mongoMocks "github.com/lateos-ai/wal-g/internal/databases/mongo/client/mocks"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
+	archiveMocks "github.com/wal-g/wal-g/internal/databases/mongo/archive/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client"
+	mongoMocks "github.com/wal-g/wal-g/internal/databases/mongo/client/mocks"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

@@ -5,10 +5,10 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/cmd/common"
-	"github.com/lateos-ai/wal-g/cmd/mysql/xb"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/wal-g/wal-g/cmd/common"
+	"github.com/wal-g/wal-g/cmd/mysql/xb"
+	"github.com/wal-g/wal-g/internal"
+	conf "github.com/wal-g/wal-g/internal/config"
 )
 
 var ShortDescription = "MySQL backup tool"

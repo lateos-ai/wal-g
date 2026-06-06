@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/internal/walparser"
 )
 
 const (

@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/limiters"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/limiters"
+	"github.com/wal-g/wal-g/utility"
 	"golang.org/x/time/rate"
 )
 

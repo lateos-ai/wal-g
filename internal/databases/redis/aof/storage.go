@@ -3,8 +3,8 @@ package aof
 import (
 	"fmt"
 
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/databases/redis/archive"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func SentinelWithExistenceCheck(folder storage.Folder, backupName string) (archive.Backup, error) {

@@ -3,9 +3,9 @@ package mongo
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo"
+	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
 )
 
 const backupDeleteShortDescription = "Deletes backup data from storage"

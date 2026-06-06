@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/webserver"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/databases/mongo/client"
+	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/wal-g/internal/webserver"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (

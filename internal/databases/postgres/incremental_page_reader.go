@@ -7,9 +7,9 @@ import (
 
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/databases/postgres/errors"
+	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/utility"
 )
 
 // IncrementFileHeader contains "wi" at the head which stands for "wal-g increment"

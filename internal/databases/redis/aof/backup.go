@@ -8,10 +8,10 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
-	"github.com/lateos-ai/wal-g/internal/diskwatcher"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/redis/archive"
+	"github.com/wal-g/wal-g/internal/diskwatcher"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type BackupService struct {

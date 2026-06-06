@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats/cache"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/multistorage/consts"
+	"github.com/wal-g/wal-g/internal/multistorage/stats"
+	"github.com/wal-g/wal-g/internal/multistorage/stats/cache"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 var _ storage.Storage = &Storage{}

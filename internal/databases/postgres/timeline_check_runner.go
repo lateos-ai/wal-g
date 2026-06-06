@@ -6,7 +6,7 @@ import (
 	"io"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type TimelineCheckDetails struct {

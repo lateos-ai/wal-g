@@ -13,7 +13,7 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/wal-g/wal-g/internal/crypto"
 )
 
 const (

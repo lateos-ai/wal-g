@@ -3,7 +3,7 @@ package mongo
 import (
 	"context"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/wal-g/wal-g/internal/databases/mongo/stages"
 	"golang.org/x/sync/errgroup"
 )
 

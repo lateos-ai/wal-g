@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/walparser"
-	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/testtools"
 )
 
 func TestIsComplete_Complete(t *testing.T) {

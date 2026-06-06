@@ -5,7 +5,7 @@ package mocks
 import (
 	io "io"
 
-	envelope "github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	envelope "github.com/wal-g/wal-g/internal/crypto/envelope"
 
 	mock "github.com/stretchr/testify/mock"
 )

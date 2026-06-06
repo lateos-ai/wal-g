@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal/multistorage/policies"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls

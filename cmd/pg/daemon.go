@@ -2,7 +2,7 @@ package pg
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
 )
 
 const DaemonShortDescription = "Runs WAL-G in daemon mode which executes commands sent from the lightweight walg-daemon-client."

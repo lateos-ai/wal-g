@@ -8,10 +8,10 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/fsutil"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/internal/limiters"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/fsutil"
+	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/internal/limiters"
+	"github.com/wal-g/wal-g/utility"
 )
 
 type FileNotExistError struct {

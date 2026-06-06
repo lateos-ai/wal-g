@@ -8,12 +8,12 @@ import (
 
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/internal/limiters"
-	"github.com/lateos-ai/wal-g/internal/walparser"
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal/databases/postgres/errors"
+	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/internal/limiters"
+	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (

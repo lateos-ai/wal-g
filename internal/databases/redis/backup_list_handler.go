@@ -5,10 +5,10 @@ import (
 	"slices"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
-	"github.com/lateos-ai/wal-g/internal/printlist"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/redis/archive"
+	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func HandleDetailedBackupList(folder storage.Folder, pretty bool, json bool) {

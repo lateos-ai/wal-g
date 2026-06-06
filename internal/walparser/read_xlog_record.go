@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
 )
 
 func readXLogRecordHeader(reader io.Reader) (*XLogRecordHeader, error) {

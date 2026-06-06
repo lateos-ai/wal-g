@@ -11,12 +11,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/crypto/openpgp"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
-	"github.com/lateos-ai/wal-g/pkg/storages/memory"
-	"github.com/lateos-ai/wal-g/testtools"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/crypto/openpgp"
+	"github.com/wal-g/wal-g/internal/databases/greenplum/pax"
+	"github.com/wal-g/wal-g/pkg/storages/memory"
+	"github.com/wal-g/wal-g/testtools"
+	"github.com/wal-g/wal-g/utility"
 )
 
 const (
@@ -210,7 +210,7 @@ func TestRegularUpload_DedupAgeLimitPassed(t *testing.T) {
 
 func TestRegularUpload_IdentityMismatch(t *testing.T) {
 	now := time.Now()
-	// remote shows kind=data,blockid=3; local says kind=toast,blockid=3 â€” mismatch -> re-upload
+	// remote shows kind=data,blockid=3; local says kind=toast,blockid=3 — mismatch -> re-upload
 	base := pax.BackupFiles{
 		"base/13/16385_pax/3.toast": {
 			StoragePath:     "1009_13_md5val_16385_3_toast_old_pax",

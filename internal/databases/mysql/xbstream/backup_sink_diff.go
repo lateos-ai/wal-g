@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/wal-g/internal/databases/mysql/innodb"
 )
 
 // DiffBackupSink doesn't try to replicate sophisticated xtrabackup logic

@@ -9,11 +9,11 @@ import (
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	pg_errors "github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	pg_errors "github.com/wal-g/wal-g/internal/databases/postgres/errors"
+	"github.com/wal-g/wal-g/internal/databases/postgres/orioledb"
+	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/wal-g/wal-g/utility"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -180,7 +180,7 @@ func verifyFile(path string, fileInfo os.FileInfo, fileReader io.Reader, isIncre
 		return nil, err
 	}
 
-	// if files donâ€™t meet the size standard. The standard is that the file size divided by the block size should be an integer
+	// if files don’t meet the size standard. The standard is that the file size divided by the block size should be an integer
 	// then skip the block check and copy the file directly with a warning message
 	if fileInfo.Size()%DatabasePageSize != 0 {
 		tracelog.WarningLogger.Printf(

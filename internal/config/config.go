@@ -17,8 +17,8 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/logging"
-	"github.com/lateos-ai/wal-g/internal/webserver"
+	"github.com/wal-g/wal-g/internal/logging"
+	"github.com/wal-g/wal-g/internal/webserver"
 )
 
 const (
@@ -959,7 +959,7 @@ func CheckAllowedSettings(config *viper.Viper) {
 	// Message for the first time.
 	if foundNotAllowed {
 		tracelog.WarningLogger.Println("We found that some variables in your config file detected as 'Unknown'. \n  " +
-			"If this is not right, please create issue https://github.com/lateos-ai/wal-g/issues/new")
+			"If this is not right, please create issue https://github.com/wal-g/wal-g/issues/new")
 	}
 }
 

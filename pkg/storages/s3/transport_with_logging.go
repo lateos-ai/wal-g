@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/statistics"
+	"github.com/wal-g/wal-g/internal/statistics"
 )
 
 type loggingTransport struct {

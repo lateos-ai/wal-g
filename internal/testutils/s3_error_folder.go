@@ -7,7 +7,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 func NewS3ErrorFolder(sourceFolder storage.Folder, S3ErrorAfterByteSize int) storage.Folder {

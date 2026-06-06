@@ -11,13 +11,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/redis"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
-	"github.com/lateos-ai/wal-g/pkg/storages/memory"
-	"github.com/lateos-ai/wal-g/testtools"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/config"
+	"github.com/wal-g/wal-g/internal/databases/redis"
+	"github.com/wal-g/wal-g/internal/databases/redis/archive"
+	"github.com/wal-g/wal-g/pkg/storages/memory"
+	"github.com/wal-g/wal-g/testtools"
+	"github.com/wal-g/wal-g/utility"
 )
 
 func init() {

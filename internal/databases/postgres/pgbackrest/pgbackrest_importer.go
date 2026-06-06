@@ -4,10 +4,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/printlist"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/wal-g/wal-g/pkg/storages/storage"
 )
 
 type BackupDetails struct {

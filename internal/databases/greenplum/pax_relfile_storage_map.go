@@ -6,8 +6,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/wal-g/internal/databases/greenplum/pax"
+	"github.com/wal-g/wal-g/internal/databases/postgres"
 )
 
 // NewPaxRelFileStorageMap walks every database on the segment, queries the PAX aux

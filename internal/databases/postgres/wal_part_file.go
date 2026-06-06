@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/wal-g/wal-g/internal/walparser"
 )
 
 type WalPartFile struct {

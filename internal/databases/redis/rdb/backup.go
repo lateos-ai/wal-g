@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/redis/archive"
 )
 
 type StorageUploader struct {

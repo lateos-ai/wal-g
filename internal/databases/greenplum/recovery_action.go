@@ -7,7 +7,7 @@ import (
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	conf "github.com/wal-g/wal-g/internal/config"
 )
 
 type ActionHandler struct {

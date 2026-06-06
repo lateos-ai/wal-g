@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/wal-g/internal"
+	"github.com/wal-g/wal-g/internal/databases/mongo/binary"
+	"github.com/wal-g/wal-g/utility"
 )
 
 func HandleBinaryFetchPush(
