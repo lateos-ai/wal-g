@@ -3,14 +3,13 @@ package common
 import (
 	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/pflag"
-	"github.com/spf13/cobra"
-
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/statistics"
 	"github.com/lateos-ai/wal-g/cmd/common/st"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/statistics"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"github.com/wal-g/tracelog"
 )
 
 const usageTemplate = `Usage:{{if .Runnable}}
