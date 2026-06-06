@@ -3,7 +3,7 @@ package testtools
 import (
 	"io"
 
-	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 type MockCompressor struct{}

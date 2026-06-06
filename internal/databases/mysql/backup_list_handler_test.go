@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/internal/printlist"
 )
 
 func TestBackupDetail_PrintableFields(t *testing.T) {

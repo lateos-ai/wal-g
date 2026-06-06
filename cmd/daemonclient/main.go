@@ -9,8 +9,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/wal-g/wal-g/internal/daemon"
-	"github.com/wal-g/wal-g/internal/databases/postgres/constants"
+	"github.com/lateos-ai/wal-g/internal/daemon"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/constants"
 )
 
 const (

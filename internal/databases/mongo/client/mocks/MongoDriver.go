@@ -5,13 +5,13 @@ package mocks
 import (
 	context "context"
 
-	client "github.com/wal-g/wal-g/internal/databases/mongo/client"
+	client "github.com/lateos-ai/wal-g/internal/databases/mongo/client"
 
 	db "github.com/mongodb/mongo-tools/common/db"
 
 	mock "github.com/stretchr/testify/mock"
 
-	models "github.com/wal-g/wal-g/internal/databases/mongo/models"
+	models "github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )

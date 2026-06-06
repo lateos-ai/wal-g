@@ -9,8 +9,8 @@ import (
 
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal/databases/postgres"
-	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 func home(filePath string) string {

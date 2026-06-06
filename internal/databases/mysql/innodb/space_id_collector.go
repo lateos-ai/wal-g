@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/fsutil"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 var ErrSpaceIDNotFound = errors.New("SpaceID not found")

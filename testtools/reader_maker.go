@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/wal-g/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // FileReaderMaker decompresses lzop tarballs from

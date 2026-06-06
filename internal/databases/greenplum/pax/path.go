@@ -4,8 +4,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/wal-g/wal-g/internal/databases/postgres"
-	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 const dirSuffix = "_pax"

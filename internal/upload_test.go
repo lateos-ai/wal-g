@@ -8,10 +8,10 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/pkg/storages/memory"
-	"github.com/wal-g/wal-g/test/mocks"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/lateos-ai/wal-g/test/mocks"
 	"go.uber.org/mock/gomock"
 )
 

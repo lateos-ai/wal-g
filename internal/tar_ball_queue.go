@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 
 	"github.com/pkg/errors"
-	conf "github.com/wal-g/wal-g/internal/config"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 // TarBallQueue is used to process multiple tarballs concurrently

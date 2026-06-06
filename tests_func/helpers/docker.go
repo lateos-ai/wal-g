@@ -19,7 +19,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/tests_func/utils"
+	"github.com/lateos-ai/wal-g/tests_func/utils"
 )
 
 var Docker *client.Client

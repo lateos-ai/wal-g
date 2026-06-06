@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	conf "github.com/wal-g/wal-g/internal/config"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

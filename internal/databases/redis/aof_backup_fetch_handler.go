@@ -4,11 +4,11 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/wal-g/wal-g/internal"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/databases/redis/aof"
-	"github.com/wal-g/wal-g/internal/databases/redis/archive"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/aof"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func HandleAofFetchPush(

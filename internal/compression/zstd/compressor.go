@@ -4,7 +4,7 @@ import (
 	"io"
 
 	"github.com/klauspost/compress/zstd"
-	"github.com/wal-g/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 const (

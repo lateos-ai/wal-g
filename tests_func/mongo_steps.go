@@ -13,9 +13,9 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/stretchr/testify/assert"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/tests_func/helpers"
-	"github.com/wal-g/wal-g/tests_func/mongodb/mongoload"
-	"github.com/wal-g/wal-g/tests_func/mongodb/mongoload/models"
+	"github.com/lateos-ai/wal-g/tests_func/helpers"
+	"github.com/lateos-ai/wal-g/tests_func/mongodb/mongoload"
+	"github.com/lateos-ai/wal-g/tests_func/mongodb/mongoload/models"
 )
 
 func SetupMongodbSteps(ctx *godog.ScenarioContext, tctx *TestContext) {

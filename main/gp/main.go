@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/wal-g/wal-g/cmd/gp"
+	"github.com/lateos-ai/wal-g/cmd/gp"
 )
 
 func main() {

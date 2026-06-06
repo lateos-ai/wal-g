@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"sync/atomic"
 
-	"github.com/wal-g/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // FileTarBallMaker creates a new FileTarBall

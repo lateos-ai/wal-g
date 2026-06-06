@@ -8,7 +8,7 @@ import (
 	"github.com/cucumber/godog/colors"
 	"github.com/spf13/pflag"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/tests_func/utils"
+	"github.com/lateos-ai/wal-g/tests_func/utils"
 )
 
 type TestOpts struct {

@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/internal/databases/etcd"
-	"github.com/wal-g/wal-g/testtools"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/etcd"
+	"github.com/lateos-ai/wal-g/testtools"
 )
 
 func init() {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/printlist"
 )
 
 // BackupDetail is used to append ExtendedMetadataDto details to BackupTime struct

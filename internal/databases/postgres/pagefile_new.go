@@ -11,7 +11,7 @@ import (
 	"os"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 
 type ReadWriterAt interface {

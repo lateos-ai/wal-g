@@ -2,8 +2,8 @@ package sqlserver
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/databases/sqlserver"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
 )
 
 const backupRestoreShortDescription = "Restores backup from the storage"

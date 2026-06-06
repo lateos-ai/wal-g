@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/databases/mongo/archive"
-	"github.com/wal-g/wal-g/internal/databases/mongo/client"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 // ResolveStartingTS fetches last-known folder TS or initiates first run from last-known mongoClient TS

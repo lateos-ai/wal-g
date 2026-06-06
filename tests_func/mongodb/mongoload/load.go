@@ -6,8 +6,8 @@ import (
 	"io"
 	"sync"
 
-	"github.com/wal-g/wal-g/tests_func/mongodb/mongoload/internal"
-	"github.com/wal-g/wal-g/tests_func/mongodb/mongoload/models"
+	"github.com/lateos-ai/wal-g/tests_func/mongodb/mongoload/internal"
+	"github.com/lateos-ai/wal-g/tests_func/mongodb/mongoload/models"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

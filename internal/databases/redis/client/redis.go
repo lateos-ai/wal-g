@@ -8,7 +8,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/wal-g/tracelog"
-	conf "github.com/wal-g/wal-g/internal/config"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const dontPanic = false

@@ -23,13 +23,13 @@ import (
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/databases/postgres/orioledb"
-	"github.com/wal-g/wal-g/internal/fsutil"
-	"github.com/wal-g/wal-g/internal/ioextensions"
-	"github.com/wal-g/wal-g/internal/limiters"
-	"github.com/wal-g/wal-g/internal/walparser"
-	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/limiters"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 var DatabasePageSize int64 = int64(walparser.BlockSize)

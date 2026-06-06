@@ -7,7 +7,7 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/wal-g/wal-g/tests_func/utils"
+	"github.com/lateos-ai/wal-g/tests_func/utils"
 )
 
 const (

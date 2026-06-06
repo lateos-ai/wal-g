@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func HandleRemove(prefix string, folder storage.Folder) error {

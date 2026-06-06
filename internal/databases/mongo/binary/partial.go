@@ -7,8 +7,8 @@ import (
 	"github.com/mongodb/mongo-tools/common/util"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/databases/mongo/common"
-	"github.com/wal-g/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 type SetMap map[string]map[string]struct{}

@@ -10,8 +10,8 @@ import (
 	"sync/atomic"
 
 	"github.com/pierrec/lz4/v4"
-	"github.com/wal-g/wal-g/internal/crypto"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 // FileTarBall represents a tarball that is

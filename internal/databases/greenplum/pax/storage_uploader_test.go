@@ -11,12 +11,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/crypto/openpgp"
-	"github.com/wal-g/wal-g/internal/databases/greenplum/pax"
-	"github.com/wal-g/wal-g/pkg/storages/memory"
-	"github.com/wal-g/wal-g/testtools"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/crypto/openpgp"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
+	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const (

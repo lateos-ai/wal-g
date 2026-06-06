@@ -3,8 +3,8 @@ package etcd
 import (
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/databases/etcd"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/etcd"
 )
 
 const fetchSinceFlagShortDescr = "backup name starting from which you want to fetch wals"

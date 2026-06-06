@@ -5,7 +5,7 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/tests_func/helpers"
+	"github.com/lateos-ai/wal-g/tests_func/helpers"
 )
 
 func SetupMongodbBinaryBackupSteps(ctx *godog.ScenarioContext, tctx *TestContext) {

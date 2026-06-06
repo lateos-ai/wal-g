@@ -9,8 +9,8 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/tests_func/helpers"
-	"github.com/wal-g/wal-g/tests_func/utils"
+	"github.com/lateos-ai/wal-g/tests_func/helpers"
+	"github.com/lateos-ai/wal-g/tests_func/utils"
 )
 
 func SetupRedisSteps(ctx *godog.ScenarioContext, tctx *TestContext) {

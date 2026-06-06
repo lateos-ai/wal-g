@@ -3,7 +3,7 @@ package internal
 import (
 	"time"
 
-	"github.com/wal-g/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/internal/printlist"
 )
 
 // BackupTime is used to sort backups by latest modified time.

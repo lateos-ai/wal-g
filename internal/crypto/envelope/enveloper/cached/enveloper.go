@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal/crypto/envelope"
+	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
 )
 
 type Item struct {

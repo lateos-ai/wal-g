@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/wal-g/wal-g/internal/databases/sqlserver"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const logRestoreShortDescription = "Restores log from the storage"

@@ -2,7 +2,7 @@ package sqlserver
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wal-g/wal-g/internal/databases/sqlserver"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
 )
 
 const backupImportShortDescription = "Import backups from the external storage"

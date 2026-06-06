@@ -5,7 +5,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/wal-g/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 	"golang.org/x/sync/errgroup"
 )
 

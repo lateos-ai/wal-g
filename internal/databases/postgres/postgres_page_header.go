@@ -3,7 +3,7 @@ package postgres
 import (
 	"io"
 
-	"github.com/wal-g/wal-g/internal/walparser/parsingutil"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 
 type PageHeader struct {

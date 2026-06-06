@@ -14,10 +14,10 @@ import (
 	io "io"
 	reflect "reflect"
 
-	internal "github.com/wal-g/wal-g/internal"
-	compression "github.com/wal-g/wal-g/internal/compression"
-	ioextensions "github.com/wal-g/wal-g/internal/ioextensions"
-	storage "github.com/wal-g/wal-g/pkg/storages/storage"
+	internal "github.com/lateos-ai/wal-g/internal"
+	compression "github.com/lateos-ai/wal-g/internal/compression"
+	ioextensions "github.com/lateos-ai/wal-g/internal/ioextensions"
+	storage "github.com/lateos-ai/wal-g/pkg/storages/storage"
 	gomock "go.uber.org/mock/gomock"
 )
 

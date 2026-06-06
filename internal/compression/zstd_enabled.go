@@ -1,7 +1,7 @@
 package compression
 
 import (
-	"github.com/wal-g/wal-g/internal/compression/zstd"
+	"github.com/lateos-ai/wal-g/internal/compression/zstd"
 )
 
 func init() {

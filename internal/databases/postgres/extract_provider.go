@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"github.com/wal-g/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type ExtractProvider interface {

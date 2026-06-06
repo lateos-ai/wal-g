@@ -15,11 +15,11 @@ import (
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 	mysqldriver "github.com/go-sql-driver/mysql"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/internal/compression"
-	conf "github.com/wal-g/wal-g/internal/config"
-	"github.com/wal-g/wal-g/pkg/storages/storage"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/compression"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const BinlogPath = "binlog_" + utility.VersionStr + "/"

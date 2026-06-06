@@ -9,11 +9,11 @@ import (
 	"github.com/RoaringBitmap/roaring/v2"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	pg_errors "github.com/wal-g/wal-g/internal/databases/postgres/errors"
-	"github.com/wal-g/wal-g/internal/databases/postgres/orioledb"
-	"github.com/wal-g/wal-g/internal/ioextensions"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	pg_errors "github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
 	"golang.org/x/sync/errgroup"
 )
 

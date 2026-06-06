@@ -7,8 +7,8 @@ import (
 	"syscall"
 
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func HandleDatabaseList(backupName string) {

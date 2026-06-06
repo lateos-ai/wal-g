@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	mocks "github.com/wal-g/wal-g/internal/databases/mongo/stages/mocks"
+	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/stages/mocks"
 )
 
 var (

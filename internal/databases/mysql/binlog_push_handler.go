@@ -14,8 +14,8 @@ import (
 	"github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/wal-g/wal-g/internal"
-	"github.com/wal-g/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const BinlogCacheFileName = ".walg_mysql_binlogs_cache"

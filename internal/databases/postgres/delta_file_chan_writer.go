@@ -3,7 +3,7 @@ package postgres
 import (
 	"sync"
 
-	"github.com/wal-g/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 type DeltaFileChanWriter struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/wal-g/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func HandleCatObject(objectPath string, folder storage.Folder, decrypt, decompress bool) error {
