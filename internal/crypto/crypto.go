@@ -1,17 +1,17 @@
 package crypto
 
 import (
-	"os/user"
-	"os/exec"
-	"strings"
-	"path/filepath"
-	"encoding/json"
 	"bytes"
-	"os"
+	"encoding/json"
 	"fmt"
+	"os"
+	"os/exec"
+	"os/user"
+	"path/filepath"
+	"strings"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type GpgKeyExportError struct {
