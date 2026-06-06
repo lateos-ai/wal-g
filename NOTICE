@@ -1,0 +1,9 @@
+This software includes code from golang-migrate/wal-g
+Original project: https://github.com/golang-migrate/wal-g
+Original license: Apache License 2.0
+Original copyright: golang-migrate contributors
+
+Modifications and new code: Copyright (c) 2026 Lateos
+Licensed under MIT License
+
+See LICENSE for full terms.

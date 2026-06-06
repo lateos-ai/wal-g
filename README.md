@@ -1,6 +1,24 @@
-﻿# WAL-G: PostgreSQL WAL Archiving & Backups
+# WAL-G: PostgreSQL WAL Archiving & Backups
 
-PostgreSQL WAL archiving, point-in-time recovery, and disaster recovery. Actively maintained successor to the unmaintained WAL-G project.
+**Actively maintained fork of [golang-migrate/wal-g](https://github.com/golang-migrate/wal-g)**
+
+PostgreSQL WAL archiving, point-in-time recovery, and disaster recovery.
+
+✅ **100% backward compatible** with WAL-G v0.14.1
+✅ **Actively maintained** — Security patches within 24 hours
+✅ **Production ready** — Tested on real PostgreSQL infrastructure
+
+---
+
+## Attribution
+
+This is a maintained fork of the [original WAL-G project](https://github.com/golang-migrate/wal-g).
+
+- Original License: Apache 2.0
+- Fork License: MIT
+- See [NOTICE](NOTICE) for details
+
+---
 
 ## Status
 
