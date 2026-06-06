@@ -4,8 +4,8 @@
 package fsutil
 
 import (
-	"io"
 	"errors"
+	"io"
 )
 
 func isEOFError(err error) bool {

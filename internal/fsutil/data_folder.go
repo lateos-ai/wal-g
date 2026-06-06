@@ -1,11 +1,11 @@
 package fsutil
 
 import (
-	"io"
 	"fmt"
+	"io"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type NoSuchFileError struct {
