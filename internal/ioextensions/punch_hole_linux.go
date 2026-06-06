@@ -3,8 +3,8 @@
 package ioextensions
 
 import (
-	"syscall"
 	"os"
+	"syscall"
 
 	"golang.org/x/sys/unix"
 )
