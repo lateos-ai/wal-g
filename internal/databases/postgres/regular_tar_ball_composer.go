@@ -1,13 +1,14 @@
 package postgres
 
 import (
-	"archive/tar"
-	"context"
 	"os"
+	"context"
+	"archive/tar"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/crypto"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type RegularTarBallComposer struct {

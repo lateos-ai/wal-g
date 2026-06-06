@@ -3,11 +3,12 @@ package st
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage/exec"
-	"github.com/lateos-ai/wal-g/internal/storagetools"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/storagetools"
+	"github.com/lateos-ai/wal-g/internal/multistorage/exec"
 )
 
 const removeShortDescription = "Removes objects by the prefix from the specified storage"

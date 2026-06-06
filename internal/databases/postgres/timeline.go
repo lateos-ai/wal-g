@@ -1,13 +1,14 @@
 package postgres
 
 import (
-	"context"
-	"fmt"
 	"regexp"
 	"strconv"
+	"context"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

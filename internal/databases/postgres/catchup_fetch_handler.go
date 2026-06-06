@@ -2,9 +2,10 @@ package postgres
 
 import (
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // HandleCatchupFetch is invoked to perform wal-g catchup-fetch

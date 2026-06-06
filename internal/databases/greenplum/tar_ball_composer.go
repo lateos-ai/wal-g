@@ -1,24 +1,25 @@
 package greenplum
 
 import (
-	"archive/tar"
-	"context"
-	"fmt"
-	"os"
 	"strconv"
 	"sync"
 	"time"
+	"os"
+	"archive/tar"
+	"context"
+	"fmt"
 
-	"github.com/spf13/viper"
+	"golang.org/x/sync/errgroup"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
+	"github.com/spf13/viper"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"golang.org/x/sync/errgroup"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 type GpTarBallComposerMaker struct {

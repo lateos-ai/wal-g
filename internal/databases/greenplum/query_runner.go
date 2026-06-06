@@ -1,17 +1,18 @@
 package greenplum
 
 import (
-	"context"
-	"fmt"
 	"regexp"
 	"strconv"
+	"context"
+	"fmt"
 
-	"github.com/greenplum-db/gp-common-go-libs/cluster"
-	"github.com/jackc/pgx/v5"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/greenplum-db/gp-common-go-libs/cluster"
+	"github.com/jackc/pgx/v5"
+
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 // GpQueryRunner is implementation for controlling Greenplum

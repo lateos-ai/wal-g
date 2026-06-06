@@ -1,13 +1,14 @@
 package binary
 
 import (
-	"encoding/json"
-	"os"
 	"strings"
+	"os"
+	"encoding/json"
 
-	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/utility"
 	"gopkg.in/yaml.v3"
+	"github.com/pkg/errors"
+
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type MongodFileConfig struct {

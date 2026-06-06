@@ -1,8 +1,8 @@
 package innodb
 
 import (
-	"encoding/binary"
 	"math"
+	"encoding/binary"
 )
 
 const (

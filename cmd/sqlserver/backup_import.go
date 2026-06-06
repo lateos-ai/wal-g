@@ -2,6 +2,7 @@ package sqlserver
 
 import (
 	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
 )
 
@@ -14,7 +15,11 @@ var backupImportCmd = &cobra.Command{
 	Use:   "backup-import",
 	Short: backupImportShortDescription,
 	Run: func(cmd *cobra.Command, args []string) {
-		sqlserver.HandleBackupImport(externalConfigFileImport, importDatabases)
+		sqlserver.HandleBackupimport (
+	"github.com/spf13/cobra"
+
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
+)
 	},
 }
 

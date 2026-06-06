@@ -1,13 +1,14 @@
 package swift
 
 import (
-	"context"
-	"fmt"
 	"io"
 	"strings"
+	"context"
+	"fmt"
 
-	"github.com/ncw/swift/v2"
 	"github.com/wal-g/tracelog"
+	"github.com/ncw/swift/v2"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

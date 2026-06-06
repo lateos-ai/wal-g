@@ -1,12 +1,12 @@
 package s3
 
 import (
-	"fmt"
-	"strings"
 	"time"
+	"strings"
+	"fmt"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage/setting"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 // TODO: Merge the settings and their default values with ones defined in internal/config.go

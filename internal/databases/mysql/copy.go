@@ -1,14 +1,15 @@
 package mysql
 
 import (
-	"path"
 	"strings"
+	"path"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/copy"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/copy"
 )
 
 // HandleCopyBackup copy specific backups from one storage to another

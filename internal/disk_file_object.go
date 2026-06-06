@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"os"
-	"path"
 	"time"
+	"path"
+	"os"
 
 	"github.com/pkg/errors"
 )

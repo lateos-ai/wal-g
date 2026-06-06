@@ -1,10 +1,11 @@
 package s3
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go/service/s3"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

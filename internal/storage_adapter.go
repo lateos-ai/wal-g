@@ -2,15 +2,16 @@ package internal
 
 import (
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/pkg/storages/azure"
-	"github.com/lateos-ai/wal-g/pkg/storages/fs"
-	"github.com/lateos-ai/wal-g/pkg/storages/gcs"
-	"github.com/lateos-ai/wal-g/pkg/storages/oss"
-	"github.com/lateos-ai/wal-g/pkg/storages/s3"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/sh"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/s3"
 	"github.com/lateos-ai/wal-g/pkg/storages/swift"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/pkg/storages/oss"
+	"github.com/lateos-ai/wal-g/pkg/storages/azure"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/pkg/storages/gcs"
+	"github.com/lateos-ai/wal-g/pkg/storages/fs"
 )
 
 type StorageAdapter struct {

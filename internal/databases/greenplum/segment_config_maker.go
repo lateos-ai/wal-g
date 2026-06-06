@@ -1,12 +1,13 @@
 package greenplum
 
 import (
-	"encoding/json"
-	"fmt"
 	"io"
 	"os"
+	"encoding/json"
+	"fmt"
 
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

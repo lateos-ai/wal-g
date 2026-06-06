@@ -1,13 +1,14 @@
 package internal
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"os/exec"
+	"bytes"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

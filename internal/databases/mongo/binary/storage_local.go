@@ -1,16 +1,17 @@
 package binary
 
 import (
-	"fmt"
-	"io"
-	"io/fs"
-	"os"
 	"path"
 	"path/filepath"
 	"regexp"
+	"os"
+	"fmt"
+	"io"
+	"io/fs"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

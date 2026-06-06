@@ -1,13 +1,14 @@
 package walparser
 
 import (
-	"bytes"
-	"encoding/binary"
 	"fmt"
 	"io"
+	"bytes"
+	"encoding/binary"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 

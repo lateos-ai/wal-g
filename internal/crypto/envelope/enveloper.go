@@ -1,9 +1,9 @@
 package envelope
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"io"
+	"fmt"
+	"crypto/sha1"
 
 	"github.com/wal-g/tracelog"
 )

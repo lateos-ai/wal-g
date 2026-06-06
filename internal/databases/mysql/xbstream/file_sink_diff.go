@@ -1,19 +1,20 @@
 package xbstream
 
 import (
-	"encoding/binary"
-	"errors"
-	"fmt"
-	"io"
 	"os"
 	"slices"
 	"strings"
+	"io"
+	"encoding/binary"
+	"errors"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+
 	"github.com/lateos-ai/wal-g/internal/splitmerge"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 )
 
 type diffFileSink struct {

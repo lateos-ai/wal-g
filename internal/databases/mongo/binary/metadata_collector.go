@@ -3,12 +3,13 @@ package binary
 import (
 	"container/heap"
 
-	"github.com/mongodb/mongo-tools/common/util"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"github.com/mongodb/mongo-tools/common/util"
+
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type StorageMetadataCollector struct {

@@ -1,16 +1,16 @@
 package gcs
 
 import (
-	"bytes"
-	"context"
-	"io"
 	"math"
 	"math/rand"
 	"time"
+	"bytes"
+	"context"
+	"io"
 
-	"cloud.google.com/go/storage"
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+	"cloud.google.com/go/storage"
 )
 
 const (

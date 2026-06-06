@@ -7,15 +7,15 @@ and writes it out using the WalUploader before reading the next wal segment.
 */
 
 import (
-	"context"
-	"io"
 	"time"
+	"io"
+	"context"
 
-	"github.com/jackc/pglogrepl"
-	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgproto3"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/jackc/pgx/v5/pgproto3"
+	"github.com/jackc/pglogrepl"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type segmentError struct {

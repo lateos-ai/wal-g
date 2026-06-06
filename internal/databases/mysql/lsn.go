@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"fmt"
 	"strconv"
+	"fmt"
 )
 
 type LSN uint64

@@ -1,13 +1,14 @@
 package limiters
 
 import (
-	"context"
-	"fmt"
 	"io"
+	"fmt"
+	"context"
 
-	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/utility"
 	"golang.org/x/time/rate"
+	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type Reader struct {

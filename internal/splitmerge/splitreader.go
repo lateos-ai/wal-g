@@ -1,8 +1,8 @@
 package splitmerge
 
 import (
-	"context"
 	"io"
+	"context"
 
 	"github.com/wal-g/tracelog"
 )

@@ -1,9 +1,9 @@
 package yckms
 
 import (
-	"github.com/wal-g/tracelog"
-	ycsdk "github.com/yandex-cloud/go-sdk"
 	"github.com/yandex-cloud/go-sdk/iamkey"
+	ycsdk "github.com/yandex-cloud/go-sdk"
+	"github.com/wal-g/tracelog"
 )
 
 func resolveCredentials(saFilePath string) ycsdk.Credentials {

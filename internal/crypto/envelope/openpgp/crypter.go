@@ -1,21 +1,22 @@
 package openpgp
 
 import (
-	"bufio"
-	"bytes"
-	"encoding/base64"
-	"io"
-	"os"
-	"strconv"
 	"strings"
-	"sync"
+	"strconv"
 	"time"
+	"sync"
+	"os"
+	"bytes"
+	"bufio"
+	"io"
+	"encoding/base64"
 
-	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	"github.com/ProtonMail/go-crypto/openpgp"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 const (

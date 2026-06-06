@@ -1,9 +1,9 @@
 package ioextensions
 
 import (
-	"fmt"
-	"io"
 	"os"
+	"io"
+	"fmt"
 
 	"github.com/lateos-ai/wal-g/utility"
 )

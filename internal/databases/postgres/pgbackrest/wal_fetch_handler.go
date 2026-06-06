@@ -1,12 +1,12 @@
 package pgbackrest
 
 import (
-	"errors"
-	"path/filepath"
 	"strings"
+	"path/filepath"
+	"errors"
 
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func HandleWalFetch(folder storage.Folder, stanza string, walFileName string, location string) error {

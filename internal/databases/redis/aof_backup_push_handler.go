@@ -1,14 +1,15 @@
 package redis
 
 import (
-	"context"
 	"path/filepath"
+	"context"
 
 	"github.com/spf13/viper"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+
 	"github.com/lateos-ai/wal-g/internal/databases/redis/aof"
 	"github.com/lateos-ai/wal-g/internal/diskwatcher"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type AOFBackupPushArgs struct {

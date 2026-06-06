@@ -1,8 +1,8 @@
 package greenplum
 
 import (
-	"fmt"
 	"regexp"
+	"fmt"
 
 	"github.com/hashicorp/go-version"
 )

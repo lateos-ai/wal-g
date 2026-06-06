@@ -1,16 +1,16 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"log"
-	"os"
 	"strings"
 	"text/template"
 	"time"
+	"os"
+	"flag"
+	"fmt"
+	"log"
 
-	"github.com/lateos-ai/wal-g/internal/daemon"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres/constants"
+	"github.com/lateos-ai/wal-g/internal/daemon"
 )
 
 const (

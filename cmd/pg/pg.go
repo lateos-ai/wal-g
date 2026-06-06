@@ -3,15 +3,16 @@ package pg
 import (
 	"strings"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/cmd/common"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/cmd/common"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const WalgShortDescription = "PostgreSQL backup tool"

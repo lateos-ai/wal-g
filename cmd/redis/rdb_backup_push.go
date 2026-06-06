@@ -1,17 +1,18 @@
 package redis
 
 import (
-	"fmt"
 	"os"
+	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/redis"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
 	client "github.com/lateos-ai/wal-g/internal/databases/redis/client"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/redis"
 )
 
 var (

@@ -1,11 +1,11 @@
 package daemon
 
 import (
-	"context"
-	"encoding/binary"
-	"fmt"
 	"net"
 	"time"
+	"fmt"
+	"context"
+	"encoding/binary"
 )
 
 type RunOptions struct {

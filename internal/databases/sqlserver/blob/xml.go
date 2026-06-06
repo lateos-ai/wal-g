@@ -1,11 +1,11 @@
 package blob
 
 import (
-	"bytes"
-	"encoding/xml"
-	"fmt"
 	"io"
 	"strings"
+	"fmt"
+	"bytes"
+	"encoding/xml"
 
 	"golang.org/x/net/html/charset"
 )

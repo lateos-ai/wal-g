@@ -1,12 +1,12 @@
 package storage
 
 import (
-	"bytes"
-	"crypto/rand"
-	"io"
 	"strings"
 	"testing"
 	"time"
+	"bytes"
+	"crypto/rand"
+	"io"
 
 	"github.com/stretchr/testify/assert"
 )

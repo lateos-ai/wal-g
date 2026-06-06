@@ -1,16 +1,17 @@
 package greenplum
 
 import (
-	"encoding/json"
-	"fmt"
-	"os"
-	"os/exec"
-	"os/signal"
 	"strings"
-	"syscall"
+	"os/signal"
 	"time"
+	"syscall"
+	"fmt"
+	"encoding/json"
+	"os/exec"
+	"os"
 
 	"github.com/wal-g/tracelog"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

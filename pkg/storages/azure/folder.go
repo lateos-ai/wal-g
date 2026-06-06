@@ -1,18 +1,19 @@
 package azure
 
 import (
-	"context"
-	"fmt"
-	"io"
 	"strings"
 	"time"
+	"io"
+	"context"
+	"fmt"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/bloberror"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blockblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/wal-g/tracelog"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/bloberror"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

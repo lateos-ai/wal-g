@@ -1,14 +1,15 @@
 package sqlserver
 
 import (
-	"context"
-	"fmt"
 	"os"
 	"syscall"
+	"context"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func HandleDatabaseList(backupName string) {

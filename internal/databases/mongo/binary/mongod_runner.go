@@ -1,14 +1,15 @@
 package binary
 
 import (
-	"context"
-	"fmt"
-	"net"
 	"os/exec"
 	"strconv"
+	"net"
+	"context"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

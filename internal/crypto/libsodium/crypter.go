@@ -6,13 +6,14 @@ package libsodium
 import "C"
 
 import (
-	"fmt"
-	"io"
-	"os"
 	"strings"
 	"sync"
+	"os"
+	"fmt"
+	"io"
 
 	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 

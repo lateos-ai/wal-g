@@ -1,14 +1,15 @@
 package postgres
 
 import (
-	"encoding/json"
-	"fmt"
-	"os"
 	"path"
 	"slices"
+	"os"
+	"encoding/json"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

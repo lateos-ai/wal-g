@@ -1,20 +1,21 @@
 package postgres
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"os"
 	"path"
 	"path/filepath"
 	"time"
+	"os"
+	"bytes"
+	"context"
+	"encoding/json"
 
-	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/fs"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (

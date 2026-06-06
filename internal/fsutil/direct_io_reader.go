@@ -1,15 +1,16 @@
 package fsutil
 
 import (
-	"errors"
-	"fmt"
-	"io"
 	"os"
 	"sync"
 	"syscall"
+	"errors"
+	"fmt"
+	"io"
 
-	"github.com/ncw/directio"
 	"github.com/spf13/viper"
+	"github.com/ncw/directio"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

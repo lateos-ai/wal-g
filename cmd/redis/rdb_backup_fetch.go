@@ -1,14 +1,15 @@
 package redis
 
 import (
-	"fmt"
 	"os"
+	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/redis"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (

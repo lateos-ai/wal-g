@@ -1,10 +1,10 @@
 package stages
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"os"
+	"bytes"
+	"fmt"
 
 	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/stages/mocks"
 )

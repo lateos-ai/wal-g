@@ -1,12 +1,12 @@
 package storagetools
 
 import (
-	"fmt"
-	"io"
-	"os"
 	"strings"
 	"text/tabwriter"
 	"time"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"log/slog"
-	"os/exec"
 	"strconv"
-	"strings"
+	"os/exec"
 	"time"
+	"strings"
+	"encoding/json"
+	"context"
+	"log/slog"
+	"fmt"
 
 	"github.com/prometheus/client_golang/prometheus"
 )

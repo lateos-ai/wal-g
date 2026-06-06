@@ -1,11 +1,11 @@
 package webserver
 
 import (
-	"context"
-	"expvar"
-	"fmt"
 	"net/http"
 	"net/http/pprof"
+	"fmt"
+	"context"
+	"expvar"
 )
 
 // WebServer defines web-server interface.

@@ -1,21 +1,22 @@
 package s3
 
 import (
-	"context"
-	"crypto/md5"
-	"encoding/base64"
-	"fmt"
-	"io"
 	"path"
-	"strings"
+	"io"
 	"time"
+	"strings"
+	"crypto/md5"
+	"context"
+	"fmt"
+	"encoding/base64"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/service/s3"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

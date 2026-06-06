@@ -9,10 +9,11 @@ package internal
 // If there is a tag, we can configure the correct implementation of crypter.
 
 import (
-	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 func configureLibsodiumCrypter(config *viper.Viper) (crypto.Crypter, error) {

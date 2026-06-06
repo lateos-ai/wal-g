@@ -1,11 +1,12 @@
 package internal
 
 import (
-	"context"
-	"sync"
 	"sync/atomic"
+	"sync"
+	"context"
 
 	"github.com/pkg/errors"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

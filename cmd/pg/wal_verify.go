@@ -1,15 +1,16 @@
 package pg
 
 import (
-	"fmt"
-	"os"
 	"strings"
+	"os"
+	"fmt"
 
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (

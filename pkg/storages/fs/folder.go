@@ -1,19 +1,20 @@
 package fs
 
 import (
-	"context"
-	"fmt"
-	"io"
-	"os"
-	"path"
 	"path/filepath"
-	"runtime"
+	"path"
 	"strings"
+	"runtime"
+	"fmt"
+	"context"
+	"os"
+	"io"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/contextio"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/contextio"
 )
 
 const dirDefaultMode = 0755

@@ -1,17 +1,18 @@
 package etcd
 
 import (
-	"fmt"
-	"path"
-	"path/filepath"
 	"slices"
 	"strings"
 	"time"
+	"fmt"
+	"path"
+	"path/filepath"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type SentinelDto struct {

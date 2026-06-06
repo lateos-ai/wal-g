@@ -1,18 +1,19 @@
 package greenplum
 
 import (
-	"context"
-	"io"
-	"path"
 	"sync"
 	"time"
+	"path"
+	"context"
+	"io"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/crypto"
+
 	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/compression"
 )
 
 type AoStorageUploader struct {

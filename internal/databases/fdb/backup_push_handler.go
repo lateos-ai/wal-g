@@ -1,13 +1,14 @@
 package fdb
 
 import (
-	"context"
-	"os/exec"
 	"time"
+	"os/exec"
+	"context"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // TODO: add more metadata

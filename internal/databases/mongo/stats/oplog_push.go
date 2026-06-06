@@ -1,17 +1,17 @@
 package stats
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
+	"context"
+	"encoding/json"
+	"fmt"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/internal/webserver"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 const (

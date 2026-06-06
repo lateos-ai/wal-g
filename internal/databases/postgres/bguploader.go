@@ -1,15 +1,15 @@
 package postgres
 
 import (
-	"context"
-	"os"
-	"path/filepath"
 	"strings"
 	"sync/atomic"
 	"time"
+	"context"
+	"os"
+	"path/filepath"
 
-	"github.com/wal-g/tracelog"
 	"golang.org/x/sync/semaphore"
+	"github.com/wal-g/tracelog"
 )
 
 const (

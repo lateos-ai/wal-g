@@ -1,13 +1,14 @@
 package internal
 
 import (
-	"fmt"
 	"strings"
+	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func FatalOnUnrecoverableMetadataError(backupTime BackupTime, err error) {

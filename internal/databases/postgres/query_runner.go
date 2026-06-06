@@ -1,19 +1,20 @@
 package postgres
 
 import (
-	"context"
-	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"context"
+	"fmt"
+	"strconv"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 type NoPostgresVersionError struct {

@@ -1,8 +1,8 @@
 package walparser
 
 import (
-	"encoding/binary"
 	"io"
+	"encoding/binary"
 )
 
 type BlockLocationWriter struct {

@@ -1,11 +1,12 @@
 package postgres
 
 import (
-	"archive/tar"
-	"io"
 	"os"
+	"io"
+	"archive/tar"
 
 	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

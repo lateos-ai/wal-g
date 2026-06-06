@@ -1,13 +1,13 @@
 package postgres
 
 import (
-	"archive/tar"
-	"context"
 	"os"
 	"sync"
+	"archive/tar"
+	"context"
 
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func newStatBundleFiles(fileStat RelFileStatistics) *StatBundleFiles {

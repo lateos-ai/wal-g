@@ -1,8 +1,8 @@
 package fs
 
 import (
-	"fmt"
 	"strings"
+	"fmt"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )

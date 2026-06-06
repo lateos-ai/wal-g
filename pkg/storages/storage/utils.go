@@ -1,14 +1,14 @@
 package storage
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"fmt"
-	"net/url"
-	"path/filepath"
 	"regexp"
-	"strings"
+	"path/filepath"
 	"time"
+	"strings"
+	"encoding/hex"
+	"crypto/rand"
+	"net/url"
+	"fmt"
 
 	"github.com/pkg/errors"
 )

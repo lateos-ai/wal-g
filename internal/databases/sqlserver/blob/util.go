@@ -1,14 +1,15 @@
 package blob
 
 import (
-	"bytes"
-	"errors"
-	"io"
 	"net/http"
 	"strings"
 	"time"
+	"bytes"
+	"errors"
+	"io"
 
 	"github.com/wal-g/tracelog"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

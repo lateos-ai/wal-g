@@ -1,14 +1,15 @@
 package postgres
 
 import (
-	"archive/tar"
-	"bytes"
-	"io"
 	"regexp"
 	"strings"
+	"io"
+	"archive/tar"
+	"bytes"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal"
 )
 

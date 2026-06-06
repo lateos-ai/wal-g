@@ -1,16 +1,17 @@
 package sqlserver
 
 import (
-	"context"
-	"database/sql"
-	"fmt"
 	"os"
 	"syscall"
+	"fmt"
+	"context"
+	"database/sql"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/sqlserver/blob"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver/blob"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func HandleBackupPush(dbnames []string, updateLatest bool) {

@@ -1,10 +1,11 @@
 package gp
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const (

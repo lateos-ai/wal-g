@@ -3,9 +3,9 @@ package mongo
 import (
 	"context"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
 )
 
 func HandleOplogReplay(ctx context.Context,

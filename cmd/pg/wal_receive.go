@@ -1,11 +1,12 @@
 package pg
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/asm"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/asm"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const walReceiveShortDescription = "Receive WAL stream with postgres Streaming Replication Protocol and push to storage"

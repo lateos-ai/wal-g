@@ -1,15 +1,15 @@
 package pgbackrest
 
 import (
-	"errors"
-	"os"
 	"path"
 	"path/filepath"
+	"errors"
+	"os"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 func HandlePgbackrestBackupFetch(folder storage.Folder, stanza string, destinationDirectory string,

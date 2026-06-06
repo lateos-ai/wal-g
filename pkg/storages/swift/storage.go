@@ -1,11 +1,12 @@
 package swift
 
 import (
-	"context"
-	"fmt"
 	"os"
+	"fmt"
+	"context"
 
 	"github.com/ncw/swift/v2"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

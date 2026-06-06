@@ -1,11 +1,12 @@
 package cached
 
 import (
-	"io"
-	"sync"
 	"time"
+	"sync"
+	"io"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
 )
 

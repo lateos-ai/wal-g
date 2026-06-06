@@ -1,13 +1,14 @@
 package mongo
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 func LoadBackups(downloader archive.Downloader) ([]*models.Backup, error) {

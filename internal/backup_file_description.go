@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"slices"
 	"time"
+	"slices"
 )
 
 const MaxCorruptBlocksInFileDesc int = 10

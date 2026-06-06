@@ -3,8 +3,8 @@
 package mocks
 
 import (
-	context "context"
 	io "io"
+	context "context"
 
 	mock "github.com/stretchr/testify/mock"
 

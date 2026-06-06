@@ -1,8 +1,8 @@
 package testutils
 
 import (
-	"strconv"
 	"strings"
+	"strconv"
 )
 
 func HexToBytes(hex string) []byte {

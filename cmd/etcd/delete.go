@@ -1,10 +1,11 @@
 package etcd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/etcd"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 var confirmed = false

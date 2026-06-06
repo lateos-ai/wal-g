@@ -1,17 +1,18 @@
 package innodb
 
 import (
-	"errors"
-	"fmt"
-	"io/fs"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
+	"os"
+	"errors"
+	"fmt"
+	"io/fs"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/fsutil"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
 )
 
 var ErrSpaceIDNotFound = errors.New("SpaceID not found")

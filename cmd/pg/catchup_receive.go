@@ -3,8 +3,9 @@ package pg
 import (
 	"strconv"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 

@@ -1,12 +1,13 @@
 package oss
 
 import (
-	"fmt"
 	"strings"
+	"fmt"
 
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage/setting"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 const (

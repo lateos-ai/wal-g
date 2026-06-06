@@ -1,12 +1,12 @@
 package mongo
 
 import (
-	"context"
 	"fmt"
+	"context"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func HandleBinaryFetchPush(

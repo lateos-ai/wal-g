@@ -1,16 +1,17 @@
 package postgres
 
 import (
-	"encoding/binary"
-	"fmt"
-	"os"
 	"path"
 	"time"
+	"os"
+	"encoding/binary"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type InvalidWalFileMagicError struct {

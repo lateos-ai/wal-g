@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/statistics"
 )
 

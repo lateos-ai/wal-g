@@ -1,13 +1,13 @@
 package mongo
 
 import (
-	"context"
 	"time"
+	"context"
 
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/binary"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type HandleBinaryBackupPushArgs struct {

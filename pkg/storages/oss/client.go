@@ -1,14 +1,14 @@
 package oss
 
 import (
-	"context"
-	"fmt"
 	"time"
+	"fmt"
+	"context"
 
-	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
-	osscred "github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/credentials"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/retry"
 	"github.com/aliyun/credentials-go/credentials/providers"
+	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
+	osscred "github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/credentials"
 )
 
 const (

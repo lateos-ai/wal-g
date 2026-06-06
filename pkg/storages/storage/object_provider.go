@@ -1,9 +1,9 @@
 package storage
 
 import (
-	"context"
-	"errors"
 	"sync"
+	"errors"
+	"context"
 
 	"github.com/wal-g/tracelog"
 )

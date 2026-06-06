@@ -1,13 +1,14 @@
 package redis
 
 import (
-	"context"
-	"fmt"
 	"strconv"
 	"strings"
+	"context"
+	"fmt"
 
-	"github.com/redis/go-redis/v9"
 	"github.com/wal-g/tracelog"
+	"github.com/redis/go-redis/v9"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

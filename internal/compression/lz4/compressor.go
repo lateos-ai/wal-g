@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/pierrec/lz4/v4"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 

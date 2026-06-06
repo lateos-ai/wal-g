@@ -1,17 +1,18 @@
 package storagetools
 
 import (
-	"errors"
-	"fmt"
-	"io"
 	"os"
 	"path"
+	"io"
+	"errors"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/compression"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/compression"
 )
 
 func HandleGetObject(objectPath, dstPath string, folder storage.Folder, decrypt, decompress bool) error {

@@ -1,13 +1,14 @@
 package storagetools
 
 import (
-	"bytes"
-	"fmt"
-	"math/rand"
 	"strings"
 	"time"
+	"math/rand"
+	"bytes"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

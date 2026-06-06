@@ -1,9 +1,9 @@
 package fsutil
 
 import (
-	"io"
-	"os"
 	"path/filepath"
+	"os"
+	"io"
 )
 
 type DiskDataFolder struct {

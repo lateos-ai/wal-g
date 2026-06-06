@@ -1,13 +1,14 @@
 package greenplum
 
 import (
-	"archive/tar"
-	"io"
 	"path"
+	"io"
+	"archive/tar"
 
 	"github.com/spf13/viper"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 func NewIncrementalTarInterpreter(dbDataDirectory string, sentinel postgres.BackupSentinelDto, filesMetadata postgres.FilesMetadataDto,

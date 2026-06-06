@@ -1,17 +1,18 @@
 package archive
 
 import (
-	"context"
-	"fmt"
 	"os"
+	"fmt"
+	"context"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
 )
 
 type MongoMetaConstructor struct {

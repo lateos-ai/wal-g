@@ -1,13 +1,14 @@
 package xbstream
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
+	"os"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/fsutil"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
 )
 
 func safeFileCreate(dataDir string, relFilePath string) (*os.File, error) {

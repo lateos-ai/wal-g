@@ -1,12 +1,12 @@
 package st
 
 import (
-	"fmt"
-	"math"
 	"time"
+	"math"
+	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+	"github.com/spf13/cobra"
 )
 
 const transferShortDescription = "Moves objects from one storage to another (Postgres only)"

@@ -1,12 +1,12 @@
 package testutils
 
 import (
-	"io"
-	"sync"
 	"sync/atomic"
+	"sync"
+	"io"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 func NewUnexpectedEOFLimitReader(readCloser io.ReadCloser, maxRead int64) io.ReadCloser {

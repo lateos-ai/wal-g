@@ -1,18 +1,18 @@
 package s3
 
 import (
-	"fmt"
-	"hash/fnv"
-	"io"
-	"math"
 	"math/rand"
 	"strconv"
 	"time"
+	"math"
+	"fmt"
+	"hash/fnv"
+	"io"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 const (

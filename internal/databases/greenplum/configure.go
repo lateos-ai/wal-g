@@ -1,11 +1,12 @@
 package greenplum
 
 import (
-	"fmt"
 	"strconv"
+	"fmt"
 
-	"github.com/greenplum-db/gp-common-go-libs/gplog"
 	"github.com/spf13/viper"
+	"github.com/greenplum-db/gp-common-go-libs/gplog"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

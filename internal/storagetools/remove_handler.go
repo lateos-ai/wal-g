@@ -1,8 +1,8 @@
 package storagetools
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )

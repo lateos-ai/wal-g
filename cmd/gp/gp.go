@@ -3,20 +3,21 @@ package gp
 import (
 	"strings"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/cmd/common"
-	"github.com/lateos-ai/wal-g/cmd/pg"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/spf13/viper"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
-	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/cmd/pg"
+	"github.com/lateos-ai/wal-g/cmd/common"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 // These variables are here only to show current version. They are set in makefile during build process

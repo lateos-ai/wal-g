@@ -1,18 +1,18 @@
 package main
 
 import (
-	"context"
-	"flag"
-	"fmt"
-	"log/slog"
-	"net/http"
-	"os"
 	"os/signal"
-	"syscall"
+	"os"
 	"time"
+	"syscall"
+	"net/http"
+	"flag"
+	"context"
+	"log/slog"
+	"fmt"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (

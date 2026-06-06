@@ -1,8 +1,8 @@
 package xbstream
 
 import (
-	"hash"
 	"io"
+	"hash"
 )
 
 /*

@@ -21,8 +21,8 @@ limitations under the License.
 package contextio
 
 import (
-	"context"
 	"io"
+	"context"
 )
 
 type writer struct {

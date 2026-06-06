@@ -4,9 +4,10 @@ import (
 	"io"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
 )
 
 type StorageFolderReader interface {

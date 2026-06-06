@@ -1,13 +1,14 @@
 package copy
 
 import (
-	"context"
-	"io"
 	"sync"
+	"io"
+	"context"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type SourceTransformerFunc func(r io.Reader) (io.Reader, error)

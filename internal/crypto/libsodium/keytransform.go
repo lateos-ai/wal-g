@@ -6,10 +6,10 @@ package libsodium
 import "C"
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"strings"
+	"encoding/base64"
+	"encoding/hex"
 )
 
 const KeyTransformBase64 = "base64"

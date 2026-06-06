@@ -1,8 +1,8 @@
 package limiters
 
 import (
-	"context"
 	"io"
+	"context"
 
 	"golang.org/x/time/rate"
 )

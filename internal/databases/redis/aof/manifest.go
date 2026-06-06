@@ -1,10 +1,10 @@
 package aof
 
 import (
-	"bufio"
-	"os"
 	"path/filepath"
 	"strings"
+	"bufio"
+	"os"
 
 	"github.com/wal-g/tracelog"
 )

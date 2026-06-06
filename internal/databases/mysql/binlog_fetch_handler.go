@@ -1,14 +1,15 @@
 package mysql
 
 import (
-	"os"
-	"path"
 	"path/filepath"
+	"path"
+	"os"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type indexHandler struct {

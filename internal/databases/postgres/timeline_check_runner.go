@@ -1,11 +1,12 @@
 package postgres
 
 import (
-	"bytes"
-	"fmt"
 	"io"
+	"fmt"
+	"bytes"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/utility"
 )
 

@@ -3,14 +3,15 @@ package mysql
 import (
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql"
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage/exec"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/mysql"
+	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
 )
 
 var targetStorage string

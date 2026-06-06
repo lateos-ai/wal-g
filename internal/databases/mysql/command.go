@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"context"
-	"os/exec"
 	"strings"
+	"os/exec"
+	"context"
 )
 
 func injectCommandArgument(cmd *exec.Cmd, argument string) {

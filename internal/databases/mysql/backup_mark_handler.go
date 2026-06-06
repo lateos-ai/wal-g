@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 )
 

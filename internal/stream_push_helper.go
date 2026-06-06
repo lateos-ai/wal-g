@@ -1,18 +1,19 @@
 package internal
 
 import (
-	"context"
-	"fmt"
-	"io"
 	"path"
 	"sync/atomic"
 	"time"
+	"context"
+	"fmt"
+	"io"
 
-	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/splitmerge"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"golang.org/x/sync/errgroup"
+	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/splitmerge"
 )
 
 const (

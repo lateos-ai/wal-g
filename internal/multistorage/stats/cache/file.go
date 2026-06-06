@@ -1,11 +1,11 @@
 package cache
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"os"
 	"time"
+	"io"
+	"encoding/json"
+	"fmt"
 )
 
 type SharedFile struct {

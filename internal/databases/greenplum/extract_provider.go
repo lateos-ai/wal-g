@@ -1,8 +1,8 @@
 package greenplum
 
 import (
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type ExtractProviderImpl struct {

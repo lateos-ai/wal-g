@@ -1,11 +1,11 @@
 package etcd
 
 import (
-	"context"
 	"os/exec"
+	"context"
 
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func HandleBackupFetch(ctx context.Context,

@@ -4,8 +4,8 @@
 package compression
 
 import (
-	"github.com/lateos-ai/wal-g/internal/compression/lz4"
 	"github.com/lateos-ai/wal-g/internal/compression/lzma"
+	"github.com/lateos-ai/wal-g/internal/compression/lz4"
 )
 
 var CompressingAlgorithms = []string{lz4.AlgorithmName, lzma.AlgorithmName}

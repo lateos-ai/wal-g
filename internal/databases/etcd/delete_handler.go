@@ -1,9 +1,9 @@
 package etcd
 
 import (
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 func NewEtcdDeleteHandler(folder storage.Folder) (*internal.DeleteHandler, error) {
