@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 2 * * *'
 
+env:
+  GOEXPERIMENT: jsonv2
+
 jobs:
   security:
     runs-on: ubuntu-latest
