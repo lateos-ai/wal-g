@@ -1,13 +1,12 @@
 package mysql
 
 import (
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mysql"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/mysql"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 const (
