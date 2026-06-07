@@ -1,9 +1,8 @@
 package st
 
 import (
-	"github.com/spf13/cobra"
-
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
 )
 
 const pgWALsShortDescription = "Moves all PostgreSQL WAL files from one storage to another"

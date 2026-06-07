@@ -1,9 +1,8 @@
 package st
 
 import (
-	"github.com/spf13/cobra"
-
 	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/spf13/cobra"
 )
 
 // Storage tools allows to interact with the configured storage, e.g.:
