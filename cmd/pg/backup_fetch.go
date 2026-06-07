@@ -3,8 +3,8 @@ package pg
 import (
 	"fmt"
 
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
