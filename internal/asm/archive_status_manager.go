@@ -1,8 +1,8 @@
 package asm
 
 import (
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 func GetOnlyWalName(filePath string) string {

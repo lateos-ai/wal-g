@@ -1,21 +1,21 @@
 package orioledb
 
 import (
-	"io"
-	"os"
 	"bytes"
 	"encoding/binary"
+	"io"
+	"os"
 
-	"github.com/wal-g/tracelog"
 	"github.com/RoaringBitmap/roaring/v2"
-
-	"github.com/lateos-ai/wal-g/internal/walparser"
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/limiters"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
+
 
 const (
 	CompressedPageSize        = 512

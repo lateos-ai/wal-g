@@ -3,8 +3,8 @@ package errors
 import (
 	"fmt"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 // InvalidBlockError indicates that file contain invalid page and cannot be archived incrementally
