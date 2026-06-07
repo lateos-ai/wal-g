@@ -3,11 +3,10 @@ package pg
 import (
 	"os"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/pgbackrest"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/pgbackrest"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 var pgbackrestWalgShowCmd = &cobra.Command{
