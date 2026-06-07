@@ -1,15 +1,14 @@
 package pgbackrest
 
 import (
-	"slices"
-	"strings"
 	"cmp"
 	"path"
+	"slices"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleWalShow(rootFolder storage.Folder, stanza string, outputWriter postgres.WalShowOutputWriter) error {

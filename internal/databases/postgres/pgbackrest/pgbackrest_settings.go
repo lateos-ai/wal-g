@@ -1,12 +1,11 @@
 package pgbackrest
 
 import (
-	"fmt"
 	"encoding/json"
-
-	"gopkg.in/ini.v1"
+	"fmt"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"gopkg.in/ini.v1"
 )
 
 const (
