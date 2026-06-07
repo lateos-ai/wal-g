@@ -3,11 +3,10 @@ package mongo
 import (
 	"os"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const BackupShowShortDescription = "Prints information about backup"

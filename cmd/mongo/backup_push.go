@@ -3,15 +3,14 @@ package mongo
 import (
 	"os"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const (
