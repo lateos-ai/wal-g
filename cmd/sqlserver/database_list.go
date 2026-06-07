@@ -1,9 +1,8 @@
 package sqlserver
 
 import (
-	"github.com/spf13/cobra"
-
 	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
+	"github.com/spf13/cobra"
 )
 
 const databaseListShortDescription = "List datbases in the backup"

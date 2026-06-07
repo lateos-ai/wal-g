@@ -1,11 +1,10 @@
 package sqlserver
 
 import (
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const backupListShortDescription = "Prints available backups"

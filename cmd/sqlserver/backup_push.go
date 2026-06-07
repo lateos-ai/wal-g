@@ -1,10 +1,9 @@
 package sqlserver
 
 import (
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
+	"github.com/spf13/cobra"
 )
 
 const backupPushShortDescription = "Creates new backup and pushes it to the storage"
