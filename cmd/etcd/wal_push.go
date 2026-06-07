@@ -1,12 +1,11 @@
 package etcd
 
 import (
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/etcd"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/etcd"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const (
