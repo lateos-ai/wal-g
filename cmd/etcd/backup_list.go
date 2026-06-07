@@ -2,8 +2,8 @@ package etcd
 
 import (
 	"github.com/lateos-ai/wal-g/internal"
-	"github.com/spf13/cobra"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
 )
 
