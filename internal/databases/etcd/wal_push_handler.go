@@ -1,22 +1,21 @@
 package etcd
 
 import (
-	"path/filepath"
-	"path"
-	"strings"
-	"sort"
-	"os/user"
-	"encoding/json"
 	"context"
-	"os"
+	"encoding/json"
 	"fmt"
+	"os"
+	"os/user"
+	"path"
+	"path/filepath"
+	"sort"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 var errBadWALName = errors.New("bad wal name")
