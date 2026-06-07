@@ -2,13 +2,13 @@ package internal
 
 import (
 	"context"
+	json2 "encoding/json/v2"
 	"fmt"
 	"io"
 	"path/filepath"
 	"sync"
 	"sync/atomic"
 
-	json2 "encoding/json/v2"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/statistics"
