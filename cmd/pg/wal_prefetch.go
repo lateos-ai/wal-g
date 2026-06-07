@@ -1,16 +1,15 @@
 package pg
 
 import (
-	"io"
 	"fmt"
+	"io"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 const WalPrefetchShortDescription = `Used for prefetching process forking
