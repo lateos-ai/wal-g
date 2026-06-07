@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
