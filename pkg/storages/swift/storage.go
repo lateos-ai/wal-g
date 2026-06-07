@@ -1,13 +1,12 @@
 package swift
 
 import (
-	"os"
-	"fmt"
 	"context"
-
-	"github.com/ncw/swift/v2"
+	"fmt"
+	"os"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/ncw/swift/v2"
 )
 
 var _ storage.HashableStorage = &Storage{}

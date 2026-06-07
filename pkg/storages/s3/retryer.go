@@ -3,8 +3,8 @@ package s3
 import (
 	"strings"
 
-	"github.com/wal-g/tracelog"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/wal-g/tracelog"
 )
 
 func NewConnResetRetryer(baseRetryer request.Retryer) *ConnResetRetryer {

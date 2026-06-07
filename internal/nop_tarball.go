@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"sync/atomic"
-	"io"
 	"archive/tar"
+	"io"
+	"sync/atomic"
 
 	"github.com/lateos-ai/wal-g/internal/crypto"
 )

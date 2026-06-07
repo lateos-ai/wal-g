@@ -1,9 +1,9 @@
 package daemon
 
 import (
-	"math"
-	"fmt"
 	"encoding/binary"
+	"fmt"
+	"math"
 )
 
 type SocketMessageType byte

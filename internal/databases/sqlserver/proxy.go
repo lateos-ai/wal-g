@@ -1,15 +1,14 @@
 package sqlserver
 
 import (
-	"syscall"
-	"os"
 	"context"
+	"os"
+	"syscall"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/databases/sqlserver/blob"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 func RunProxy(folder storage.Folder) {

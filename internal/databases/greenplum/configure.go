@@ -1,13 +1,12 @@
 package greenplum
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 
-	"github.com/spf13/viper"
 	"github.com/greenplum-db/gp-common-go-libs/gplog"
-
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
 )
 
 func SetSegmentStoragePrefix(contentID int) {

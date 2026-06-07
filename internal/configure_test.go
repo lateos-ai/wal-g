@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression/lz4"
 	"github.com/lateos-ai/wal-g/internal/compression/lzma"
 	"github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/limiters"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 	"golang.org/x/time/rate"
 )
 

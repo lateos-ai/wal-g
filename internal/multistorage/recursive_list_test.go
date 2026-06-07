@@ -7,14 +7,14 @@ import (
 	"strings"
 	"testing"
 
-	"go.uber.org/mock/gomock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
 	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestListFolderRecursively(t *testing.T) {

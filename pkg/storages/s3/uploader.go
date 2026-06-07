@@ -1,19 +1,18 @@
 package s3
 
 import (
-	"io"
-	"time"
 	"context"
 	"fmt"
+	"io"
+	"time"
 
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager/s3manageriface"
-	"github.com/pkg/errors"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager/s3manageriface"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/pkg/errors"
 )
 
 type UploaderConfig struct {

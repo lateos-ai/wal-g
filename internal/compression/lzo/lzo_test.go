@@ -11,12 +11,12 @@ import (
 	"testing"
 
 	"github.com/cyberdelia/lzo"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	walg_lzo "github.com/lateos-ai/wal-g/internal/compression/lzo"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 // Test extraction of various lzo compressed tar files.

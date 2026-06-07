@@ -1,12 +1,12 @@
 package greenplum
 
 import (
-	"net"
-	"slices"
-	"strings"
 	"cmp"
 	"errors"
 	"fmt"
+	"net"
+	"slices"
+	"strings"
 
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
 )

@@ -1,17 +1,16 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
-	"encoding/json"
+
 	jsonv2 "encoding/json/v2"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 // region errors

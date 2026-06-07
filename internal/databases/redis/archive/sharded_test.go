@@ -4,11 +4,11 @@ import (
 	"os"
 	"testing"
 
-	"go.uber.org/mock/gomock"
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/require"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive/mocks"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 type Addrs struct {

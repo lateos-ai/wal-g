@@ -1,25 +1,24 @@
 package postgres
 
 import (
-	"path/filepath"
-	"os"
-	"strings"
-	"sync/atomic"
-	"sync"
-	"context"
 	"archive/tar"
+	"context"
 	"fmt"
-	"io/fs"
 	"io"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+	"sync/atomic"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
 	"github.com/RoaringBitmap/roaring/v2"
-
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

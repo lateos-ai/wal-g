@@ -1,18 +1,17 @@
 package binary
 
 import (
-	"path"
-	"path/filepath"
-	"regexp"
-	"os"
 	"fmt"
 	"io"
 	"io/fs"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"os"
+	"path"
+	"path/filepath"
+	"regexp"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

@@ -6,10 +6,10 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/stretchr/testify/assert"
 )
 
 func genDatabasesByNames() postgres.DatabasesByNames {

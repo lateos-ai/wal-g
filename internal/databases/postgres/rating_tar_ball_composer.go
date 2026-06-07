@@ -1,20 +1,19 @@
 package postgres
 
 import (
-	"os"
-	"slices"
-	"sync"
 	"archive/tar"
 	"cmp"
 	"context"
+	"os"
+	"slices"
+	"sync"
 
-	"golang.org/x/sync/errgroup"
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 type RatingTarBallComposerMaker struct {

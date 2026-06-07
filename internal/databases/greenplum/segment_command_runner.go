@@ -1,18 +1,17 @@
 package greenplum
 
 import (
-	"strings"
-	"os/signal"
-	"time"
-	"syscall"
-	"fmt"
 	"encoding/json"
-	"os/exec"
+	"fmt"
 	"os"
-
-	"github.com/wal-g/tracelog"
+	"os/exec"
+	"os/signal"
+	"strings"
+	"syscall"
+	"time"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/wal-g/tracelog"
 )
 
 type SegCmdRunner struct {

@@ -3,8 +3,8 @@ package innodb
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/testutils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFSP(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 func createTempDir(prefix string) (name string, err error) {

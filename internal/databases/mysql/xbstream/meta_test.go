@@ -3,8 +3,8 @@ package xbstream
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/testutils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMetadataParser(t *testing.T) {

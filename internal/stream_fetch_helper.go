@@ -1,18 +1,17 @@
 package internal
 
 import (
-	"path"
-	"time"
 	"fmt"
 	"io"
+	"path"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/splitmerge"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/splitmerge"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 func ParseTS(endTSEnvVar string) (endTS *time.Time, err error) {

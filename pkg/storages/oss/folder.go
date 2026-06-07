@@ -1,17 +1,16 @@
 package oss
 
 import (
-	"io"
-	"path"
-	"strings"
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"path"
+	"strings"
 
-	"github.com/wal-g/tracelog"
 	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
-
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 var _ storage.Folder = &Folder{}

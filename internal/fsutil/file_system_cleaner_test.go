@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/fsutil"
+	"github.com/stretchr/testify/assert"
 )
 
 const Filename1 = "file"

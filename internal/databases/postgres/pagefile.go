@@ -11,26 +11,25 @@
 package postgres
 
 import (
-	"regexp"
-	"path"
-	"strings"
-	"slices"
-	"fmt"
 	"encoding/binary"
-	"os"
+	"fmt"
 	"io"
+	"os"
+	"path"
+	"regexp"
+	"slices"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
 	"github.com/RoaringBitmap/roaring/v2"
-
-	"github.com/lateos-ai/wal-g/internal/walparser"
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/limiters"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
 	"github.com/lateos-ai/wal-g/internal/fsutil"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/limiters"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 var DatabasePageSize int64 = int64(walparser.BlockSize)

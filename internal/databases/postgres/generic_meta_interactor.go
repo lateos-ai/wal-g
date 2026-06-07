@@ -1,10 +1,9 @@
 package postgres
 
 import (
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/pkg/errors"
 )
 
 type GenericMetaInteractor struct {

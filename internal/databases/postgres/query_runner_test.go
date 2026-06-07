@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/stretchr/testify/assert"
 )
 
 // Tests building start backup query

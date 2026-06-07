@@ -1,27 +1,26 @@
 package postgres
 
 import (
-	"os/signal"
-	"os"
-	"path"
-	"time"
-	"strings"
-	"net"
-	"context"
 	"bytes"
+	"context"
 	"encoding/binary"
-	"io"
 	"fmt"
+	"io"
+	"net"
+	"os"
+	"os/signal"
+	"path"
+	"strings"
+	"time"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/daemon"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

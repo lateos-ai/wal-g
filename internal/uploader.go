@@ -1,22 +1,21 @@
 package internal
 
 import (
+	"context"
+	"fmt"
+	"io"
 	"path/filepath"
 	"sync"
 	"sync/atomic"
-	"io"
-	"context"
+
 	json2 "encoding/json/v2"
-	"fmt"
-
-	"golang.org/x/sync/errgroup"
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/statistics"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/statistics"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 var ErrorSizeTrackingDisabled = fmt.Errorf("size tracking disabled by DisableSizeTracking method")

@@ -3,10 +3,9 @@ package internal
 import (
 	"os"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleDefaultBackupList(folder storage.Folder, pretty, json bool) {

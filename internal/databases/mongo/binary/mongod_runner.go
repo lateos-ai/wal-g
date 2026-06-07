@@ -1,16 +1,15 @@
 package binary
 
 import (
-	"os/exec"
-	"strconv"
-	"net"
 	"context"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"net"
+	"os/exec"
+	"strconv"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type MongodProcess struct {

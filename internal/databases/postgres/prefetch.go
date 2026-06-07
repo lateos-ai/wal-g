@@ -1,24 +1,23 @@
 package postgres
 
 import (
-	"path/filepath"
-	"path"
-	"time"
-	"sync"
-	"fmt"
 	"archive/tar"
-	"os"
+	"fmt"
 	"io"
+	"os"
+	"path"
+	"path/filepath"
+	"sync"
+	"time"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/fsutil"
-	"github.com/lateos-ai/wal-g/utility"
-	pg_errors "github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	pg_errors "github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 // TODO : unit tests

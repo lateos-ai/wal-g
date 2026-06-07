@@ -3,8 +3,8 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type NotWalFilenameError struct {

@@ -1,21 +1,20 @@
 package client
 
 import (
-	"io"
-	"time"
-	"fmt"
 	"context"
 	"errors"
+	"fmt"
+	"io"
+	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/utility"
 	"github.com/mongodb/mongo-tools/common/db"
 	"github.com/wal-g/tracelog"
 	"go.mongodb.org/mongo-driver/bson"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var (

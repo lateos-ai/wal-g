@@ -1,16 +1,15 @@
 package postgres
 
 import (
-	"path"
-	"slices"
-	"os"
 	"encoding/json"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"os"
+	"path"
+	"slices"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

@@ -1,12 +1,11 @@
 package internal
 
 import (
-	"io"
 	"archive/tar"
-
-	"github.com/pkg/errors"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/pkg/errors"
 )
 
 // A TarBall represents one tar file.

@@ -3,9 +3,8 @@ package postgres
 import (
 	"regexp"
 
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/wal-g/tracelog"
 )
 
 type FilesToExtractProvider interface {

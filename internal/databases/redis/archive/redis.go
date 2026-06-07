@@ -1,9 +1,9 @@
 package archive
 
 import (
-	"strings"
-	"os/exec"
 	"fmt"
+	"os/exec"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 )

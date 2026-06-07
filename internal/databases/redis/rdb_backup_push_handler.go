@@ -3,11 +3,10 @@ package redis
 import (
 	"os/exec"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/rdb"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/rdb"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type RDBBackupPushArgs struct {

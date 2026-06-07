@@ -1,10 +1,10 @@
 package memory
 
 import (
-	"sync"
-	"time"
 	"bytes"
 	"slices"
+	"sync"
+	"time"
 )
 
 // This function is needed for being cross-platform

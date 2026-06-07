@@ -1,11 +1,11 @@
 package innodb
 
 import (
-	"io"
-	"os"
-	"fmt"
 	"bytes"
 	"encoding/hex"
+	"fmt"
+	"io"
+	"os"
 )
 
 type RawPage struct {

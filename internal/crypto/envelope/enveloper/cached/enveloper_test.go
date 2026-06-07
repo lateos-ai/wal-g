@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	"github.com/lateos-ai/wal-g/internal/crypto/envelope/mocks"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
-	"github.com/lateos-ai/wal-g/internal/crypto/envelope/mocks"
 )
 
 func TestDecryptKey(t *testing.T) {

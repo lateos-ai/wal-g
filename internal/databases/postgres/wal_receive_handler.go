@@ -1,18 +1,17 @@
 package postgres
 
 import (
-	"time"
-	"fmt"
 	"context"
+	"fmt"
+	"time"
 
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
 	"github.com/jackc/pglogrepl"
 	"github.com/jackc/pgx/v5/pgconn"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

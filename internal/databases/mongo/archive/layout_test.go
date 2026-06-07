@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func shuffledArchives(s []models.Archive) []models.Archive {

@@ -1,14 +1,14 @@
 package sh
 
 import (
-	"strings"
-	"sync"
-	"os"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
+	"sync"
 
-	"golang.org/x/crypto/ssh"
 	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 type SFTPClient interface {

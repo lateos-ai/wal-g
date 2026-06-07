@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFilters(t *testing.T) {

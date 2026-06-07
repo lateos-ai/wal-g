@@ -1,8 +1,8 @@
 package models
 
 import (
-	"regexp"
 	"fmt"
+	"regexp"
 
 	"github.com/lateos-ai/wal-g/utility"
 )

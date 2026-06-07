@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/google/brotli/go/cbrotli"
-
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 

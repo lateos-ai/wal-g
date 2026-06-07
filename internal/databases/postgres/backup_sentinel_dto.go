@@ -1,15 +1,14 @@
 package postgres
 
 import (
-	"sync"
-	"time"
 	"encoding/json"
 	"os"
+	"sync"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 const MetadataDatetimeFormat = "%Y-%m-%dT%H:%M:%S.%fZ"

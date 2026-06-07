@@ -3,10 +3,9 @@ package greenplum
 import (
 	"strings"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/tracelog"
 )
 
 const (

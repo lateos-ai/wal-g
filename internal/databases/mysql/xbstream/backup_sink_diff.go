@@ -1,14 +1,13 @@
 package xbstream
 
 import (
-	"os"
-	"sync"
 	"errors"
 	"io"
-
-	"github.com/wal-g/tracelog"
+	"os"
+	"sync"
 
 	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/tracelog"
 )
 
 // DiffBackupSink doesn't try to replicate sophisticated xtrabackup logic

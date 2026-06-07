@@ -1,23 +1,22 @@
 package mysql
 
 import (
-	"slices"
-	"path/filepath"
-	"sync"
-	"strings"
-	"io"
 	"bytes"
-	"os/exec"
+	"io"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"slices"
+	"strings"
+	"sync"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/xbstream"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/xbstream"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 const (

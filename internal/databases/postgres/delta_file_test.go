@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSaveLoadDeltaFile(t *testing.T) {

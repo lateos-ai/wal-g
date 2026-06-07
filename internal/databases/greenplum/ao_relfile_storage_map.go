@@ -3,12 +3,11 @@ package greenplum
 import (
 	"context"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
 	"github.com/jackc/pgx/v5"
-
-	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type RelStorageType byte

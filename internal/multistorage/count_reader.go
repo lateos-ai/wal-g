@@ -1,8 +1,8 @@
 package multistorage
 
 import (
-	"sync/atomic"
 	"io"
+	"sync/atomic"
 )
 
 var _ io.Reader = &countReader{}

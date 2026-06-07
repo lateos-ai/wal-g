@@ -1,17 +1,16 @@
 package binary
 
 import (
-	"sync"
-	"time"
-	"os"
 	"context"
 	"fmt"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"os"
+	"sync"
+	"time"
 
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type BackupCursor struct {

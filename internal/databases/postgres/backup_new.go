@@ -1,14 +1,13 @@
 package postgres
 
 import (
-	"sync"
-	"path/filepath"
 	"os"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"path/filepath"
+	"sync"
 
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 // temporary flag is used in tar interpreter to determine if it should use new unwrap logic

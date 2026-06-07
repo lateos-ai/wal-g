@@ -1,27 +1,26 @@
 package s3
 
 import (
-	"os"
-	"strconv"
-	"strings"
-	"net/http"
 	"fmt"
 	"io"
 	"net"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
 
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sts"
-	"gopkg.in/yaml.v3"
-	"github.com/wal-g/tracelog"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/client"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/client"
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/defaults"
-
+	"github.com/aws/aws-sdk-go/aws/endpoints"
+	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
+	"gopkg.in/yaml.v3"
 )
 
 func createSession(config *Config) (*session.Session, error) {

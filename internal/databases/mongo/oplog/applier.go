@@ -1,21 +1,20 @@
 package oplog
 
 import (
-	"slices"
-	"strings"
-	"io"
 	"context"
 	"fmt"
+	"io"
+	"slices"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/mongodb/mongo-tools/common/db"
 	"github.com/mongodb/mongo-tools/common/txn"
 	"github.com/mongodb/mongo-tools/common/util"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/wal-g/tracelog"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const NamespaceNotFoundError int32 = 26

@@ -1,8 +1,8 @@
 package stats
 
 import (
-	"time"
 	"fmt"
+	"time"
 
 	"github.com/lateos-ai/wal-g/internal/multistorage/stats/cache"
 )

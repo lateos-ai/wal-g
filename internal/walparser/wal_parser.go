@@ -1,15 +1,14 @@
 package walparser
 
 import (
-	"fmt"
-	"io"
 	"bytes"
 	"encoding/binary"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"fmt"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const XLogRecordAlignment = 8

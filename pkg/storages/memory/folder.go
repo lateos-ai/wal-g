@@ -1,18 +1,17 @@
 package memory
 
 import (
-	"path/filepath"
-	"strings"
-	"sync"
-	"path"
 	"bytes"
 	"context"
 	"io"
+	"path"
+	"path/filepath"
+	"strings"
+	"sync"
 
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/contextio"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/pkg/errors"
 )
 
 // TODO: Unit tests

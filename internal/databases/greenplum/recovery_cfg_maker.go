@@ -1,8 +1,8 @@
 package greenplum
 
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 func NewRecoveryConfigMaker(walgBinaryPath, cfgPath, recoveryTargetName string,

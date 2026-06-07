@@ -1,9 +1,9 @@
 package postgres
 
 import (
-	"path"
-	"os"
 	"context"
+	"os"
+	"path"
 
 	"github.com/wal-g/tracelog"
 )

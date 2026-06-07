@@ -1,12 +1,12 @@
 package postgres
 
 import (
-	"strings"
-	"regexp"
 	"fmt"
+	"regexp"
+	"strings"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type DatabasesByNames map[string]DatabaseObjectsInfo

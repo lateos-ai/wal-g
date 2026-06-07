@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 )
 
 func TestHandleRemove(t *testing.T) {

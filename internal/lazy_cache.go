@@ -1,11 +1,11 @@
 package internal
 
 import (
-	"sync"
 	"fmt"
+	"sync"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type WrongTypeError struct {

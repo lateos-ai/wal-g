@@ -1,13 +1,12 @@
 package postgres
 
 import (
-	"io"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type NilWalParserError struct {

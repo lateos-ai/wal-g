@@ -1,13 +1,12 @@
 package internal
 
 import (
-	"sync/atomic"
-	"sync"
 	"context"
-
-	"github.com/pkg/errors"
+	"sync"
+	"sync/atomic"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/pkg/errors"
 )
 
 // TarBallQueue is used to process multiple tarballs concurrently

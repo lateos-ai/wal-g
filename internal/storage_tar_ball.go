@@ -1,17 +1,16 @@
 package internal
 
 import (
-	"io"
-	"sync/atomic"
-	"fmt"
 	"archive/tar"
 	"context"
+	"fmt"
+	"io"
+	"sync/atomic"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const TarPartitionFolderName = "/tar_partitions/"

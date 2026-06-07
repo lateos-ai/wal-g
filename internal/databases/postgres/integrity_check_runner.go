@@ -1,21 +1,20 @@
 package postgres
 
 import (
-	"io"
-	"slices"
-	"fmt"
 	"bytes"
 	"cmp"
+	"fmt"
+	"io"
+	"slices"
 
-	"github.com/spf13/viper"
-	"github.com/wal-g/tracelog"
 	"github.com/jedib0t/go-pretty/table"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 type IntegrityCheckDetails []*IntegrityScanSegmentSequence

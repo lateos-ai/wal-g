@@ -1,19 +1,18 @@
 package postgres
 
 import (
-	"path"
-	"strconv"
-	"strings"
 	"archive/tar"
 	"context"
 	"os"
+	"path"
+	"strconv"
+	"strings"
 
-	"golang.org/x/sync/errgroup"
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/crypto"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 type copyStatus int

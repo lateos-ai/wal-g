@@ -1,22 +1,21 @@
 package postgres
 
 import (
-	"path/filepath"
-	"os"
-	"time"
-	"strings"
-	"context"
 	"bytes"
-	"io"
+	"context"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/statistics"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/statistics"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 type CantOverwriteWalFileError struct {

@@ -1,11 +1,11 @@
 package oplog
 
 import (
-	"slices"
 	"fmt"
+	"slices"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/mongodb/mongo-tools/common/db"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // filterUUIDs recursively removes 'ui' entries from ops, including nested applyOps ops.

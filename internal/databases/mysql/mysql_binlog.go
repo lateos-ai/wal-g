@@ -1,24 +1,23 @@
 package mysql
 
 import (
-	"strconv"
-	"path/filepath"
-	"time"
-	"strings"
-	"os"
-	"encoding/json"
 	"bytes"
-	"io"
+	"encoding/json"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
 
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
 	"github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const BinlogSentinelPath = "binlog_sentinel_" + utility.VersionStr + ".json"

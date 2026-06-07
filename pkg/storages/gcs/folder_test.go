@@ -6,8 +6,8 @@ import (
 	"time"
 
 	gcs "cloud.google.com/go/storage"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGSFolder(t *testing.T) {

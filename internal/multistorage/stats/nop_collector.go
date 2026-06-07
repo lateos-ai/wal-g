@@ -1,8 +1,8 @@
 package stats
 
 import (
-	"slices"
 	"fmt"
+	"slices"
 )
 
 var _ Collector = &nopCollector{}

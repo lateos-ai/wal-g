@@ -1,17 +1,17 @@
 package archive
 
 import (
-	"strconv"
-	"time"
-	"fmt"
 	"context"
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"time"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/printlist"
 	"github.com/lateos-ai/wal-g/internal"
 	client "github.com/lateos-ai/wal-g/internal/databases/redis/client"
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const (

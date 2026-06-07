@@ -1,13 +1,12 @@
 package greenplum
 
 import (
-	"time"
-	"path"
 	"fmt"
-
-	"github.com/spf13/viper"
+	"path"
+	"time"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
 )
 
 const stateFilesDirPrefix = "walg_seg_states"

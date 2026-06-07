@@ -1,15 +1,14 @@
 package swift
 
 import (
-	"io"
-	"strings"
 	"context"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/ncw/swift/v2"
+	"io"
+	"strings"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/ncw/swift/v2"
+	"github.com/wal-g/tracelog"
 )
 
 // TODO: Unit tests

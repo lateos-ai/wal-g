@@ -3,25 +3,24 @@ package archive
 //go:generate mockgen -build_flags -mod=readonly -destination=./mocks/neti.go -package=mocks . NetI
 
 import (
-	"os"
-	"net"
-	"strings"
-	"path/filepath"
-	"fmt"
-	"bytes"
 	"bufio"
-	"encoding/json"
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"net"
+	"os"
+	"path/filepath"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 const SlotsFileName = "slots.json"

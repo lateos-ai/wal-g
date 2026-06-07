@@ -3,9 +3,8 @@ package s3
 import (
 	"net/http"
 
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/internal/statistics"
+	"github.com/wal-g/tracelog"
 )
 
 type loggingTransport struct {

@@ -1,19 +1,18 @@
 package stages
 
 import (
-	"fmt"
-	"io"
-	"time"
 	"bufio"
 	"bytes"
 	"context"
+	"fmt"
+	"io"
+	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/tracelog"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var (

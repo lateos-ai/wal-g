@@ -3,8 +3,8 @@ package postgres_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestWalSegmentRunner_AllExists tests the case when all segments exists

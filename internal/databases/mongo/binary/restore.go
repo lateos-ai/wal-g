@@ -1,16 +1,15 @@
 package binary
 
 import (
-	"time"
 	"context"
+	"time"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 var (

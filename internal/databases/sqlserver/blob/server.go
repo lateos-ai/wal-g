@@ -1,32 +1,31 @@
 package blob
 
 import (
-	"strconv"
-	"runtime/debug"
-	"strings"
-	"time"
-	"sync"
-	"net/http/httputil"
-	"context"
 	"bytes"
+	"context"
 	"fmt"
-	"net/http"
 	"io"
+	"net/http"
+	"net/http/httputil"
+	"runtime/debug"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
 
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-	"golang.org/x/xerrors"
-	"github.com/wal-g/tracelog"
 	"github.com/gofrs/flock"
 	"github.com/google/uuid"
 	lru "github.com/hashicorp/golang-lru/v2"
-
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"golang.org/x/xerrors"
 )
 
 const ProxyStartTimeout = 10 * time.Second

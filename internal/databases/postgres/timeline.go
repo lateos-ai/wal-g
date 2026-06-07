@@ -1,15 +1,14 @@
 package postgres
 
 import (
-	"regexp"
-	"strconv"
 	"context"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"regexp"
+	"strconv"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const PatternTimelineAndLogSegNo = "[0-9A-F]{24}"

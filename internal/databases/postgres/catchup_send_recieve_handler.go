@@ -1,25 +1,24 @@
 package postgres
 
 import (
-	"path"
-	"os"
-	"path/filepath"
-	"strings"
-	"slices"
-	"net"
-	"encoding/gob"
 	"context"
+	"encoding/gob"
 	"fmt"
-	"io/fs"
 	"io"
+	"io/fs"
+	"net"
+	"os"
+	"path"
+	"path/filepath"
+	"slices"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleCatchupSend(pgDataDirectory string, destination string) {

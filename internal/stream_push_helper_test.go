@@ -7,14 +7,14 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/tracelog"
 	. "github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	functests "github.com/lateos-ai/wal-g/internal/testutils"
 	"github.com/lateos-ai/wal-g/pkg/storages/fs"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
+	"github.com/wal-g/tracelog"
 )
 
 const (

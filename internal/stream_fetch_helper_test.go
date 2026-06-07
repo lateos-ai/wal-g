@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const (

@@ -1,10 +1,10 @@
 package postgres
 
 import (
-	"os"
-	"path"
 	"encoding/binary"
 	"io"
+	"os"
+	"path"
 
 	"github.com/wal-g/tracelog"
 )

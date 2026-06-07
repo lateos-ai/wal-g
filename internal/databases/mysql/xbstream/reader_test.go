@@ -5,8 +5,8 @@ import (
 	"io"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/testutils"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestXBStreamReader(t *testing.T) {

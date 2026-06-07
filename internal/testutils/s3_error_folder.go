@@ -1,11 +1,11 @@
 package testutils
 
 import (
-	"io"
-	"sync"
-	"errors"
 	"bytes"
 	"context"
+	"errors"
+	"io"
+	"sync"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )

@@ -3,9 +3,8 @@ package mongo
 import (
 	"context"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"golang.org/x/sync/errgroup"
 )
 
 // HandleOplogPush starts oplog archiving process: fetch, validate, upload to storage.

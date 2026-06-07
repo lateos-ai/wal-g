@@ -3,9 +3,9 @@ package s3_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/s3"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestS3FolderValidate_S3ReturnsErr(t *testing.T) {

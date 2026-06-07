@@ -1,16 +1,15 @@
 package postgres
 
 import (
-	"io"
-	"encoding/binary"
 	"bytes"
+	"encoding/binary"
+	"io"
 
-	"github.com/wal-g/tracelog"
 	"github.com/RoaringBitmap/roaring/v2"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 // IncrementFileHeader contains "wi" at the head which stands for "wal-g increment"

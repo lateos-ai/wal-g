@@ -1,12 +1,11 @@
 package postgres
 
 import (
-	"io"
 	"archive/tar"
-
-	"github.com/wal-g/tracelog"
+	"io"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 // TODO : unit tests

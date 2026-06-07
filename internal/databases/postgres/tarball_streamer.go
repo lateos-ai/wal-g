@@ -1,16 +1,15 @@
 package postgres
 
 import (
-	"regexp"
-	"strings"
-	"io"
 	"archive/tar"
 	"bytes"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"io"
+	"regexp"
+	"strings"
 
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

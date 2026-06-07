@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pkg/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 	"github.com/lateos-ai/wal-g/test/mocks"
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 

@@ -1,16 +1,15 @@
 package yckms
 
 import (
-	"io"
-	"context"
 	"bufio"
+	"context"
+	"io"
 
-	ycsdk "github.com/yandex-cloud/go-sdk"
-	"github.com/wal-g/tracelog"
-	"github.com/minio/sio"
-
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/minio/sio"
+	"github.com/wal-g/tracelog"
+	ycsdk "github.com/yandex-cloud/go-sdk"
 )
 
 type YcCrypter struct {

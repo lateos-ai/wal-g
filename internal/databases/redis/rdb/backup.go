@@ -1,12 +1,12 @@
 package rdb
 
 import (
-	"io"
-	"fmt"
 	"context"
+	"fmt"
+	"io"
 
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
 )
 
 type StorageUploader struct {
