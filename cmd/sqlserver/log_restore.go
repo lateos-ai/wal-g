@@ -3,9 +3,9 @@ package sqlserver
 import (
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/lateos-ai/wal-g/internal/databases/sqlserver"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
 )
 
 const logRestoreShortDescription = "Restores log from the storage"

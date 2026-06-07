@@ -1,13 +1,14 @@
 package greenplum
 
 import (
-	"fmt"
 	"strings"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/walparser"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (

@@ -1,8 +1,8 @@
 package splitmerge
 
 import (
-	"fmt"
 	"io"
+	"fmt"
 )
 
 // channelReader provider io.ReadCloser interface on top of `in` chan []byte

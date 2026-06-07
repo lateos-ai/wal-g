@@ -1,10 +1,11 @@
 package walparser
 
 import (
-	"bytes"
 	"io"
+	"bytes"
 
 	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 

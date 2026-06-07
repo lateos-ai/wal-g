@@ -1,14 +1,15 @@
 package models
 
 import (
-	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
+	"encoding/json"
+	"fmt"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/printlist"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // Backup represents backup sentinel data

@@ -1,8 +1,8 @@
 package st
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/lateos-ai/wal-g/internal/storagetools"
+	"github.com/spf13/cobra"
 )
 
 const (

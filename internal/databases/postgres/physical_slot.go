@@ -9,8 +9,8 @@ and is consumed by the walReceiveHandler.
 import (
 	"regexp"
 
-	"github.com/jackc/pglogrepl"
 	"github.com/pkg/errors"
+	"github.com/jackc/pglogrepl"
 )
 
 // The PhysicalSlot represents a Physical Replication Slot.

@@ -6,25 +6,26 @@ A base backup object can connect to Postgres, issue a BASE_BACKUP command, and r
 */
 
 import (
-	"bytes"
-	"context"
-	"fmt"
-	"io"
-	"iter"
-	"slices"
 	"strconv"
-	"strings"
+	"slices"
 	"time"
+	"strings"
+	"iter"
+	"context"
+	"bytes"
+	"io"
+	"fmt"
 
-	"github.com/jackc/pglogrepl"
-	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgproto3"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/jackc/pgx/v5/pgproto3"
+	"github.com/jackc/pglogrepl"
+	"github.com/jackc/pgx/v5/pgconn"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 // The StreamingBaseBackup object represents a Postgres BASE_BACKUP, connecting to Postgres, and streaming backup data.

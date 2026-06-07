@@ -1,21 +1,22 @@
 package mysql
 
 import (
-	"bufio"
-	"context"
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"os"
 	"os/user"
-	"path"
+	"os"
 	"path/filepath"
+	"path"
+	"fmt"
+	"context"
+	"bufio"
+	"encoding/json"
+	"database/sql"
 
-	"github.com/go-mysql-org/go-mysql/mysql"
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+	"github.com/go-mysql-org/go-mysql/mysql"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const BinlogCacheFileName = ".walg_mysql_binlogs_cache"

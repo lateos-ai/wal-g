@@ -1,3 +1,6 @@
+//go:build libsodium
+// +build libsodium
+
 package libsodium
 
 // #cgo CFLAGS: -I../../../tmp/libsodium/include
@@ -6,13 +9,14 @@ package libsodium
 import "C"
 
 import (
-	"fmt"
-	"io"
-	"os"
 	"strings"
 	"sync"
+	"os"
+	"fmt"
+	"io"
 
 	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 

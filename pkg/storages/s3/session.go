@@ -1,26 +1,27 @@
 package s3
 
 import (
-	"fmt"
-	"io"
-	"net"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"net/http"
+	"fmt"
+	"io"
+	"net"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/client"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/defaults"
-	"github.com/aws/aws-sdk-go/aws/endpoints"
-	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sts"
-	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/utility"
 	"gopkg.in/yaml.v3"
+	"github.com/wal-g/tracelog"
+	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/aws/client"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/endpoints"
+	"github.com/aws/aws-sdk-go/aws/defaults"
+
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func createSession(config *Config) (*session.Session, error) {

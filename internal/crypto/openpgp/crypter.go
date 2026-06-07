@@ -1,16 +1,17 @@
 package openpgp
 
 import (
-	"bufio"
-	"bytes"
-	"io"
 	"strings"
 	"sync"
+	"io"
+	"bufio"
+	"bytes"
 
-	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/ProtonMail/go-crypto/openpgp"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 // Crypter incapsulates specific of cypher method

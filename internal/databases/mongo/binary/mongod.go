@@ -1,23 +1,24 @@
 package binary
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
+	"fmt"
+	"context"
+	"encoding/json"
 
-	"github.com/cenkalti/backoff/v5"
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/bson"
+	"github.com/cenkalti/backoff/v5"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const adminDB = "admin"

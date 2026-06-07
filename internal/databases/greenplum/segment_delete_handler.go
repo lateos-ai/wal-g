@@ -1,17 +1,18 @@
 package greenplum
 
 import (
-	"fmt"
-	"path"
 	"strings"
 	"time"
+	"fmt"
+	"path"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
 )
 
 type SegDeleteType int

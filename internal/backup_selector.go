@@ -1,16 +1,17 @@
 package internal
 
 import (
-	"fmt"
-	"reflect"
 	"strings"
+	"reflect"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
 )
 
 const LatestString = "LATEST"

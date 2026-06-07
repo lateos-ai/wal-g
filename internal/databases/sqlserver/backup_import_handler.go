@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"

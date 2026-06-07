@@ -1,13 +1,14 @@
 package aof
 
 import (
-	"context"
 	"fmt"
+	"context"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type RestoreService struct {

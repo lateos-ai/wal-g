@@ -1,8 +1,8 @@
 package parsingutil
 
 import (
-	"encoding/binary"
 	"io"
+	"encoding/binary"
 
 	"github.com/pkg/errors"
 )

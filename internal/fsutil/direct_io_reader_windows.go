@@ -1,8 +1,8 @@
 package fsutil
 
 import (
-	"errors"
 	"io"
+	"errors"
 
 	"golang.org/x/sys/windows"
 )

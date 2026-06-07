@@ -1,12 +1,12 @@
 package mongo
 
 import (
-	"fmt"
 	"os/exec"
+	"fmt"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // HandleBackupPush starts backup procedure.

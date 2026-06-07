@@ -1,18 +1,19 @@
 package greenplum
 
 import (
-	"fmt"
-	"path"
 	"slices"
 	"strings"
+	"fmt"
+	"path"
 
-	"github.com/greenplum-db/gp-common-go-libs/cluster"
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/spf13/viper"
+	"github.com/greenplum-db/gp-common-go-libs/cluster"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 type FollowPrimaryHandler struct {

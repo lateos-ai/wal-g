@@ -1,11 +1,12 @@
 package greenplum
 
 import (
-	"fmt"
-	"path"
 	"time"
+	"path"
+	"fmt"
 
 	"github.com/spf13/viper"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

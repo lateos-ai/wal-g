@@ -1,12 +1,13 @@
 package transfer
 
 import (
-	"path"
 	"strings"
+	"path"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 type BackupFileLister struct {

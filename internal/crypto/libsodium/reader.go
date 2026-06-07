@@ -1,3 +1,6 @@
+//go:build libsodium
+// +build libsodium
+
 package libsodium
 
 // #cgo CFLAGS: -I../../../tmp/libsodium/include
@@ -6,8 +9,8 @@ package libsodium
 import "C"
 
 import (
-	"io"
 	"sync"
+	"io"
 
 	"github.com/pkg/errors"
 )

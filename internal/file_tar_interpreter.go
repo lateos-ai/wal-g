@@ -1,16 +1,17 @@
 package internal
 
 import (
-	"archive/tar"
-	"io"
 	"os"
 	"path"
+	"archive/tar"
+	"io"
 
-	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/viper"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type FileTarInterpreter struct {

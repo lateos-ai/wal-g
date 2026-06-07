@@ -1,18 +1,19 @@
 package internal
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io"
 	"slices"
 	"strings"
 	"time"
+	"io"
+	"bytes"
+	"encoding/json"
+	"fmt"
 
-	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"golang.org/x/xerrors"
+	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 const (

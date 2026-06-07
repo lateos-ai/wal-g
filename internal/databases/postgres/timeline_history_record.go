@@ -1,16 +1,17 @@
 package postgres
 
 import (
-	"bufio"
-	"fmt"
-	"io"
 	"regexp"
 	"strconv"
+	"io"
+	"bufio"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // regexp for .history file record. For more details, see

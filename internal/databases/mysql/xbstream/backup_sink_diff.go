@@ -1,12 +1,13 @@
 package xbstream
 
 import (
-	"errors"
-	"io"
 	"os"
 	"sync"
+	"errors"
+	"io"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 )
 

@@ -1,14 +1,15 @@
 package internal
 
 import (
-	"fmt"
 	"io"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/compression"
 )
 
 // CompressAndEncryptError is used to catch specific errors from CompressAndEncrypt

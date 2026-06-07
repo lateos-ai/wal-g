@@ -1,13 +1,14 @@
 package awskms
 
 import (
-	"bufio"
 	"io"
+	"bufio"
 
-	"github.com/minio/sio"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/minio/sio"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 // Crypter is AWS KMS Crypter implementation

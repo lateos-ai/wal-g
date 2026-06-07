@@ -3,13 +3,13 @@ package mongo
 import (
 	"os"
 
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 var (

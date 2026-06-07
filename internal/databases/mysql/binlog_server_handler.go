@@ -1,27 +1,28 @@
 package mysql
 
 import (
-	"context"
-	"database/sql"
-	"encoding/binary"
-	"fmt"
-	"hash/crc32"
-	"net"
-	"os"
 	"path"
+	"os"
 	"strconv"
-	"strings"
 	"time"
+	"strings"
+	"net"
+	"database/sql"
+	"context"
+	"encoding/binary"
+	"hash/crc32"
+	"fmt"
 
-	"github.com/go-mysql-org/go-mysql/mysql"
-	"github.com/go-mysql-org/go-mysql/replication"
-	"github.com/go-mysql-org/go-mysql/server"
 	mysqldriver "github.com/go-sql-driver/mysql"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/go-mysql-org/go-mysql/server"
+	"github.com/go-mysql-org/go-mysql/mysql"
+	"github.com/go-mysql-org/go-mysql/replication"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 var (

@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
 )

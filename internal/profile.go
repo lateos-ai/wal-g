@@ -1,11 +1,12 @@
 package internal
 
 import (
-	"math/rand"
 	"time"
+	"math/rand"
 
-	"github.com/pkg/profile"
 	"github.com/spf13/viper"
+	"github.com/pkg/profile"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 

@@ -1,8 +1,8 @@
 package s3
 
 import (
-	"fmt"
 	"io"
+	"fmt"
 )
 
 // ContentLengthMismatchError is returned when the actual number of bytes read

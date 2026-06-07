@@ -1,13 +1,13 @@
 package yckms
 
 import (
-	"context"
-	"encoding/binary"
 	"errors"
 	"io"
+	"context"
+	"encoding/binary"
 
-	"github.com/yandex-cloud/go-genproto/yandex/cloud/kms/v1"
 	ycsdk "github.com/yandex-cloud/go-sdk"
+	"github.com/yandex-cloud/go-genproto/yandex/cloud/kms/v1"
 )
 
 const (

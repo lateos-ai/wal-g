@@ -5,10 +5,11 @@
 package mock_internal
 
 import (
-	reflect "reflect"
 	time "time"
+	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
+
 	storage "github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

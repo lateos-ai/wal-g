@@ -3,11 +3,12 @@ package internal
 import (
 	"context"
 
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/spf13/viper"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type ConcurrentUploader struct {

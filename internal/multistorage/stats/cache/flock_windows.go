@@ -4,9 +4,9 @@
 package cache
 
 import (
-	"os"
-	"syscall"
 	"unsafe"
+	"syscall"
+	"os"
 )
 
 var (

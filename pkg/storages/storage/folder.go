@@ -1,11 +1,11 @@
 package storage
 
 import (
-	"context"
-	"fmt"
-	"io"
 	"path"
 	"strings"
+	"io"
+	"context"
+	"fmt"
 )
 
 //go:generate mockery --name Folder

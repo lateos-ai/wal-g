@@ -3,9 +3,9 @@ package xb
 import (
 	"os"
 
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/xbstream"
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/xbstream"
 )
 
 const (

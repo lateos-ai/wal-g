@@ -1,15 +1,16 @@
 package stats
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"io"
 	"math/rand"
 	"path"
 	"time"
+	"io"
+	"context"
+	"errors"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

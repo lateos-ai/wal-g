@@ -3,11 +3,12 @@ package greenplum
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
+	"github.com/pkg/errors"
+	"github.com/jackc/pgx/v5"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
 )
 
 // NewPaxRelFileStorageMap walks every database on the segment, queries the PAX aux

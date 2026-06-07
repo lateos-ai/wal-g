@@ -1,12 +1,13 @@
 package internal
 
 import (
-	"archive/tar"
-	"context"
 	"os"
+	"context"
+	"archive/tar"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/lateos-ai/wal-g/internal/crypto"
-	"golang.org/x/sync/errgroup"
 )
 
 type RegularTarBallComposer struct {

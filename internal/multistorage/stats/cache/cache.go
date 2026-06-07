@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
 )

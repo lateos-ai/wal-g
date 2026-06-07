@@ -1,25 +1,26 @@
 package mysql
 
 import (
-	"crypto/tls"
-	"crypto/x509"
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"os"
 	"path"
+	"os"
 	"slices"
-	"strings"
 	"time"
+	"strings"
+	"crypto/x509"
+	"crypto/tls"
+	"database/sql"
+	"fmt"
+	"encoding/json"
 
-	gomysql "github.com/go-mysql-org/go-mysql/mysql"
-	mysqldriver "github.com/go-sql-driver/mysql"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/compression"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	mysqldriver "github.com/go-sql-driver/mysql"
+	gomysql "github.com/go-mysql-org/go-mysql/mysql"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/compression"
 )
 
 const BinlogPath = "binlog_" + utility.VersionStr + "/"

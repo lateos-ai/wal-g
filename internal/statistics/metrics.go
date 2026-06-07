@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/cactus/go-statsd-client/v5/statsd"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type metrics struct {

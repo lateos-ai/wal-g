@@ -1,18 +1,19 @@
 package sh
 
 import (
-	"bufio"
-	"context"
-	"fmt"
-	"io"
 	"os"
 	"path"
 	"path/filepath"
+	"io"
+	"bufio"
+	"context"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/contextio"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/contextio"
 )
 
 // TODO: Unit tests

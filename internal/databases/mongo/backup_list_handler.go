@@ -1,17 +1,18 @@
 package mongo
 
 import (
-	"fmt"
-	"io"
 	"slices"
 	"time"
+	"fmt"
+	"io"
 
 	"github.com/pkg/errors"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+
 	"github.com/lateos-ai/wal-g/internal/printlist"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
 )
 
 type BackupDetail struct {

@@ -1,11 +1,11 @@
 package pg
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const pgbackrestCommandDescription = "Interact with pgbackrest backups (beta)"

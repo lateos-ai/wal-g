@@ -1,15 +1,16 @@
 package oss
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"io"
 	"path"
 	"strings"
+	"context"
+	"errors"
+	"fmt"
 
-	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
 	"github.com/wal-g/tracelog"
+	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

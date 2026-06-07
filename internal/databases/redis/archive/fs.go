@@ -1,9 +1,9 @@
 package archive
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
+	"os"
+	"fmt"
 )
 
 type AofFolderInfo struct {

@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"os"
 	"path/filepath"
+	"os"
 
 	"github.com/wal-g/tracelog"
 )

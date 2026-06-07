@@ -1,10 +1,10 @@
 package storage
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"crypto/md5"
+	"encoding/hex"
 )
 
 // Storage represents a storage of objects. It deals with resources shared by all folders, and provides the root folder

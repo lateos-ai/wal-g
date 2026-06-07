@@ -1,12 +1,12 @@
 package gcs
 
 import (
-	"encoding/base64"
-	"fmt"
 	"time"
+	"fmt"
+	"encoding/base64"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage/setting"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 const (

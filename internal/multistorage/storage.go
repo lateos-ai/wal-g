@@ -1,17 +1,18 @@
 package multistorage
 
 import (
-	"cmp"
-	"fmt"
-	"slices"
 	"strings"
 	"time"
+	"slices"
+	"cmp"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage/stats/cache"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
 )
 
 var _ storage.Storage = &Storage{}

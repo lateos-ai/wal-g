@@ -1,14 +1,15 @@
 package postgres
 
 import (
-	"os"
-	"os/exec"
 	"strings"
+	"os/exec"
+	"os"
 
-	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/spf13/viper"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type WalPrefetcher interface {

@@ -5,12 +5,13 @@
 package postgres
 
 import (
-	"bytes"
-	"encoding/binary"
 	"io"
 	"os"
+	"bytes"
+	"encoding/binary"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 

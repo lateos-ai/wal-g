@@ -1,14 +1,15 @@
 package greenplum
 
 import (
-	"fmt"
 	"path"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum/pax"
 )
 
 type FilesToExtractProviderImpl struct {

@@ -1,18 +1,19 @@
 package postgres
 
 import (
-	"bytes"
-	"context"
 	"fmt"
 	"sync"
+	"bytes"
+	"context"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/fsutil"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
 )
 
 type DeltaFileWriterNotFoundError struct {

@@ -1,13 +1,14 @@
 package internal
 
 import (
-	"context"
 	"io"
+	"context"
 
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/internal/limiters"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"golang.org/x/time/rate"
+
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/limiters"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 type LimitedFolder struct {

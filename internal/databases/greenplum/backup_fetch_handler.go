@@ -1,18 +1,19 @@
 package greenplum
 
 import (
-	"fmt"
-	"path"
 	"strings"
+	"path"
+	"fmt"
 
-	"github.com/greenplum-db/gp-common-go-libs/cluster"
-	"github.com/hashicorp/go-version"
-	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/pkg/errors"
+	"github.com/greenplum-db/gp-common-go-libs/cluster"
+	"github.com/hashicorp/go-version"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type BackupFetchMode string

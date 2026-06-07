@@ -1,12 +1,13 @@
 package postgres
 
 import (
-	"os"
-	"path/filepath"
 	"sync"
+	"path/filepath"
+	"os"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal"
 )
 

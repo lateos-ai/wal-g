@@ -1,18 +1,19 @@
 package greenplum
 
 import (
-	"context"
-	"fmt"
-	"os"
 	"strconv"
 	"strings"
+	"os"
+	"context"
+	"fmt"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/jackc/pgx/v5"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 type dbInfo struct {

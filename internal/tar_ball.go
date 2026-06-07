@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"archive/tar"
 	"io"
+	"archive/tar"
 
 	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 

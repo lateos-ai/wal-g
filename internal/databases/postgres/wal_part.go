@@ -3,8 +3,8 @@ package postgres
 import (
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 )
 
 type WalPartDataType uint8

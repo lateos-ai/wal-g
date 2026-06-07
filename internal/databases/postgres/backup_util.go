@@ -1,11 +1,11 @@
 package postgres
 
 import (
-	"slices"
 	"time"
+	"slices"
 
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 type BackupTimeSlicesOrder int

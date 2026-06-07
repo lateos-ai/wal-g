@@ -1,17 +1,18 @@
 package internal
 
 import (
-	"archive/tar"
-	"fmt"
 	"io"
 	"os"
+	"archive/tar"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/fsutil"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/limiters"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/fsutil"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 type FileNotExistError struct {

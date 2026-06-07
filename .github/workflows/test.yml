@@ -5,12 +5,15 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  GOEXPERIMENT: jsonv2
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-go@v4
+    - uses: actions/checkout@v6
+    - uses: actions/setup-go@v6
       with:
-        go-version: '1.23'
+        go-version: '1.25'
     - run: go test -v -race ./...

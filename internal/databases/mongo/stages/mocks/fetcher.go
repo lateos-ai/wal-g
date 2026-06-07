@@ -6,6 +6,7 @@ import (
 	context "context"
 
 	mock "github.com/stretchr/testify/mock"
+
 	models "github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 

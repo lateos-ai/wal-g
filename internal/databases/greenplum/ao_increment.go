@@ -1,17 +1,18 @@
 package greenplum
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"os"
+	"bytes"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/internal/limiters"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/internal/limiters"
 )
 
 const SignatureMagicNumber byte = 0x56

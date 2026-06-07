@@ -1,13 +1,14 @@
 package archive
 
 import (
-	"fmt"
 	"time"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 // Sequence represents serial archive route

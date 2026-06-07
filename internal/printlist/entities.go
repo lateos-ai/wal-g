@@ -1,11 +1,11 @@
 package printlist
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"strings"
 	"text/tabwriter"
+	"io"
+	"encoding/json"
+	"fmt"
 
 	"github.com/jedib0t/go-pretty/table"
 )

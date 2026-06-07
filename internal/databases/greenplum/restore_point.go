@@ -1,24 +1,25 @@
 package greenplum
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"os"
 	"slices"
 	"strings"
 	"time"
+	"os"
+	"context"
+	"encoding/json"
+	"fmt"
 
-	"github.com/greenplum-db/gp-common-go-libs/cluster"
-	"github.com/jackc/pgx/v5"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/greenplum-db/gp-common-go-libs/cluster"
+	"github.com/jackc/pgx/v5"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 const RestorePointSuffix = "_restore_point.json"

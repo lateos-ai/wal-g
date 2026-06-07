@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo"
@@ -16,6 +14,8 @@ import (
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/stats"
 	"github.com/lateos-ai/wal-g/internal/webserver"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 // oplogPushCmd represents the continuous oplog archiving procedure

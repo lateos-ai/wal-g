@@ -1,3 +1,6 @@
+//go:build libsodium
+// +build libsodium
+
 package libsodium
 
 // #cgo CFLAGS: -I../../../tmp/libsodium/include
@@ -6,10 +9,10 @@ package libsodium
 import "C"
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"strings"
+	"encoding/base64"
+	"encoding/hex"
 )
 
 const KeyTransformBase64 = "base64"

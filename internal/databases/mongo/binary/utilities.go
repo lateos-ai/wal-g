@@ -1,13 +1,13 @@
 package binary
 
 import (
-	"math"
-	"strconv"
 	"time"
+	"strconv"
+	"math"
 
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
 	"golang.org/x/mod/semver"
+	"github.com/wal-g/tracelog"
+	"github.com/pkg/errors"
 )
 
 // MajorMinorVersion return version in format '<MajorVersion>.<MinorVersion>' (without patch, prerelease, build, ...)

@@ -1,13 +1,13 @@
 package xbstream
 
 import (
-	"bytes"
-	"encoding/binary"
-	"errors"
-	"fmt"
 	"hash/crc32"
 	"io"
 	"sync/atomic"
+	"fmt"
+	"bytes"
+	"encoding/binary"
+	"errors"
 
 	"github.com/lateos-ai/wal-g/utility"
 )

@@ -1,28 +1,29 @@
 package postgres
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"fmt"
-	"os"
-	"os/exec"
-	"os/signal"
 	"path/filepath"
+	"os/signal"
 	"strings"
-	"syscall"
 	"time"
+	"syscall"
+	"os/exec"
+	"context"
+	"bytes"
+	"encoding/json"
+	"os"
+	"fmt"
 
-	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
 )
 
 type backupFromFuture struct {

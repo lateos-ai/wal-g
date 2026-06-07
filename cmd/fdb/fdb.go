@@ -3,11 +3,11 @@ package fdb
 import (
 	"strings"
 
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/cmd/common"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 var dbShortDescription = "FoundationDB backup tool"

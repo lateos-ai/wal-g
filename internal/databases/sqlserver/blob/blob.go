@@ -1,16 +1,17 @@
 package blob
 
 import (
-	"bytes"
-	"cmp"
-	"encoding/json"
-	"fmt"
-	"io"
 	"slices"
-	"sync"
+	"io"
 	"time"
+	"sync"
+	"cmp"
+	"bytes"
+	"fmt"
+	"encoding/json"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

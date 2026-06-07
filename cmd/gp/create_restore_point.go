@@ -1,9 +1,9 @@
 package gp
 
 import (
+	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
 )
 
 const (

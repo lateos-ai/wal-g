@@ -1,13 +1,14 @@
 package innodb
 
 import (
-	"errors"
-	"io"
-	"os"
 	"strings"
 	"syscall"
+	"os"
+	"errors"
+	"io"
 
 	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 

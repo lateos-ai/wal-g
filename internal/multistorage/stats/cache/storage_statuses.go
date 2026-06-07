@@ -1,10 +1,10 @@
 package cache
 
 import (
-	"errors"
-	"fmt"
 	"strings"
 	"time"
+	"errors"
+	"fmt"
 
 	"github.com/wal-g/tracelog"
 )

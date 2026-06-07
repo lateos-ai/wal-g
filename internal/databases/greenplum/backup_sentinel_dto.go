@@ -1,12 +1,13 @@
 package greenplum
 
 import (
-	"encoding/json"
-	"os"
 	"time"
+	"os"
+	"encoding/json"
 
-	"github.com/greenplum-db/gp-common-go-libs/cluster"
 	"github.com/wal-g/tracelog"
+	"github.com/greenplum-db/gp-common-go-libs/cluster"
+
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 

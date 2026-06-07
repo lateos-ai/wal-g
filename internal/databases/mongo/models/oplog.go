@@ -1,13 +1,13 @@
 package models
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
 	"sync"
+	"fmt"
+	"strconv"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (

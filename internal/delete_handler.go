@@ -1,19 +1,20 @@
 package internal
 
 import (
-	"fmt"
-	"os"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
+	"fmt"
+	"os"
+	"slices"
 
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/spf13/cobra"
+	"github.com/pkg/errors"
+
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
 )
 
 const (

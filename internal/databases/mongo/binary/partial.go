@@ -1,14 +1,15 @@
 package binary
 
 import (
-	"fmt"
 	"strings"
+	"fmt"
 
-	"github.com/mongodb/mongo-tools/common/util"
-	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/pkg/errors"
+	"github.com/mongodb/mongo-tools/common/util"
+
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
 )
 
 type SetMap map[string]map[string]struct{}
