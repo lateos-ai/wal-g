@@ -1,12 +1,12 @@
 package orioledb
 
 import (
-	"regexp"
-	"strconv"
-	"strings"
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/wal-g/tracelog"
 )

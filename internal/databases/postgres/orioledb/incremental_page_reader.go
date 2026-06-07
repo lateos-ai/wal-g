@@ -16,7 +16,6 @@ import (
 	"github.com/wal-g/tracelog"
 )
 
-
 const (
 	CompressedPageSize        = 512
 	SignatureMagicNumber byte = 0x55
