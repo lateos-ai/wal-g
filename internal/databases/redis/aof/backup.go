@@ -1,18 +1,17 @@
 package aof
 
 import (
-	"os"
-	"path/filepath"
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/diskwatcher"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/lateos-ai/wal-g/internal/diskwatcher"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type BackupService struct {
