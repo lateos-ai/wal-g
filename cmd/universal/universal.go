@@ -1,16 +1,15 @@
 package universal
 
 import (
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/cmd/pg"
-	"github.com/lateos-ai/wal-g/cmd/mysql"
-	"github.com/lateos-ai/wal-g/cmd/sqlserver"
-	"github.com/lateos-ai/wal-g/cmd/redis"
-	"github.com/lateos-ai/wal-g/cmd/etcd"
 	"github.com/lateos-ai/wal-g/cmd/common"
-	"github.com/lateos-ai/wal-g/cmd/mongo"
+	"github.com/lateos-ai/wal-g/cmd/etcd"
 	"github.com/lateos-ai/wal-g/cmd/fdb"
+	"github.com/lateos-ai/wal-g/cmd/mongo"
+	"github.com/lateos-ai/wal-g/cmd/mysql"
+	"github.com/lateos-ai/wal-g/cmd/pg"
+	"github.com/lateos-ai/wal-g/cmd/redis"
+	"github.com/lateos-ai/wal-g/cmd/sqlserver"
+	"github.com/spf13/cobra"
 )
 
 var (
