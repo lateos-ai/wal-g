@@ -1,16 +1,15 @@
 package mysql
 
 import (
-	"strconv"
-	"time"
 	"fmt"
 	"os"
+	"strconv"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/internal/printlist"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 type BackupDetail struct {
