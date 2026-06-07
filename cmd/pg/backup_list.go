@@ -1,14 +1,13 @@
 package pg
 
 import (
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/cobra"
-
-	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
 )
 
 const (
