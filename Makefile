@@ -106,12 +106,36 @@ pg_save_image: install_and_build_pg pg10_build_image pg18_build_image
 	docker save wal-g/ubuntu:18.04 > ${CACHE_FILE_UBUNTU_18_04}
 	docker save wal-g/ubuntu:22.04 > ${CACHE_FILE_UBUNTU_22_04}
 	docker save ${IMAGE_GOLANG}    > ${CACHE_FILE_GOLANG}
-	-$(call retry,$(PULL_RETRIES),docker pull ${S3_IMAGE})
-	-docker inspect ${S3_IMAGE} >/dev/null 2>&1 && docker save ${S3_IMAGE} > ${CACHE_FILE_S3} && echo "Cached ${S3_IMAGE}"
-	-$(call retry,$(PULL_RETRIES),docker pull ${S3_THROTTLING_IMAGE})
-	-docker inspect ${S3_THROTTLING_IMAGE} >/dev/null 2>&1 && docker save ${S3_THROTTLING_IMAGE} > ${CACHE_FILE_S3_THROTTLING} && echo "Cached ${S3_THROTTLING_IMAGE}"
-	-$(call retry,$(PULL_RETRIES),docker pull ${SWIFT_IMAGE})
-	-docker inspect ${SWIFT_IMAGE} >/dev/null 2>&1 && docker save ${SWIFT_IMAGE} > ${CACHE_FILE_SWIFT} && echo "Cached ${SWIFT_IMAGE}"
+	for i in $$(seq 1 $(PULL_RETRIES)); do \
+		if docker pull ${S3_IMAGE} 2>/dev/null; then \
+			docker save ${S3_IMAGE} > ${CACHE_FILE_S3} && echo "Cached ${S3_IMAGE}"; \
+			break; \
+		elif [ $$i -eq $(PULL_RETRIES) ]; then \
+			echo "Warning: failed to pull ${S3_IMAGE}, skipping cache"; \
+		else \
+			sleep $$((1 << ($$i - 1))); \
+		fi; \
+	done
+	for i in $$(seq 1 $(PULL_RETRIES)); do \
+		if docker pull ${S3_THROTTLING_IMAGE} 2>/dev/null; then \
+			docker save ${S3_THROTTLING_IMAGE} > ${CACHE_FILE_S3_THROTTLING} && echo "Cached ${S3_THROTTLING_IMAGE}"; \
+			break; \
+		elif [ $$i -eq $(PULL_RETRIES) ]; then \
+			echo "Warning: failed to pull ${S3_THROTTLING_IMAGE}, skipping cache"; \
+		else \
+			sleep $$((1 << ($$i - 1))); \
+		fi; \
+	done
+	for i in $$(seq 1 $(PULL_RETRIES)); do \
+		if docker pull ${SWIFT_IMAGE} 2>/dev/null; then \
+			docker save ${SWIFT_IMAGE} > ${CACHE_FILE_SWIFT} && echo "Cached ${SWIFT_IMAGE}"; \
+			break; \
+		elif [ $$i -eq $(PULL_RETRIES) ]; then \
+			echo "Warning: failed to pull ${SWIFT_IMAGE}, skipping cache"; \
+		else \
+			sleep $$((1 << ($$i - 1))); \
+		fi; \
+	done
 	ls ${CACHE_FOLDER}
 
 pg_integration_test: clean_compose pull_external_images
