@@ -24,6 +24,9 @@ MONGO_REPO ?= "repo.mongodb.org"
 MONGO_TEST_TYPE ?= "all"
 GOLANGCI_LINT_VERSION ?= "v2.0"
 REDIS_VERSION ?= "6.2.4"
+S3_IMAGE := minio/minio:RELEASE.2021-06-07T21-40-51Z
+S3_THROTTLING_IMAGE := minio/minio:RELEASE.2024-01-18T22-51-28Z
+PULL_RETRIES := 3
 IMAGE_TYPE ?= "rdb"
 MOCKS_DESTINATION := ./testtools/mocks
 FILE_TO_MOCKS := ./internal/uploader.go # list interface paths here
@@ -61,14 +64,14 @@ retry = for i in $$(seq 1 $(1)); do \
     echo "Failed after $(1) attempts"; \
     exit 1; \
   else \
-    sleep $$((2 ** ($$i - 1))); \
+    sleep $$((1 << ($$i - 1))); \
   fi; \
 done
 
 # Pull external Docker images with retry (e.g., s3 from Docker Hub).
 # External images are not built locally and may fail on transient network errors.
 pull_external_images:
-	$(call retry,3,docker compose pull s3 s3-another s3-for-throttling)
+	$(call retry,$(PULL_RETRIES),docker compose pull s3 s3-another s3-for-throttling)
 
 .PHONY: unittest fmt lint clean
 
@@ -102,6 +105,10 @@ pg_save_image: install_and_build_pg pg10_build_image pg18_build_image
 	docker save wal-g/ubuntu:18.04 > ${CACHE_FILE_UBUNTU_18_04}
 	docker save wal-g/ubuntu:22.04 > ${CACHE_FILE_UBUNTU_22_04}
 	docker save ${IMAGE_GOLANG}    > ${CACHE_FILE_GOLANG}
+	$(call retry,$(PULL_RETRIES),docker pull ${S3_IMAGE})
+	docker save ${S3_IMAGE} > ${CACHE_FILE_S3}
+	$(call retry,$(PULL_RETRIES),docker pull ${S3_THROTTLING_IMAGE})
+	docker save ${S3_THROTTLING_IMAGE} > ${CACHE_FILE_S3_THROTTLING}
 	ls ${CACHE_FOLDER}
 
 pg_integration_test: clean_compose pull_external_images
@@ -176,10 +183,13 @@ load_docker_common:
 	@if [ "x" = "${CACHE_FOLDER}x" ]; then\
 		echo "Rebuild";\
 		docker compose build $(DOCKER_COMMON);\
+		$(call retry,$(PULL_RETRIES),docker compose pull s3 s3-another s3-for-throttling);\
 	else\
 		docker load -i ${CACHE_FILE_UBUNTU_18_04} && rm ${CACHE_FILE_UBUNTU_18_04};\
 		docker load -i ${CACHE_FILE_UBUNTU_22_04} && rm ${CACHE_FILE_UBUNTU_22_04};\
 		docker load -i ${CACHE_FILE_GOLANG} && rm ${CACHE_FILE_GOLANG};\
+		if [ -f ${CACHE_FILE_S3} ]; then docker load -i ${CACHE_FILE_S3} && rm ${CACHE_FILE_S3}; fi;\
+		if [ -f ${CACHE_FILE_S3_THROTTLING} ]; then docker load -i ${CACHE_FILE_S3_THROTTLING} && rm ${CACHE_FILE_S3_THROTTLING}; fi;\
 	fi
 
 mysql_integration_test: deps mysql_build unlink_brotli pull_external_images load_docker_common
