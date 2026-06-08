@@ -207,9 +207,12 @@ class DisconnectBinlogProxy:
 
         try:
             while self.running:
-                client, _ = ls.accept()
-                t = threading.Thread(target=self.handle_client, args=(client,), daemon=True)
-                t.start()
+                try:
+                    client, _ = ls.accept()
+                    t = threading.Thread(target=self.handle_client, args=(client,), daemon=True)
+                    t.start()
+                except Exception as e:
+                    self.log(f"Accept error: {e}")
         except KeyboardInterrupt:
             self.log("Shutting down...")
         finally:

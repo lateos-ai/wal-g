@@ -29,3 +29,6 @@ if wal-g delete everything --confirm; then
 '
   exit 1
 fi
+
+# clean up the permanent backup for subsequent tests
+wal-g delete everything FORCE --confirm
