@@ -1,16 +1,15 @@
 package internal
 
 import (
-	"path/filepath"
-	"strings"
 	"archive/tar"
 	"os"
+	"path/filepath"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type TarSizeError struct {

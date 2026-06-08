@@ -1,15 +1,14 @@
 package internal
 
 import (
-	"io"
-	"os/exec"
 	"bytes"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"io"
+	"os/exec"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type BackupNonExistenceError struct {

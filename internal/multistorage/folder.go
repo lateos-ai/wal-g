@@ -1,20 +1,19 @@
 package multistorage
 
 import (
-	"io"
-	"path"
-	"strings"
-	"fmt"
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
+	"io"
+	"path"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 // UseAllAliveStorages makes a copy of the Folder that uses all currently alive storages.

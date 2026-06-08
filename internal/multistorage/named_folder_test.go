@@ -3,8 +3,8 @@ package multistorage
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNamedFolder_GetSubFolder(t *testing.T) {

@@ -9,8 +9,8 @@ package libsodium
 import "C"
 
 import (
-	"sync"
 	"io"
+	"sync"
 
 	"github.com/pkg/errors"
 )

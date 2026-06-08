@@ -8,9 +8,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
 )
 
 // TODO : this test is broken now

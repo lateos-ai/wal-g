@@ -1,20 +1,19 @@
 package postgres
 
 import (
-	"path"
-	"path/filepath"
-	"strings"
 	"archive/tar"
 	"io"
 	"os"
+	"path"
+	"path/filepath"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 type IncrementalTarInterpreter interface {

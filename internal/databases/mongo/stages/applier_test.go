@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	archiveMocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 // TODO: test archive timeout

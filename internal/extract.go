@@ -1,22 +1,21 @@
 package internal
 
 import (
-	"strings"
-	"sync"
-	"time"
-	"io"
 	"archive/tar"
 	"context"
 	"fmt"
+	"io"
+	"strings"
+	"sync"
+	"time"
 
-	"golang.org/x/sync/semaphore"
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/semaphore"
 )
 
 var MinExtractRetryWait = time.Minute

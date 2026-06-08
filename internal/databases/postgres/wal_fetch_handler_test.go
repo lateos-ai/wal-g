@@ -5,13 +5,13 @@ import (
 	"io"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/compression/lz4"
 	"github.com/lateos-ai/wal-g/internal/compression/lzma"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWallFetchCachesLastDecompressor(t *testing.T) {

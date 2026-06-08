@@ -8,10 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"go.uber.org/mock/gomock"
-
-	"github.com/stretchr/testify/assert"
-
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
@@ -19,6 +15,8 @@ import (
 	"github.com/lateos-ai/wal-g/testtools"
 	mock_internal "github.com/lateos-ai/wal-g/testtools/mocks"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func init() {

@@ -1,9 +1,9 @@
 package multistorage
 
 import (
-	"sync/atomic"
-	"io"
 	"fmt"
+	"io"
+	"sync/atomic"
 
 	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
 )

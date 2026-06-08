@@ -1,15 +1,14 @@
 package redis
 
 import (
-	"slices"
 	"os"
+	"slices"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/printlist"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleDetailedBackupList(folder storage.Folder, pretty bool, json bool) {

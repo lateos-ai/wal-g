@@ -1,9 +1,9 @@
 package diskwatcher
 
 import (
-	"unsafe"
-	"syscall"
 	"path/filepath"
+	"syscall"
+	"unsafe"
 
 	"github.com/wal-g/tracelog"
 )

@@ -1,12 +1,11 @@
 package gcs
 
 import (
-	"time"
-	"fmt"
 	"context"
+	"fmt"
+	"time"
 
 	gcs "cloud.google.com/go/storage"
-
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

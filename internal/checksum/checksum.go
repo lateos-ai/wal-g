@@ -1,9 +1,9 @@
 package checksum
 
 import (
-	"hash"
-	"encoding/hex"
 	"crypto/sha256"
+	"encoding/hex"
+	"hash"
 )
 
 type Calculator struct {

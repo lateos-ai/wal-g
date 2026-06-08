@@ -3,11 +3,10 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type WalSegmentNotFoundError struct {

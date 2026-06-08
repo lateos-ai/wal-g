@@ -1,17 +1,16 @@
 package stages
 
 import (
-	"time"
-	"fmt"
 	"context"
+	"fmt"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stats"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/stats"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 var (

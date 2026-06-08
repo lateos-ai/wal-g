@@ -1,11 +1,11 @@
 package mongo
 
 import (
-	"io"
 	"encoding/json"
+	"io"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 // HandleBackupShow prints sentinel contents.

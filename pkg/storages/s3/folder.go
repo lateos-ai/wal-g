@@ -1,23 +1,22 @@
 package s3
 
 import (
-	"path"
-	"io"
-	"time"
-	"strings"
-	"crypto/md5"
 	"context"
-	"fmt"
+	"crypto/md5"
 	"encoding/base64"
+	"fmt"
+	"io"
+	"path"
+	"strings"
+	"time"
 
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-
+	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

@@ -1,11 +1,11 @@
 package pax
 
 import (
-	"strings"
 	"path"
+	"strings"
 
-	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 const dirSuffix = "_pax"

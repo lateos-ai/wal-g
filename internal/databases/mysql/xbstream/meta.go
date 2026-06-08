@@ -1,10 +1,9 @@
 package xbstream
 
 import (
-	"gopkg.in/ini.v1"
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/tracelog"
+	"gopkg.in/ini.v1"
 )
 
 // '.meta' file format for IBD file:

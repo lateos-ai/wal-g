@@ -3,8 +3,8 @@
 package ioextensions
 
 import (
-	"syscall"
 	"os"
+	"syscall"
 )
 
 func PunchHole(f *os.File, offset int64, size int64) error {

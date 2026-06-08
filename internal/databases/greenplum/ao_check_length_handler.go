@@ -1,18 +1,17 @@
 package greenplum
 
 import (
-	"strings"
-	"fmt"
 	"context"
+	"fmt"
+	"strings"
 
-	"github.com/wal-g/tracelog"
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type AOLengthCheckHandler struct {

@@ -1,16 +1,15 @@
 package blob
 
 import (
-	"net/http"
-	"strings"
-	"time"
 	"bytes"
 	"errors"
 	"io"
-
-	"github.com/wal-g/tracelog"
+	"net/http"
+	"strings"
+	"time"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/wal-g/tracelog"
 )
 
 var ErrNoLease = errors.New("no lease")

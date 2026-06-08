@@ -1,9 +1,9 @@
 package openpgp
 
 import (
-	"os"
-	"io"
 	"bytes"
+	"io"
+	"os"
 
 	"github.com/ProtonMail/go-crypto/openpgp"
 )

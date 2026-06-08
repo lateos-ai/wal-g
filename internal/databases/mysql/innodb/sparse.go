@@ -1,15 +1,14 @@
 package innodb
 
 import (
-	"strings"
-	"syscall"
-	"os"
 	"errors"
 	"io"
-
-	"github.com/wal-g/tracelog"
+	"os"
+	"strings"
+	"syscall"
 
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/wal-g/tracelog"
 )
 
 func RepairSparse(file *os.File) error {

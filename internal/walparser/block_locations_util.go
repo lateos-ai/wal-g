@@ -1,8 +1,8 @@
 package walparser
 
 import (
-	"io"
 	"bytes"
+	"io"
 )
 
 func ExtractBlockLocations(records []XLogRecord) []BlockLocation {

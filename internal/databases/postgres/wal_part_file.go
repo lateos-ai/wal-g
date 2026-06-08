@@ -3,9 +3,8 @@ package postgres
 import (
 	"io"
 
-	"github.com/pkg/errors"
-
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/pkg/errors"
 )
 
 type WalPartFile struct {

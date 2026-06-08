@@ -1,11 +1,11 @@
 package mock
 
 import (
-	"io"
 	"context"
+	"io"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 type Folder struct {

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMockCrypterFromKey_ShouldReturnErrorOnEmptyKey(t *testing.T) {

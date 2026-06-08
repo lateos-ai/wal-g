@@ -1,11 +1,10 @@
 package mysql
 
 import (
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type DeleteHandler struct {

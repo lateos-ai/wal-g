@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestSwiftFolderUsingEnvVariables requires some OS_* env vars like OS_AUTH_URL or OS_PASSWORD.

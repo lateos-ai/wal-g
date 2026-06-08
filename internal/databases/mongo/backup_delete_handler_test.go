@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestHandleBackupDelete(t *testing.T) {

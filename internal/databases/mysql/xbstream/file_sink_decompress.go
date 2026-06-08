@@ -1,16 +1,15 @@
 package xbstream
 
 import (
-	"os"
-	"io"
 	"fmt"
+	"io"
+	"os"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/splitmerge"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/lateos-ai/wal-g/internal/splitmerge"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type fileSinkDecompress struct {

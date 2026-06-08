@@ -1,17 +1,16 @@
 package pax
 
 import (
-	"sync"
-	"time"
 	"context"
 	"path"
+	"sync"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 // StorageUploader routes PAX files to the dedicated wal-g `paxfiles/` storage prefix

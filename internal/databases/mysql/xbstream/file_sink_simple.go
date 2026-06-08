@@ -1,15 +1,14 @@
 package xbstream
 
 import (
-	"os"
-	"syscall"
 	"errors"
 	"io"
+	"os"
+	"syscall"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type fileSinkSimple struct {

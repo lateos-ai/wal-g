@@ -17,12 +17,12 @@ Furthermore it can be read as an IOReader (having a Name() and Read() function) 
 */
 
 import (
-	"slices"
-	"strconv"
-	"strings"
 	"cmp"
 	"io"
 	"regexp"
+	"slices"
+	"strconv"
+	"strings"
 
 	"github.com/jackc/pglogrepl"
 )

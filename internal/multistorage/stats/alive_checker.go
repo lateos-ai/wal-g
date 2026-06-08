@@ -1,17 +1,16 @@
 package stats
 
 import (
-	"math/rand"
-	"path"
-	"time"
-	"io"
 	"context"
 	"errors"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
+	"io"
+	"math/rand"
+	"path"
+	"time"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 const checkObjectName = "wal-g_storage_check"

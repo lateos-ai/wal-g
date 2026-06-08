@@ -1,12 +1,12 @@
 package awskms
 
 import (
-	"sync"
 	"crypto/rand"
+	"sync"
 
-	"github.com/aws/aws-sdk-go/service/kms"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/kms"
 )
 
 // SymmetricKey is AWS KMS implementation of crypto.SymmetricKey interface

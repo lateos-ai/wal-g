@@ -1,9 +1,8 @@
 package greenplum
 
 import (
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/tracelog"
 )
 
 func NewSegBackupHandler(arguments postgres.BackupArguments) (*postgres.BackupHandler, error) {

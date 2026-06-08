@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"os"
 	"archive/tar"
+	"os"
 )
 
 type TarBallComposer interface {

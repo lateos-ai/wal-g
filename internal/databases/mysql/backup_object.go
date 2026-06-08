@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 // FIXME: why do we use BackupObject instead of internal.GenericMetadata ?

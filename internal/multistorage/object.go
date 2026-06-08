@@ -1,8 +1,8 @@
 package multistorage
 
 import (
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/consts"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 // StorageTeller is any object that can tell the name of the storage in which it is stored.

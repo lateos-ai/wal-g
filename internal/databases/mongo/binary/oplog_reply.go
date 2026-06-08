@@ -1,18 +1,17 @@
 package binary
 
 import (
-	"time"
-	"fmt"
 	"context"
+	"fmt"
+	"time"
 
-	"golang.org/x/sync/errgroup"
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/oplog"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/stages"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 const inlineMongodShutdownTimeout = 30 * time.Second

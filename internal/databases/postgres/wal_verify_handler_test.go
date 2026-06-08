@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/assert"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {

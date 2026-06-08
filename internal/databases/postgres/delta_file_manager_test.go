@@ -4,11 +4,11 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCanceledDeltaFiles_MidWalFile(t *testing.T) {

@@ -1,9 +1,8 @@
 package mysql
 
 import (
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/wal-g/tracelog"
 )
 
 // MarkBackup marks a backup as permanent or impermanent

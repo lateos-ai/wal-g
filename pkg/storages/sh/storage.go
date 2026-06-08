@@ -1,13 +1,12 @@
 package sh
 
 import (
-	"os"
 	"fmt"
-
-	"golang.org/x/crypto/ssh"
-	"github.com/wal-g/tracelog"
+	"os"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/crypto/ssh"
 )
 
 var _ storage.HashableStorage = &Storage{}

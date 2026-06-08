@@ -1,10 +1,10 @@
 package diskwatcher
 
 import (
-	"sync/atomic"
-	"time"
 	"fmt"
 	"os"
+	"sync/atomic"
+	"time"
 )
 
 type DiskWatcher struct {

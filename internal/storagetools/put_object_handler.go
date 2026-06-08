@@ -1,16 +1,16 @@
 package storagetools
 
 import (
-	"os"
-	"path/filepath"
-	"io"
 	"context"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 func HandlePutObject(

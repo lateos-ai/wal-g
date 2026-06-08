@@ -1,24 +1,23 @@
 package greenplum
 
 import (
-	"strconv"
-	"strings"
-	"time"
-	"os"
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/wal-g/tracelog"
-	"github.com/greenplum-db/gp-common-go-libs/gplog"
 	"github.com/google/uuid"
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
-
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/lateos-ai/wal-g/utility"
+	"github.com/greenplum-db/gp-common-go-libs/gplog"
+	"github.com/jackc/pgx/v5"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 const (

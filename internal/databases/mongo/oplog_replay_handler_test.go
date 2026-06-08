@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	mocks "github.com/lateos-ai/wal-g/internal/databases/mongo/stages/mocks"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 type betweenFetcherReturn struct {

@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/compression/lz4"
@@ -17,6 +15,8 @@ import (
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 )
 
 var BundleTestLocations = []walparser.BlockLocation{

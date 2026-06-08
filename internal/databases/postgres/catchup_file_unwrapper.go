@@ -1,13 +1,12 @@
 package postgres
 
 import (
-	"os"
-	"io"
 	"archive/tar"
-
-	"github.com/pkg/errors"
+	"io"
+	"os"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
 )
 
 // CatchupFileUnwrapper is used for catchup (catchup-push) backups

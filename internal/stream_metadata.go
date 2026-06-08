@@ -1,14 +1,13 @@
 package internal
 
 import (
-	"io"
 	"errors"
+	"io"
 
-	"github.com/wal-g/tracelog"
-	"github.com/spf13/viper"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
 )
 
 const (

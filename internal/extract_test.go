@@ -10,13 +10,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/crypto/openpgp"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
+	"github.com/wal-g/tracelog"
 )
 
 const (

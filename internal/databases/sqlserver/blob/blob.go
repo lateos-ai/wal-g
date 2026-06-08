@@ -1,18 +1,17 @@
 package blob
 
 import (
-	"slices"
-	"io"
-	"time"
-	"sync"
-	"cmp"
 	"bytes"
-	"fmt"
+	"cmp"
 	"encoding/json"
-
-	"github.com/wal-g/tracelog"
+	"fmt"
+	"io"
+	"slices"
+	"sync"
+	"time"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 const IndexFileName = "__blob_index.json"

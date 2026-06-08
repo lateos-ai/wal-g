@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"io"
 	"encoding/json"
+	"io"
 
 	"github.com/jedib0t/go-pretty/table"
 )

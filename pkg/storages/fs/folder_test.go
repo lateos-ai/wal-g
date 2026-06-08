@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFSFolder(t *testing.T) {

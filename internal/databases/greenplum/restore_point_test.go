@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
 )
 
 var (

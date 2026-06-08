@@ -3,11 +3,11 @@ package greenplum_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal/databases/greenplum"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
+	"github.com/wal-g/tracelog"
 )
 
 func TestGetCopyingInfos_WhenFolderIsEmpty(t *testing.T) {

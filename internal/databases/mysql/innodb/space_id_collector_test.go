@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/testutils"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 func generateData(t *testing.T) string {

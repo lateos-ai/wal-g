@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/stretchr/testify/assert"
 )
 
 func buildFileBuffer(path string) *FileBuffer {

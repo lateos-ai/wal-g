@@ -3,8 +3,8 @@ package multistorage
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
+	"github.com/stretchr/testify/assert"
 )
 
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls

@@ -8,11 +8,11 @@ import (
 	"testing"
 
 	"github.com/RoaringBitmap/roaring/v2"
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 const (

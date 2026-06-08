@@ -1,9 +1,9 @@
 package postgres
 
 import (
-	"os"
-	"io"
 	"archive/tar"
+	"io"
+	"os"
 )
 
 type FileUnwrapperType int

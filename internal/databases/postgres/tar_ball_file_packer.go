@@ -1,21 +1,20 @@
 package postgres
 
 import (
-	"io"
-	"os"
 	"context"
 	"fmt"
+	"io"
+	"os"
 
-	"github.com/wal-g/tracelog"
-	"golang.org/x/sync/errgroup"
 	"github.com/RoaringBitmap/roaring/v2"
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
 	"github.com/lateos-ai/wal-g/internal"
 	pg_errors "github.com/lateos-ai/wal-g/internal/databases/postgres/errors"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres/orioledb"
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 type SkippedFileError struct {

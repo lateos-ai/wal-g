@@ -1,17 +1,16 @@
 package greenplum
 
 import (
-	"slices"
-	"time"
 	"fmt"
 	"os"
+	"slices"
+	"time"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 func NewBackupDetail(backup Backup) BackupDetail {

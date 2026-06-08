@@ -1,13 +1,12 @@
 package internal
 
 import (
-	"time"
 	"math/rand"
-
-	"github.com/spf13/viper"
-	"github.com/pkg/profile"
+	"time"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/pkg/profile"
+	"github.com/spf13/viper"
 )
 
 type ProfileStopper interface {

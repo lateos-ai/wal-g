@@ -5,11 +5,11 @@ import (
 	"io"
 	"testing"
 
-	"go.uber.org/mock/gomock"
+	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
+	"go.uber.org/mock/gomock"
 )
 
 func Test_reportReadCloser(t *testing.T) {

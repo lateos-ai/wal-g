@@ -1,13 +1,12 @@
 package postgres
 
 import (
-	"io"
-	"fmt"
 	"bytes"
-
-	"github.com/wal-g/tracelog"
+	"fmt"
+	"io"
 
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 type TimelineCheckDetails struct {

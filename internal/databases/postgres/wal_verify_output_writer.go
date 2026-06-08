@@ -1,10 +1,10 @@
 package postgres
 
 import (
-	"fmt"
-	"io"
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 )
 
 type WalVerifyOutputType int

@@ -1,17 +1,16 @@
 package postgres
 
 import (
-	"strconv"
-	"strings"
 	"fmt"
 	"path"
+	"strconv"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
 	"github.com/RoaringBitmap/roaring/v2"
-
-	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

@@ -1,13 +1,12 @@
 package cached
 
 import (
-	"time"
-	"sync"
 	"io"
-
-	"github.com/wal-g/tracelog"
+	"sync"
+	"time"
 
 	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	"github.com/wal-g/tracelog"
 )
 
 type Item struct {

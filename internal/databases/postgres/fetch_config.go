@@ -1,9 +1,8 @@
 package postgres
 
 import (
-	"github.com/wal-g/tracelog"
-
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func NewFetchConfig(dbDataDirectory string, backup Backup, rootFolder storage.Folder, spec *TablespaceSpec,

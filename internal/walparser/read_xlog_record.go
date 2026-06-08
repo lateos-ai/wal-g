@@ -1,12 +1,11 @@
 package walparser
 
 import (
-	"io"
 	"bytes"
-
-	"github.com/pkg/errors"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/pkg/errors"
 )
 
 func readXLogRecordHeader(reader io.Reader) (*XLogRecordHeader, error) {

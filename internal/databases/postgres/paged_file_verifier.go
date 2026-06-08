@@ -1,11 +1,11 @@
 package postgres
 
 import (
-	"os"
-	"unsafe"
-	"io"
 	"bytes"
 	"encoding/binary"
+	"io"
+	"os"
+	"unsafe"
 
 	"github.com/wal-g/tracelog"
 )

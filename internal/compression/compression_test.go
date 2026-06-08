@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
 )
 
 type BiasedRandomReader struct{}

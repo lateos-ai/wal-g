@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"sync"
-	"os"
 	"archive/tar"
+	"os"
+	"sync"
 )
 
 // BundleFiles represents the files in the backup that is going to be created

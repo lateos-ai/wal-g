@@ -9,15 +9,14 @@ package libsodium
 import "C"
 
 import (
-	"strings"
-	"sync"
-	"os"
 	"fmt"
 	"io"
-
-	"github.com/pkg/errors"
+	"os"
+	"strings"
+	"sync"
 
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/pkg/errors"
 )
 
 const (

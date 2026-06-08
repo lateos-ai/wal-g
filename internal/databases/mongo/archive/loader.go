@@ -1,24 +1,23 @@
 package archive
 
 import (
-	"slices"
-	"strings"
-	"time"
-	"io"
 	"bytes"
 	"context"
 	"fmt"
+	"io"
+	"slices"
+	"strings"
+	"time"
 
-	"github.com/wal-g/tracelog"
 	"github.com/aws/aws-sdk-go/aws"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/common"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 var (

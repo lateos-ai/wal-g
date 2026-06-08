@@ -1,15 +1,14 @@
 package redis
 
 import (
-	"reflect"
-	"io"
 	"fmt"
+	"io"
+	"reflect"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/internal/printlist"
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
+	"github.com/lateos-ai/wal-g/internal/printlist"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleBackupInfo(folder storage.Folder, backupName string, output io.Writer, tag string) {

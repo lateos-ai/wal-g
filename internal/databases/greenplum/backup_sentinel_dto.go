@@ -1,14 +1,13 @@
 package greenplum
 
 import (
-	"time"
-	"os"
 	"encoding/json"
+	"os"
+	"time"
 
-	"github.com/wal-g/tracelog"
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
-
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/wal-g/tracelog"
 )
 
 type SegmentRole string

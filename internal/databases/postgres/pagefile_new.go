@@ -5,14 +5,13 @@
 package postgres
 
 import (
-	"io"
-	"os"
 	"bytes"
 	"encoding/binary"
-
-	"github.com/wal-g/tracelog"
+	"io"
+	"os"
 
 	"github.com/lateos-ai/wal-g/internal/walparser/parsingutil"
+	"github.com/wal-g/tracelog"
 )
 
 type ReadWriterAt interface {

@@ -1,14 +1,13 @@
 package postgres
 
 import (
-	"strconv"
-	"strings"
 	"fmt"
 	"path"
-
-	"github.com/wal-g/tracelog"
+	"strconv"
+	"strings"
 
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/wal-g/tracelog"
 )
 
 const (

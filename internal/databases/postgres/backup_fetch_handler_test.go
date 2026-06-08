@@ -3,9 +3,9 @@ package postgres_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/testtools"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetBaseFilesToUnwrap_SimpleFile(t *testing.T) {

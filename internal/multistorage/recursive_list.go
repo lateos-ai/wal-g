@@ -1,9 +1,9 @@
 package multistorage
 
 import (
-	"strings"
-	"path"
 	"fmt"
+	"path"
+	"strings"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )

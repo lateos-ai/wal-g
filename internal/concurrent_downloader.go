@@ -1,14 +1,13 @@
 package internal
 
 import (
-	"strings"
-	"regexp"
 	"fmt"
+	"regexp"
+	"strings"
 
-	"github.com/pkg/errors"
-
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/pkg/errors"
 )
 
 type ConcurrentDownloader struct {

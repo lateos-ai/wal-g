@@ -4,11 +4,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/wal-g/tracelog"
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/config"
 )
 
 func TestGetMaxConcurrency_InvalidKey(t *testing.T) {

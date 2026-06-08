@@ -1,14 +1,13 @@
 package postgres
 
 import (
-	"io"
-	"fmt"
 	"bytes"
-
-	"github.com/wal-g/tracelog"
-	"github.com/pkg/errors"
+	"fmt"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/walparser"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 const (

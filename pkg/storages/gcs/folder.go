@@ -1,18 +1,17 @@
 package gcs
 
 import (
-	"path"
-	"strconv"
-	"strings"
 	"context"
 	"fmt"
 	"io"
+	"path"
+	"strconv"
+	"strings"
 
-	"google.golang.org/api/iterator"
-	"github.com/wal-g/tracelog"
 	gcs "cloud.google.com/go/storage"
-
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
+	"google.golang.org/api/iterator"
 )
 
 const composeChunkLimit = 32

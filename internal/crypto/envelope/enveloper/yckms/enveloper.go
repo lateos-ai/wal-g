@@ -1,17 +1,16 @@
 package yckms
 
 import (
-	"io"
-	"encoding/binary"
 	"context"
-
-	ycsdk "github.com/yandex-cloud/go-sdk"
-	"github.com/yandex-cloud/go-sdk/iamkey"
-	"github.com/yandex-cloud/go-genproto/yandex/cloud/kms/v1"
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
+	"encoding/binary"
+	"io"
 
 	"github.com/lateos-ai/wal-g/internal/crypto/envelope"
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+	"github.com/yandex-cloud/go-genproto/yandex/cloud/kms/v1"
+	ycsdk "github.com/yandex-cloud/go-sdk"
+	"github.com/yandex-cloud/go-sdk/iamkey"
 )
 
 const (

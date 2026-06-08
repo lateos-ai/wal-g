@@ -1,15 +1,14 @@
 package redis
 
 import (
-	"strconv"
-	"strings"
 	"context"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
-	"github.com/redis/go-redis/v9"
+	"strconv"
+	"strings"
 
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/redis/go-redis/v9"
+	"github.com/wal-g/tracelog"
 )
 
 const dontPanic = false

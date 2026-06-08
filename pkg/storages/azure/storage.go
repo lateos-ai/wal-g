@@ -1,16 +1,15 @@
 package azure
 
 import (
-	"net/url"
-	"time"
 	"fmt"
 	"net/http"
+	"net/url"
+	"time"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 

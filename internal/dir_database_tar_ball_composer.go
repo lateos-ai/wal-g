@@ -1,14 +1,13 @@
 package internal
 
 import (
-	"os"
-	"path"
 	"archive/tar"
 	"context"
-
-	"golang.org/x/sync/errgroup"
+	"os"
+	"path"
 
 	"github.com/lateos-ai/wal-g/internal/crypto"
+	"golang.org/x/sync/errgroup"
 )
 
 type PathFilter func(path string) bool

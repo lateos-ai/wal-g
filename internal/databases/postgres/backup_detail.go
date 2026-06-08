@@ -1,11 +1,11 @@
 package postgres
 
 import (
-	"strconv"
 	"fmt"
+	"strconv"
 
-	"github.com/lateos-ai/wal-g/internal/printlist"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/printlist"
 )
 
 // BackupDetail is used to append ExtendedMetadataDto details to BackupTime struct

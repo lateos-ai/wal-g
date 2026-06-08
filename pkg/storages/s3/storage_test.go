@@ -3,8 +3,8 @@ package s3
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestS3FolderCreatesWithoutAdditionalHeaders(t *testing.T) {

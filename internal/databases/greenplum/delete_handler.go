@@ -1,21 +1,20 @@
 package greenplum
 
 import (
-	"strconv"
-	"strings"
-	"os"
 	"context"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
 
-	"golang.org/x/sync/errgroup"
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/multistorage"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
+	"github.com/lateos-ai/wal-g/internal/multistorage"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
+	"golang.org/x/sync/errgroup"
 )
 
 type DeleteArgs struct {

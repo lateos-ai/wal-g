@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/lateos-ai/wal-g/pkg/storages/s3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/lateos-ai/wal-g/pkg/storages/s3"
 )
 
 type ErrOnCloseCloser struct{ io.Reader }

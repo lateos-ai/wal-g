@@ -3,10 +3,9 @@ package mysql
 import (
 	"os/exec"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleBackupFetch(folder storage.Folder,

@@ -1,14 +1,13 @@
 package xbstream
 
 import (
-	"strings"
-	"path/filepath"
 	"errors"
+	"path/filepath"
+	"strings"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 	"github.com/lateos-ai/wal-g/internal/compression"
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/tracelog"
 )
 
 var ErrSinkEOF = errors.New("ErrSinkEOF")

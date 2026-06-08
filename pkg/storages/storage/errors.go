@@ -3,8 +3,8 @@ package storage
 import (
 	"fmt"
 
-	"github.com/wal-g/tracelog"
 	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
 )
 
 type ObjectNotFoundError struct {

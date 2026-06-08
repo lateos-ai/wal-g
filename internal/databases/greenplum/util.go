@@ -1,13 +1,12 @@
 package greenplum
 
 import (
-	"path"
 	"fmt"
+	"path"
 
-	"github.com/spf13/viper"
-
-	"github.com/lateos-ai/wal-g/utility"
 	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/spf13/viper"
 )
 
 const SegmentsFolderPath = "segments_" + utility.VersionStr + "/"

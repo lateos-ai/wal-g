@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/tracelog"
 	"github.com/lateos-ai/wal-g/internal/copy"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/testtools"
 	"github.com/lateos-ai/wal-g/utility"
+	"github.com/stretchr/testify/assert"
+	"github.com/wal-g/tracelog"
 )
 
 func TestStartCopy_WhenThereAreNoObjectsToCopy(t *testing.T) {

@@ -1,14 +1,13 @@
 package discovery
 
 import (
-	"fmt"
 	"context"
+	"fmt"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/wal-g/tracelog"
 )
 
 // ResolveStartingTS fetches last-known folder TS or initiates first run from last-known mongoClient TS

@@ -1,14 +1,13 @@
 package xbstream
 
 import (
-	"os"
-	"sync"
 	"errors"
 	"io"
-
-	"github.com/wal-g/tracelog"
+	"os"
+	"sync"
 
 	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
+	"github.com/wal-g/tracelog"
 )
 
 // xbstream BackupSink will unpack archive to disk.

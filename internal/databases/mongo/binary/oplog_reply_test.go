@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	testifymock "github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 	archivepkg "github.com/lateos-ai/wal-g/internal/databases/mongo/archive"
 	archivemocks "github.com/lateos-ai/wal-g/internal/databases/mongo/archive/mocks"
 	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
+	"github.com/stretchr/testify/assert"
+	testifymock "github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestResolveOplogReplaySequenceFallsBackToFullList(t *testing.T) {

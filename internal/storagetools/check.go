@@ -1,15 +1,14 @@
 package storagetools
 
 import (
-	"strings"
-	"time"
-	"math/rand"
 	"bytes"
 	"fmt"
-
-	"github.com/wal-g/tracelog"
+	"math/rand"
+	"strings"
+	"time"
 
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleCheckRead(folder storage.Folder, filenames []string) error {

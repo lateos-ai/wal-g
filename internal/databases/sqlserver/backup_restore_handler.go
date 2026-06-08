@@ -1,17 +1,16 @@
 package sqlserver
 
 import (
-	"os"
-	"syscall"
-	"fmt"
 	"context"
 	"database/sql"
+	"fmt"
+	"os"
+	"syscall"
 
-	"github.com/wal-g/tracelog"
-
-	"github.com/lateos-ai/wal-g/utility"
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
+	"github.com/wal-g/tracelog"
 )
 
 func HandleBackupRestore(backupName string, dbnames []string, fromnames []string, noRecovery bool) {
