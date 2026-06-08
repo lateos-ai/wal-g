@@ -50,6 +50,26 @@ ifdef ENABLE_DEBUG
 	BUILD_GCFLAGS:=$(BUILD_GCFLAGS) all=-N -l
 endif
 
+# Retry a command up to N times with exponential backoff.
+# Usage: $(call retry,3,command arg1 arg2)
+retry = for i in $$(seq 1 $(1)); do \
+  echo "Attempt $$i/$(1): $(2)"; \
+  if $(2); then \
+    echo "Success on attempt $$i"; \
+    break; \
+  elif [ $$i -eq $(1) ]; then \
+    echo "Failed after $(1) attempts"; \
+    exit 1; \
+  else \
+    sleep $$((2 ** ($$i - 1))); \
+  fi; \
+done
+
+# Pull external Docker images with retry (e.g., s3 from Docker Hub).
+# External images are not built locally and may fail on transient network errors.
+pull_external_images:
+	$(call retry,3,docker compose pull s3 s3-another s3-for-throttling)
+
 .PHONY: unittest fmt lint clean
 
 test: deps unittest pg_build mysql_build redis_build mongo_build gp_build cloudberry_build unlink_brotli pg_integration_test mysql_integration_test redis_integration_test fdb_integration_test gp_integration_test cloudberry_integration_test etcd_integration_test
@@ -61,7 +81,7 @@ pg_build: $(CMD_FILES) $(PKG_FILES)
 
 install_and_build_pg: deps pg_build
 
-pg10_build_image:
+pg10_build_image: pull_external_images
 	# There are dependencies between container images.
 	# Running in one command leads to using outdated images and fails on clean system.
 	# It can not be fixed with depends_on in compose file. https://github.com/docker/compose/issues/6332
@@ -69,7 +89,7 @@ pg10_build_image:
 	docker compose build pg10
 	docker compose build pg10_tests_template
 
-pg18_build_image:
+pg18_build_image: pull_external_images
 	docker compose build $(DOCKER_COMMON)
 	docker compose build pg18
 	docker compose build pg18_tests_template
@@ -84,7 +104,7 @@ pg_save_image: install_and_build_pg pg10_build_image pg18_build_image
 	docker save ${IMAGE_GOLANG}    > ${CACHE_FILE_GOLANG}
 	ls ${CACHE_FOLDER}
 
-pg_integration_test: clean_compose
+pg_integration_test: clean_compose pull_external_images
 	@if [ "x" = "${CACHE_FILE_PG10_TESTS}x" ]; then\
 		echo "Rebuild";\
 		make install_and_build_pg;\
@@ -119,7 +139,7 @@ pg_integration_test: clean_compose
 	fi
 	make clean_compose
 
-orioledb_integration_test: install_and_build_pg clean_compose load_docker_common
+orioledb_integration_test: install_and_build_pg clean_compose pull_external_images load_docker_common
 	docker compose build orioledb
 	docker compose up --exit-code-from orioledb orioledb
 	make clean_compose
@@ -132,7 +152,7 @@ clean_compose:
 all_unittests: deps unittest
 
 # todo Should we remove this target as a duplicate of pg_integration_test?
-pg_int_tests_only:
+pg_int_tests_only: pull_external_images
 	docker compose build pg10_tests
 	docker compose up --exit-code-from pg10_tests pg10_tests
 
@@ -162,12 +182,12 @@ load_docker_common:
 		docker load -i ${CACHE_FILE_GOLANG} && rm ${CACHE_FILE_GOLANG};\
 	fi
 
-mysql_integration_test: deps mysql_build unlink_brotli load_docker_common
+mysql_integration_test: deps mysql_build unlink_brotli pull_external_images load_docker_common
 	./link_brotli.sh
 	docker compose build mysql && docker compose build $(MYSQL_TEST)
 	docker compose up --force-recreate --exit-code-from $(MYSQL_TEST) $(MYSQL_TEST)
 
-mysql8_integration_test: go_deps unlink_brotli load_docker_common
+mysql8_integration_test: go_deps unlink_brotli pull_external_images load_docker_common
 	docker compose build mysql8 && docker compose build $(MYSQL8_TEST)
 	docker compose up --force-recreate --exit-code-from $(MYSQL8_TEST) $(MYSQL8_TEST)
 
@@ -180,7 +200,7 @@ mysql_install: mysql_build
 
 mariadb_test: deps mysql_build unlink_brotli mariadb_integration_test
 
-mariadb_integration_test: unlink_brotli load_docker_common
+mariadb_integration_test: unlink_brotli pull_external_images load_docker_common
 	./link_brotli.sh
 	docker compose build mariadb && docker compose build mariadb_tests
 	docker compose up --force-recreate --exit-code-from mariadb_tests mariadb_tests
@@ -220,7 +240,7 @@ fdb_build: $(CMD_FILES) $(PKG_FILES)
 fdb_install: fdb_build
 	mv $(MAIN_FDB_PATH)/wal-g $(GOBIN)/wal-g
 
-fdb_integration_test: load_docker_common
+fdb_integration_test: pull_external_images load_docker_common
 	docker compose down -v
 	docker compose build fdb_tests
 	docker compose up --force-recreate --renew-anon-volumes --exit-code-from fdb_tests fdb_tests
@@ -230,7 +250,7 @@ redis_test: deps redis_build unlink_brotli redis_integration_test
 redis_build: $(CMD_FILES) $(PKG_FILES)
 	(cd $(MAIN_REDIS_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/redis.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/redis.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/redis.walgVersion=$(WALG_VERSION)")
 
-redis_integration_test: load_docker_common
+redis_integration_test: pull_external_images load_docker_common
 	docker compose build redis && docker compose build redis_tests
 	docker compose up --exit-code-from redis_tests redis_tests
 
@@ -263,7 +283,7 @@ etcd_clean:
 	./cleanup.sh
 
 # refactor
-etcd_integration_test: load_docker_common
+etcd_integration_test: pull_external_images load_docker_common
 	docker compose build etcd
 	docker compose build etcd_tests
 	docker compose up --exit-code-from etcd_tests etcd_tests
@@ -280,7 +300,7 @@ gp_install: gp_build
 
 gp_test: deps gp_build unlink_brotli gp_integration_test
 
-gp_integration_test: load_docker_common
+gp_integration_test: pull_external_images load_docker_common
 	docker compose build gp
 	docker compose build gp_tests
 	docker compose up --exit-code-from gp_tests gp_tests
@@ -293,14 +313,14 @@ cloudberry_install: gp_install
 
 cloudberry_test: deps cloudberry_build unlink_brotli cloudberry_integration_test
 
-cloudberry_integration_test: load_docker_common
+cloudberry_integration_test: pull_external_images load_docker_common
 	docker compose build cloudberry
 	docker compose build cloudberry_tests
 	docker compose up s3 cloudberry_tests --force-recreate --exit-code-from cloudberry_tests
 
 st_test: deps pg_build unlink_brotli st_integration_test
 
-st_integration_test: load_docker_common
+st_integration_test: pull_external_images load_docker_common
 	docker compose build st_tests
 	docker compose up --exit-code-from st_tests st_tests
 
