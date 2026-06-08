@@ -26,6 +26,7 @@ GOLANGCI_LINT_VERSION ?= "v2.0"
 REDIS_VERSION ?= "6.2.4"
 S3_IMAGE := minio/minio:RELEASE.2021-06-07T21-40-51Z
 S3_THROTTLING_IMAGE := minio/minio:RELEASE.2024-01-18T22-51-28Z
+SWIFT_IMAGE := openstackswift/saio:py3
 PULL_RETRIES := 3
 IMAGE_TYPE ?= "rdb"
 MOCKS_DESTINATION := ./testtools/mocks
@@ -109,6 +110,8 @@ pg_save_image: install_and_build_pg pg10_build_image pg18_build_image
 	docker save ${S3_IMAGE} > ${CACHE_FILE_S3}
 	$(call retry,$(PULL_RETRIES),docker pull ${S3_THROTTLING_IMAGE})
 	docker save ${S3_THROTTLING_IMAGE} > ${CACHE_FILE_S3_THROTTLING}
+	$(call retry,$(PULL_RETRIES),docker pull ${SWIFT_IMAGE})
+	docker save ${SWIFT_IMAGE} > ${CACHE_FILE_SWIFT}
 	ls ${CACHE_FOLDER}
 
 pg_integration_test: clean_compose pull_external_images
@@ -131,6 +134,13 @@ pg_integration_test: clean_compose pull_external_images
 	fi
 	@if echo "$(TEST)" | grep -Fq -e "pg10_ssh_" -e "pg10_storage_ssh_"; then\
 		docker compose build ssh;\
+	fi
+	@if echo "$(TEST)" | grep -Fqe "swift"; then\
+		if [ -f ${CACHE_FILE_SWIFT} ]; then\
+			docker load -i ${CACHE_FILE_SWIFT} && rm ${CACHE_FILE_SWIFT};\
+		else\
+			docker compose build swift;\
+		fi;\
 	fi
 
 	docker compose up --exit-code-from $(TEST) $(TEST)
