@@ -72,7 +72,16 @@ done
 # Pull external Docker images with retry (e.g., s3 from Docker Hub).
 # External images are not built locally and may fail on transient network errors.
 pull_external_images:
-	$(call retry,$(PULL_RETRIES),docker compose pull s3 s3-another s3-for-throttling)
+	for i in $$(seq 1 $(PULL_RETRIES)); do \
+		if docker compose pull s3 s3-another s3-for-throttling 2>/dev/null; then \
+			echo "Successfully pulled external images"; \
+			break; \
+		elif [ $$i -eq $(PULL_RETRIES) ]; then \
+			echo "Warning: failed to pull external images after $(PULL_RETRIES) attempts, continuing"; \
+		else \
+			sleep $$((1 << ($$i - 1))); \
+		fi; \
+	done
 
 .PHONY: unittest fmt lint clean
 
@@ -217,7 +226,16 @@ load_docker_common:
 	@if [ "x" = "${CACHE_FOLDER}x" ]; then\
 		echo "Rebuild";\
 		docker compose build $(DOCKER_COMMON);\
-		$(call retry,$(PULL_RETRIES),docker compose pull s3 s3-another s3-for-throttling);\
+		for i in $$(seq 1 $(PULL_RETRIES)); do \
+			if docker compose pull s3 s3-another s3-for-throttling 2>/dev/null; then \
+				echo "Successfully pulled external images"; \
+				break; \
+			elif [ $$i -eq $(PULL_RETRIES) ]; then \
+				echo "Warning: failed to pull external images after $(PULL_RETRIES) attempts, continuing"; \
+			else \
+				sleep $$((1 << ($$i - 1))); \
+			fi; \
+		done;\
 	else\
 		docker load -i ${CACHE_FILE_UBUNTU_18_04} && rm ${CACHE_FILE_UBUNTU_18_04};\
 		docker load -i ${CACHE_FILE_UBUNTU_22_04} && rm ${CACHE_FILE_UBUNTU_22_04};\
