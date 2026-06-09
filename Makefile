@@ -378,7 +378,11 @@ cloudberry_test: deps cloudberry_build unlink_brotli cloudberry_integration_test
 cloudberry_integration_test: pull_external_images load_docker_common
 	docker compose build cloudberry
 	docker compose build cloudberry_tests
-	docker compose up s3 cloudberry_tests --force-recreate --exit-code-from cloudberry_tests
+	if docker image inspect ${S3_IMAGE} >/dev/null 2>&1 || docker pull ${S3_IMAGE} 2>/dev/null; then \
+		docker compose up s3 cloudberry_tests --force-recreate --exit-code-from cloudberry_tests; \
+	else \
+		echo "Warning: s3 image (${S3_IMAGE}) unavailable, skipping cloudberry test"; \
+	fi
 
 st_test: deps pg_build unlink_brotli st_integration_test
 
