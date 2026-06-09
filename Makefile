@@ -72,6 +72,8 @@ done
 # Pull external Docker images with retry (e.g., s3 from Docker Hub).
 # External images are not built locally and may fail on transient network errors.
 pull_external_images:
+	@if [ -f ${CACHE_FILE_S3} ]; then docker load -i ${CACHE_FILE_S3} && echo "Loaded S3 from cache"; fi
+	@if [ -f ${CACHE_FILE_S3_THROTTLING} ]; then docker load -i ${CACHE_FILE_S3_THROTTLING} && echo "Loaded S3 throttling from cache"; fi
 	for i in $$(seq 1 $(PULL_RETRIES)); do \
 		if docker compose pull s3 s3-another s3-for-throttling 2>/dev/null; then \
 			echo "Successfully pulled external images"; \
@@ -176,22 +178,22 @@ pg_integration_test: clean_compose pull_external_images
 		fi;\
 	fi
 
-	docker compose up --exit-code-from $(TEST) $(TEST)
+	docker compose up --pull never --exit-code-from $(TEST) $(TEST)
 	# Run tests with dependencies if we run all tests
 	@if [ "$(TEST)" = "pg10_tests" ]; then\
 		docker compose build pg10_pgbackrest ssh swift pg10_wal_perftest_with_throttling &&\
-		docker compose up --exit-code-from pg10_ssh_backup_test pg10_ssh_backup_test &&\
-		docker compose up --exit-code-from pg10_storage_swift_test pg10_storage_swift_test &&\
-		docker compose up --exit-code-from pg10_storage_ssh_test pg10_storage_ssh_test &&\
-		docker compose up --exit-code-from pg10_pgbackrest_backup_fetch_test pg10_pgbackrest_backup_fetch_test &&\
+		docker compose up --pull never --exit-code-from pg10_ssh_backup_test pg10_ssh_backup_test &&\
+		docker compose up --pull never --exit-code-from pg10_storage_swift_test pg10_storage_swift_test &&\
+		docker compose up --pull never --exit-code-from pg10_storage_ssh_test pg10_storage_ssh_test &&\
+		docker compose up --pull never --exit-code-from pg10_pgbackrest_backup_fetch_test pg10_pgbackrest_backup_fetch_test &&\
 		docker compose down &&\
-		docker compose up --exit-code-from pg10_wal_perftest_with_throttling pg10_wal_perftest_with_throttling ;\
+		docker compose up --pull never --exit-code-from pg10_wal_perftest_with_throttling pg10_wal_perftest_with_throttling ;\
 	fi
 	make clean_compose
 
 orioledb_integration_test: install_and_build_pg clean_compose pull_external_images load_docker_common
 	docker compose build orioledb
-	docker compose up --exit-code-from orioledb orioledb
+	docker compose up --pull never --exit-code-from orioledb orioledb
 	make clean_compose
 
 .PHONY: clean_compose
@@ -204,7 +206,7 @@ all_unittests: deps unittest
 # todo Should we remove this target as a duplicate of pg_integration_test?
 pg_int_tests_only: pull_external_images
 	docker compose build pg10_tests
-	docker compose up --exit-code-from pg10_tests pg10_tests
+	docker compose up --pull never --exit-code-from pg10_tests pg10_tests
 
 pg_clean:
 	(cd $(MAIN_PG_PATH) && go clean)
@@ -247,11 +249,11 @@ load_docker_common:
 mysql_integration_test: deps mysql_build unlink_brotli pull_external_images load_docker_common
 	./link_brotli.sh
 	docker compose build mysql && docker compose build $(MYSQL_TEST)
-	docker compose up --force-recreate --exit-code-from $(MYSQL_TEST) $(MYSQL_TEST)
+	docker compose up --pull never --force-recreate --exit-code-from $(MYSQL_TEST) $(MYSQL_TEST)
 
 mysql8_integration_test: go_deps unlink_brotli pull_external_images load_docker_common
 	docker compose build mysql8 && docker compose build $(MYSQL8_TEST)
-	docker compose up --force-recreate --exit-code-from $(MYSQL8_TEST) $(MYSQL8_TEST)
+	docker compose up --pull never --force-recreate --exit-code-from $(MYSQL8_TEST) $(MYSQL8_TEST)
 
 mysql_clean:
 	(cd $(MAIN_MYSQL_PATH) && go clean)
@@ -265,7 +267,7 @@ mariadb_test: deps mysql_build unlink_brotli mariadb_integration_test
 mariadb_integration_test: unlink_brotli pull_external_images load_docker_common
 	./link_brotli.sh
 	docker compose build mariadb && docker compose build mariadb_tests
-	docker compose up --force-recreate --exit-code-from mariadb_tests mariadb_tests
+	docker compose up --pull never --force-recreate --exit-code-from mariadb_tests mariadb_tests
 
 mongo_test: deps mongo_build unlink_brotli
 
@@ -305,7 +307,7 @@ fdb_install: fdb_build
 fdb_integration_test: pull_external_images load_docker_common
 	docker compose down -v
 	docker compose build fdb_tests
-	docker compose up --force-recreate --renew-anon-volumes --exit-code-from fdb_tests fdb_tests
+	docker compose up --pull never --force-recreate --renew-anon-volumes --exit-code-from fdb_tests fdb_tests
 
 redis_test: deps redis_build unlink_brotli redis_integration_test
 
@@ -314,7 +316,7 @@ redis_build: $(CMD_FILES) $(PKG_FILES)
 
 redis_integration_test: pull_external_images load_docker_common
 	docker compose build redis && docker compose build redis_tests
-	docker compose up --exit-code-from redis_tests redis_tests
+	docker compose up --pull never --exit-code-from redis_tests redis_tests
 
 redis_clean:
 	(cd $(MAIN_REDIS_PATH) && go clean)
@@ -348,7 +350,7 @@ etcd_clean:
 etcd_integration_test: pull_external_images load_docker_common
 	docker compose build etcd
 	docker compose build etcd_tests
-	docker compose up --exit-code-from etcd_tests etcd_tests
+	docker compose up --pull never --exit-code-from etcd_tests etcd_tests
 
 gp_build: $(CMD_FILES) $(PKG_FILES)
 	(cd $(MAIN_GP_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/gp.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/gp.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/gp.walgVersion=$(WALG_VERSION)")
@@ -365,7 +367,7 @@ gp_test: deps gp_build unlink_brotli gp_integration_test
 gp_integration_test: pull_external_images load_docker_common
 	docker compose build gp
 	docker compose build gp_tests
-	docker compose up --exit-code-from gp_tests gp_tests
+	docker compose up --pull never --exit-code-from gp_tests gp_tests
 
 cloudberry_build: gp_build
 
@@ -378,13 +380,13 @@ cloudberry_test: deps cloudberry_build unlink_brotli cloudberry_integration_test
 cloudberry_integration_test: pull_external_images load_docker_common
 	docker compose build cloudberry
 	docker compose build cloudberry_tests
-	docker compose up s3 cloudberry_tests --force-recreate --exit-code-from cloudberry_tests
+	docker compose up --pull never s3 cloudberry_tests --force-recreate --exit-code-from cloudberry_tests
 
 st_test: deps pg_build unlink_brotli st_integration_test
 
 st_integration_test: pull_external_images load_docker_common
 	docker compose build st_tests
-	docker compose up --exit-code-from st_tests st_tests
+	docker compose up --pull never --exit-code-from st_tests st_tests
 
 unittest:
 	go vet -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
