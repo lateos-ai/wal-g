@@ -396,8 +396,10 @@ func UnmarshalSentinelUserData(userDataStr string) (interface{}, error) {
 		return nil, nil
 	}
 
+	decoder := json.NewDecoder(strings.NewReader(userDataStr))
+	decoder.UseNumber()
 	var out interface{}
-	err := json.Unmarshal([]byte(userDataStr), &out)
+	err := decoder.Decode(&out)
 	if err != nil {
 		return nil, errors.Wrapf(newUnmarshallingError(userDataStr, err), "failed to read the user data as a JSON object")
 	}

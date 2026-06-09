@@ -7,6 +7,7 @@ import (
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/wal-g/tracelog"
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 var _ storage.HashableStorage = &Storage{}
@@ -30,6 +31,19 @@ type Secrets struct {
 	Password string
 }
 
+func getHostKeyCallback() (ssh.HostKeyCallback, error) {
+	knownHostsFile := os.Getenv("WALG_SSH_KNOWN_HOSTS")
+	if knownHostsFile == "" {
+		tracelog.WarningLogger.Println("WALG_SSH_KNOWN_HOSTS not set; SSH host keys will not be verified")
+		return ssh.InsecureIgnoreHostKey(), nil
+	}
+	callback, err := knownhosts.New(knownHostsFile)
+	if err != nil {
+		return nil, fmt.Errorf("read known_hosts file %q: %w", knownHostsFile, err)
+	}
+	return callback, nil
+}
+
 // TODO: Unit tests
 func NewStorage(config *Config, rootWraps ...storage.WrapRootFolder) (*Storage, error) {
 	var authMethods []ssh.AuthMethod
@@ -50,11 +64,15 @@ func NewStorage(config *Config, rootWraps ...storage.WrapRootFolder) (*Storage, 
 		authMethods = append(authMethods, ssh.Password(config.Secrets.Password))
 	}
 
+	hostKeyCallback, err := getHostKeyCallback()
+	if err != nil {
+		return nil, fmt.Errorf("SSH host key callback: %w", err)
+	}
+
 	sshConfig := &ssh.ClientConfig{
-		User: config.User,
-		Auth: authMethods,
-		// TODO: Allow checking SSH host keys if it's needed
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		User:            config.User,
+		Auth:            authMethods,
+		HostKeyCallback: hostKeyCallback,
 	}
 	address := fmt.Sprint(config.Host, ":", config.Port)
 	client := NewSFTPLazy(address, sshConfig)

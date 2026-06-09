@@ -122,7 +122,7 @@ func importSingleDatabaseBackup(ctx context.Context, backupName string, dbname s
 }
 
 func getProxyHTTPClient() *http.Client {
-	config := &tls.Config{InsecureSkipVerify: true}
+	config := &tls.Config{MinVersion: tls.VersionTLS12}
 	tr := &http.Transport{
 		TLSClientConfig:   config,
 		ForceAttemptHTTP2: false,
