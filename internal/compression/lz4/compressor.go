@@ -3,8 +3,9 @@ package lz4
 import (
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/pierrec/lz4/v4"
+
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 const (

@@ -3,8 +3,9 @@ package lzma
 import (
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/compression/computils"
 	"github.com/ulikunitz/xz/lzma"
+
+	"github.com/lateos-ai/wal-g/internal/compression/computils"
 )
 
 type Decompressor struct{}
