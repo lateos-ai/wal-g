@@ -101,6 +101,12 @@ formatters:
     - gci
     - gofmt
     - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/lateos-ai/wal-g)
   exclusions:
     generated: lax
     paths:
