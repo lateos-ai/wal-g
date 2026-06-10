@@ -8,9 +8,10 @@ import (
 	"sync"
 	"syscall"
 
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/ncw/directio"
 	"github.com/spf13/viper"
+
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 const directIOBlockCount = 32
