@@ -33,7 +33,16 @@ const (
 	WalgXtrabackupTool              BackupTool = "WALG_XTRABACKUP_TOOL"
 )
 
+var allowedMySQLVariables = map[string]bool{
+	"version":                true,
+	"version_compile_machine": true,
+	"version_compile_os":     true,
+}
+
 func fetchMySQLVariable(db *sql.DB, variable string) (string, error) {
+	if !allowedMySQLVariables[variable] {
+		return "", fmt.Errorf("disallowed MySQL variable: %s", variable)
+	}
 	row := db.QueryRow("SELECT @@" + variable)
 	var value string
 	err := row.Scan(&value)

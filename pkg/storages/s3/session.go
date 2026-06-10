@@ -264,7 +264,11 @@ func decodeHeaders(encodedHeaders string) (map[string]string, error) {
 	headers := map[string]string{}
 
 	for k, v := range interfaces {
-		headers[k] = v.(string)
+		strVal, ok := v.(string)
+		if !ok {
+			return nil, fmt.Errorf("header %q value is not a string", k)
+		}
+		headers[k] = strVal
 	}
 
 	return headers, nil
@@ -273,7 +277,10 @@ func decodeHeaders(encodedHeaders string) (map[string]string, error) {
 func reformHeaderListToMap(headerList []interface{}) map[string]interface{} {
 	headers := map[string]interface{}{}
 	for _, header := range headerList {
-		ma := header.(map[string]interface{})
+		ma, ok := header.(map[string]interface{})
+		if !ok {
+			continue
+		}
 		for k, v := range ma {
 			headers[k] = v
 		}
