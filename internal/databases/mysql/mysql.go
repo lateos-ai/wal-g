@@ -34,9 +34,9 @@ const (
 )
 
 var allowedMySQLVariables = map[string]bool{
-	"version":                true,
+	"version":                 true,
 	"version_compile_machine": true,
-	"version_compile_os":     true,
+	"version_compile_os":      true,
 }
 
 func fetchMySQLVariable(db *sql.DB, variable string) (string, error) {
