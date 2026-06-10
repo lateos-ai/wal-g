@@ -6,9 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/printlist"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Backup represents backup sentinel data

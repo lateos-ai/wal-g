@@ -4,10 +4,11 @@ import (
 	"context"
 	"io"
 
+	"golang.org/x/time/rate"
+
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/internal/limiters"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"golang.org/x/time/rate"
 )
 
 type LimitedFolder struct {

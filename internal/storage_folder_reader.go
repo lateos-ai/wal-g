@@ -3,19 +3,23 @@ package internal
 import (
 	"io"
 
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/wal-g/tracelog"
 )
 
 type StorageFolderReader interface {
 	ReadObject(objectRelativePath string) (io.ReadCloser, error)
+
 	SubFolder(subFolderRelativePath string) StorageFolderReader
 }
 
 func NewFolderReader(folder storage.Folder) StorageFolderReader {
+
 	return &FolderReaderImpl{folder}
+
 }
 
 type FolderReaderImpl struct {
@@ -23,21 +27,35 @@ type FolderReaderImpl struct {
 }
 
 func (fsr *FolderReaderImpl) SubFolder(subFolderRelativePath string) StorageFolderReader {
+
 	return NewFolderReader(fsr.GetSubFolder(subFolderRelativePath))
+
 }
 
 func PrepareMultiStorageFolderReader(folder storage.Folder, targetStorage string) (StorageFolderReader, error) {
+
 	folder = multistorage.SetPolicies(folder, policies.MergeAllStorages)
+
 	var err error
+
 	if targetStorage == "" {
+
 		folder, err = multistorage.UseAllAliveStorages(folder)
+
 	} else {
+
 		folder, err = multistorage.UseSpecificStorage(targetStorage, folder)
+
 	}
+
 	tracelog.DebugLogger.Printf("Files will be read from storages: %v", multistorage.UsedStorages(folder))
+
 	if err != nil {
+
 		return nil, err
+
 	}
 
 	return NewFolderReader(folder), nil
+
 }

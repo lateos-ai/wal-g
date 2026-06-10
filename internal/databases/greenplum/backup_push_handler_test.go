@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/greenplum-db/gp-common-go-libs/cluster"
+
 	"github.com/lateos-ai/wal-g/internal/config"
 )
 
