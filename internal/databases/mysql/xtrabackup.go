@@ -95,7 +95,7 @@ func prepareTemporaryDirectory(tmpDirRoot string) string {
 		tracelog.ErrorLogger.Fatalf("Failed to create temporary directory: %v", err)
 	}
 
-	return tmpPath, nil
+	return tmpPath
 }
 
 func removeTemporaryDirectory(tmpDir string) error {
