@@ -193,43 +193,30 @@ func Init(cmd *cobra.Command, dbName string) {
 // setup init and usage functionality
 
 func initHelp(cmd *cobra.Command) {
-
 	cmd.SetUsageTemplate(usageTemplate)
 
 	defaultUsageFn := (&cobra.Command{}).UsageFunc()
-
 	defaultHelpFn := (&cobra.Command{}).HelpFunc()
 
 	// hide global config flags from usage output
-
 	cmd.SetUsageFunc(func(cmd *cobra.Command) error {
-
 		hideGlobalConfigFlags(cmd)
-
 		return defaultUsageFn(cmd)
-
 	})
 
 	// hide global config flags from help output
-
 	cmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
-
 		hideGlobalConfigFlags(cmd)
-
 		defaultHelpFn(cmd, args)
-
 	})
 
 	// Init help subcommand
-
 	cmd.InitDefaultHelpCmd()
 
 	helpCmd, _, _ := cmd.Find([]string{"help"})
 
 	// fix to disable the required settings check for the help subcommand
-
 	helpCmd.PersistentPreRun = func(*cobra.Command, []string) {}
-
 }
 
 // hide global config flags from all subcommands except the "flags" subcommand
