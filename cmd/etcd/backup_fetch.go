@@ -14,6 +14,7 @@ const backupFetchShortDescription = "Fetches desired backup from storage"
 // backupFetchCmd represents the streamFetch command
 
 var backupFetchCmd = &cobra.Command{
+
 	Use: "backup-fetch backup-name",
 
 	Short: backupFetchShortDescription,
@@ -21,14 +22,17 @@ var backupFetchCmd = &cobra.Command{
 	Args: cobra.ExactArgs(1),
 
 	PreRun: func(cmd *cobra.Command, args []string) {
+
 		conf.RequiredSettings[conf.NameStreamRestoreCmd] = true
 
 		err := internal.AssertRequiredSettingsSet()
 
 		tracelog.ErrorLogger.FatalOnError(err)
+
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
+
 		internal.ConfigureLimiters()
 
 		ctx := cmd.Context()
@@ -46,9 +50,12 @@ var backupFetchCmd = &cobra.Command{
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		etcd.HandleBackupFetch(ctx, storage.RootFolder(), targetBackupSelector, restoreCmd)
+
 	},
 }
 
 func init() {
+
 	cmd.AddCommand(backupFetchCmd)
+
 }

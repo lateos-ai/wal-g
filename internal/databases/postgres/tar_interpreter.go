@@ -119,7 +119,7 @@ func (tarInterpreter *FileTarInterpreter) Interpret(fileReader io.Reader, fileIn
 	// nolint : staticcheck
 
 	switch fileInfo.Typeflag {
-	case tar.TypeReg, tar.TypeRegA:
+	case tar.TypeReg:
 
 		// temporary switch to determine if new unwrap logic should be used
 

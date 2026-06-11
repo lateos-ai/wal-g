@@ -419,7 +419,7 @@ func (idx *Index) GetSections(rangeMin, rangeMax uint64) []Section {
 	return sections
 }
 
-// nolint: unused
+//nolint:unused
 
 func (idx *Index) debugBlocks() {
 	for i, b := range idx.ocache {

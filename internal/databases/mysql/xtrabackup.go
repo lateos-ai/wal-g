@@ -84,9 +84,7 @@ func isXtrabackup(cmd *exec.Cmd) bool {
 	})
 }
 
-//nolint:unparam
-
-func prepareTemporaryDirectory(tmpDirRoot string) (string, error) {
+func prepareTemporaryDirectory(tmpDirRoot string) string {
 	tmpDirPattern := "wal-g"
 
 	tmpPath, err := os.MkdirTemp(tmpDirRoot, tmpDirPattern)
@@ -227,9 +225,7 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 
 	incrementalBackupDir := viper.GetString(conf.MysqlIncrementalBackupDst)
 
-	tempDeltaDir, err := prepareTemporaryDirectory(incrementalBackupDir)
-
-	tracelog.ErrorLogger.FatalfOnError("Failed to prepare temp dir: %v", err)
+	tempDeltaDir := prepareTemporaryDirectory(incrementalBackupDir)
 
 	if sentinel.IsIncremental {
 		restoreCmd = cloneCommand(restoreCmd)
@@ -347,9 +343,7 @@ func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplac
 
 	tracelog.ErrorLogger.FatalfOnError("Failed to get config value: %v", err)
 
-	tempDeltaDir, err := prepareTemporaryDirectory(incrementalBackupDir)
-
-	tracelog.ErrorLogger.FatalfOnError("Failed to prepare temp dir: %v", err)
+	tempDeltaDir := prepareTemporaryDirectory(incrementalBackupDir)
 
 	if sentinel.IsIncremental {
 		prepareCmd = cloneCommand(prepareCmd)

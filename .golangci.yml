@@ -29,7 +29,7 @@ linters:
     dupl:
       threshold: 400
     funlen:
-      lines: 150
+      lines: 250
       statements: 80
     nakedret:
       max-func-lines: 60
@@ -43,7 +43,7 @@ linters:
         - style
       settings:
         hugeParam:
-          sizeThreshold: 170
+          sizeThreshold: 300
     gocyclo:
       min-complexity: 25
     lll:

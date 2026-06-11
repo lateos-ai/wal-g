@@ -590,7 +590,7 @@ func (bh *BackupHandler) uploadSentinel(sentinelDto BackupSentinelDto) (err erro
 	return internal.UploadSentinel(sentinelUploader, sentinelDto, bh.currBackupInfo.backupName)
 }
 
-// nolint:unused
+//nolint:unused
 
 func (bh *BackupHandler) connect() (err error) {
 	tracelog.InfoLogger.Println("Connecting to Greenplum master.")

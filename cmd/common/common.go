@@ -15,37 +15,71 @@ import (
 
 const usageTemplate = `Usage:{{if .Runnable}}
 
+
+
 {{.UseLine}}{{end}}{{if .HasAvailableSubCommands}}
+
+
 
 {{.CommandPath}} [command]{{end}}{{if gt (len .Aliases) 0}}
 
 
 
+
+
+
+
 Aliases:
+
+
 
 {{.NameAndAliases}}{{end}}{{if .HasExample}}
 
 
 
+
+
+
+
 Examples:
+
+
 
 {{.Example}}{{end}}{{if .HasAvailableSubCommands}}
 
 
 
+
+
+
+
 Available Commands:{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "help"))}}
+
+
 
 {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
 
 
 
+
+
+
+
 Flags:
+
+
 
 {{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
 
 
 
+
+
+
+
 Global Flags:
+
+
 
 {{.InheritedFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}` +
 
@@ -55,25 +89,42 @@ Global Flags:
 
 
 
+
+
+
+
 To get the complete list of all global flags, run: 'wal-g flags'` +
 
 	`{{if .HasHelpSubCommands}}
 
 
 
+
+
+
+
 Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
+
+
 
 {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
 
 
 
+
+
+
+
 Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
+
+
 
 `
 
 const hiddenConfigFlagAnnotation = "walg_annotation_hidden_config_flag"
 
 func Init(cmd *cobra.Command, dbName string) {
+
 	internal.ConfigureSettings(dbName)
 
 	cobra.OnInitialize(conf.InitConfig, conf.Configure)
@@ -116,8 +167,11 @@ func Init(cmd *cobra.Command, dbName string) {
 	var p internal.ProfileStopper
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+
 		if persistentPreRun != nil {
+
 			persistentPreRun(cmd, args)
+
 		}
 
 		var err error
@@ -125,11 +179,15 @@ func Init(cmd *cobra.Command, dbName string) {
 		p, err = internal.Profile()
 
 		tracelog.ErrorLogger.FatalOnError(err)
+
 	}
 
 	cmd.PersistentPostRun = func(cmd *cobra.Command, args []string) {
+
 		if persistentPostRun != nil {
+
 			persistentPostRun(cmd, args)
+
 		}
 
 		// metrics hook
@@ -137,8 +195,11 @@ func Init(cmd *cobra.Command, dbName string) {
 		statistics.PushMetrics()
 
 		if p != nil {
+
 			p.Stop()
+
 		}
+
 	}
 
 	// Don't run PersistentPreRun when shell autocompleting
@@ -146,17 +207,23 @@ func Init(cmd *cobra.Command, dbName string) {
 	preRun := cmd.PersistentPreRun
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+
 		if strings.Index(cmd.Use, cobra.ShellCompRequestCmd) == 0 {
+
 			return
+
 		}
 
 		preRun(cmd, args)
+
 	}
+
 }
 
 // setup init and usage functionality
 
 func initHelp(cmd *cobra.Command) {
+
 	cmd.SetUsageTemplate(usageTemplate)
 
 	defaultUsageFn := (&cobra.Command{}).UsageFunc()
@@ -166,17 +233,21 @@ func initHelp(cmd *cobra.Command) {
 	// hide global config flags from usage output
 
 	cmd.SetUsageFunc(func(cmd *cobra.Command) error {
+
 		hideGlobalConfigFlags(cmd)
 
 		return defaultUsageFn(cmd)
+
 	})
 
 	// hide global config flags from help output
 
 	cmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
+
 		hideGlobalConfigFlags(cmd)
 
 		defaultHelpFn(cmd, args)
+
 	})
 
 	// Init help subcommand
@@ -188,16 +259,25 @@ func initHelp(cmd *cobra.Command) {
 	// fix to disable the required settings check for the help subcommand
 
 	helpCmd.PersistentPreRun = func(*cobra.Command, []string) {}
+
 }
 
 // hide global config flags from all subcommands except the "flags" subcommand
 
 func hideGlobalConfigFlags(cmd *cobra.Command) {
+
 	if cmd != FlagsCmd {
+
 		cmd.Root().PersistentFlags().VisitAll(func(f *pflag.Flag) {
+
 			if _, ok := f.Annotations[hiddenConfigFlagAnnotation]; ok {
+
 				f.Hidden = true
+
 			}
+
 		})
+
 	}
+
 }

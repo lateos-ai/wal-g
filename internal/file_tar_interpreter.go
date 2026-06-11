@@ -34,9 +34,7 @@ func (tarInterpreter *FileTarInterpreter) Interpret(reader io.Reader, fileInfo *
 	targetPath := path.Join(tarInterpreter.DirectoryToSave, fileInfo.Name)
 
 	switch fileInfo.Typeflag {
-	// nolint : staticcheck
-
-	case tar.TypeReg, tar.TypeRegA:
+	case tar.TypeReg:
 
 		return tarInterpreter.interpretRegularFile(targetPath, fileInfo, reader)
 
