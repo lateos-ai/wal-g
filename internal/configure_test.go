@@ -20,7 +20,6 @@ import (
 )
 
 func TestGetSentinelUserData(t *testing.T) {
-
 	viper.Set(config.SentinelUserDataSetting, "1.0")
 
 	data, err := internal.GetSentinelUserData()
@@ -62,11 +61,9 @@ func TestGetSentinelUserData(t *testing.T) {
 	assert.Nil(t, data)
 
 	resetToDefaults()
-
 }
 
 func TestGetDataFolderPath_Default(t *testing.T) {
-
 	pgEnv := os.Getenv(config.PgDataSetting)
 
 	os.Unsetenv(config.PgDataSetting)
@@ -90,11 +87,9 @@ func TestGetDataFolderPath_Default(t *testing.T) {
 	os.Setenv(config.PgDataSetting, pgEnv)
 
 	resetToDefaults()
-
 }
 
 func TestGetDataFolderPath_FolderNotExist(t *testing.T) {
-
 	parentDir := prepareDataFolder(t, "someOtherFolder")
 
 	defer testtools.Cleanup(t, parentDir)
@@ -106,11 +101,9 @@ func TestGetDataFolderPath_FolderNotExist(t *testing.T) {
 	assert.Equal(t, path.Join(internal.GetDefaultDataFolderPath(), "walg_data"), actual)
 
 	resetToDefaults()
-
 }
 
 func TestGetDataFolderPath_Wal(t *testing.T) {
-
 	parentDir := prepareDataFolder(t, "pg_wal")
 
 	defer testtools.Cleanup(t, parentDir)
@@ -122,11 +115,9 @@ func TestGetDataFolderPath_Wal(t *testing.T) {
 	assert.Equal(t, filepath.ToSlash(filepath.Join(parentDir, "pg_wal", "walg_data")), actual)
 
 	resetToDefaults()
-
 }
 
 func TestGetDataFolderPath_Xlog(t *testing.T) {
-
 	parentDir := prepareDataFolder(t, "pg_xlog")
 
 	defer testtools.Cleanup(t, parentDir)
@@ -138,11 +129,9 @@ func TestGetDataFolderPath_Xlog(t *testing.T) {
 	assert.Equal(t, filepath.ToSlash(filepath.Join(parentDir, "pg_xlog", "walg_data")), actual)
 
 	resetToDefaults()
-
 }
 
 func TestGetDataFolderPath_WalIgnoreXlog(t *testing.T) {
-
 	parentDir := prepareDataFolder(t, "pg_xlog")
 
 	defer testtools.Cleanup(t, parentDir)
@@ -150,9 +139,7 @@ func TestGetDataFolderPath_WalIgnoreXlog(t *testing.T) {
 	err := os.Mkdir(filepath.Join(parentDir, "pg_wal"), 0700)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	viper.Set(config.PgDataSetting, parentDir)
@@ -162,11 +149,9 @@ func TestGetDataFolderPath_WalIgnoreXlog(t *testing.T) {
 	assert.Equal(t, filepath.ToSlash(filepath.Join(parentDir, "pg_wal", "walg_data")), actual)
 
 	resetToDefaults()
-
 }
 
 func TestConfigureArchiveStatusManager(t *testing.T) {
-
 	parentDir := prepareDataFolder(t, "pg_wal")
 
 	defer testtools.Cleanup(t, parentDir)
@@ -196,11 +181,9 @@ func TestConfigureArchiveStatusManager(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.True(t, manager.FileExists(fileName))
-
 }
 
 func TestConfigureCompressor_Lz4Method(t *testing.T) {
-
 	viper.Set(config.CompressionMethodSetting, "lz4")
 
 	compressor, err := internal.ConfigureCompressor()
@@ -210,11 +193,9 @@ func TestConfigureCompressor_Lz4Method(t *testing.T) {
 	assert.Equal(t, compressor, lz4.Compressor{})
 
 	resetToDefaults()
-
 }
 
 func TestConfigureCompressor_LzmaMethod(t *testing.T) {
-
 	viper.Set(config.CompressionMethodSetting, "lzma")
 
 	compressor, err := internal.ConfigureCompressor()
@@ -224,11 +205,9 @@ func TestConfigureCompressor_LzmaMethod(t *testing.T) {
 	assert.Equal(t, compressor, lzma.Compressor{})
 
 	resetToDefaults()
-
 }
 
 func TestConfigureCompressor_UseDefaultOnNoMethodSet(t *testing.T) {
-
 	compressor, err := internal.ConfigureCompressor()
 
 	assert.NoError(t, err)
@@ -236,11 +215,9 @@ func TestConfigureCompressor_UseDefaultOnNoMethodSet(t *testing.T) {
 	assert.Equal(t, compressor, lz4.Compressor{})
 
 	resetToDefaults()
-
 }
 
 func TestConfigureCompressor_ErrorWhenViperClear(t *testing.T) {
-
 	viper.Reset()
 
 	compressor, err := internal.ConfigureCompressor()
@@ -250,11 +227,9 @@ func TestConfigureCompressor_ErrorWhenViperClear(t *testing.T) {
 	assert.Equal(t, compressor, nil)
 
 	resetToDefaults()
-
 }
 
 func TestConfigureCompressor_FailsOnInvalidCompressorString(t *testing.T) {
-
 	viper.Set(config.CompressionMethodSetting, "kek123kek")
 
 	compressor, err := internal.ConfigureCompressor()
@@ -264,17 +239,13 @@ func TestConfigureCompressor_FailsOnInvalidCompressorString(t *testing.T) {
 	assert.Equal(t, compressor, nil)
 
 	resetToDefaults()
-
 }
 
 func prepareDataFolder(t *testing.T, name string) string {
-
 	cwd, err := filepath.Abs("./")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Create temp Directory.
@@ -282,27 +253,21 @@ func prepareDataFolder(t *testing.T, name string) string {
 	dir, err := os.MkdirTemp(cwd, "test")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	err = os.Mkdir(filepath.Join(dir, name), 0700)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	fmt.Println(dir)
 
 	return dir
-
 }
 
 func resetToDefaults() {
-
 	viper.Reset()
 
 	internal.ConfigureSettings(config.PG)
@@ -310,11 +275,9 @@ func resetToDefaults() {
 	config.InitConfig()
 
 	config.Configure()
-
 }
 
 func TestGetDeltaConfig(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -326,9 +289,7 @@ func TestGetDeltaConfig(t *testing.T) {
 
 		wantFull bool
 	}{
-
 		{
-
 			name: "latest origin",
 
 			maxDeltas: 3,
@@ -341,7 +302,6 @@ func TestGetDeltaConfig(t *testing.T) {
 		},
 
 		{
-
 			name: "latest full origin",
 
 			maxDeltas: 5,
@@ -355,9 +315,7 @@ func TestGetDeltaConfig(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			viper.Set(config.DeltaMaxStepsSetting, tt.maxDeltas)
 
 			viper.Set(config.DeltaOriginSetting, tt.origin)
@@ -369,15 +327,11 @@ func TestGetDeltaConfig(t *testing.T) {
 			assert.Equal(t, tt.wantFull, gotFull)
 
 			resetToDefaults()
-
 		})
-
 	}
-
 }
 
 func TestGetDeltaConfig_DefaultOrigin(t *testing.T) {
-
 	viper.Set(config.DeltaMaxStepsSetting, 7)
 
 	gotMax, gotFull := internal.GetDeltaConfig()
@@ -387,21 +341,17 @@ func TestGetDeltaConfig_DefaultOrigin(t *testing.T) {
 	assert.False(t, gotFull)
 
 	resetToDefaults()
-
 }
 
 func TestConfigureLimiters_NoSettings(t *testing.T) {
-
 	limiters.DiskLimiter = nil
 
 	limiters.NetworkLimiter = nil
 
 	defer func() {
-
 		limiters.DiskLimiter = nil
 
 		limiters.NetworkLimiter = nil
-
 	}()
 
 	internal.ConfigureLimiters()
@@ -409,11 +359,9 @@ func TestConfigureLimiters_NoSettings(t *testing.T) {
 	assert.Nil(t, limiters.DiskLimiter)
 
 	assert.Nil(t, limiters.NetworkLimiter)
-
 }
 
 func TestConfigureLimiters_DiskRateLimit(t *testing.T) {
-
 	limiters.DiskLimiter = nil
 
 	defer func() { limiters.DiskLimiter = nil }()
@@ -431,11 +379,9 @@ func TestConfigureLimiters_DiskRateLimit(t *testing.T) {
 	assert.Equal(t, rate.Limit(diskLimit), limiters.DiskLimiter.Limit())
 
 	assert.Equal(t, int(diskLimit+internal.DefaultDataBurstRateLimit), limiters.DiskLimiter.Burst())
-
 }
 
 func TestConfigureLimiters_NetworkRateLimit(t *testing.T) {
-
 	limiters.NetworkLimiter = nil
 
 	defer func() { limiters.NetworkLimiter = nil }()
@@ -453,21 +399,17 @@ func TestConfigureLimiters_NetworkRateLimit(t *testing.T) {
 	assert.Equal(t, rate.Limit(netLimit), limiters.NetworkLimiter.Limit())
 
 	assert.Equal(t, int(netLimit+internal.DefaultDataBurstRateLimit), limiters.NetworkLimiter.Burst())
-
 }
 
 func TestConfigureLimiters_BothLimits(t *testing.T) {
-
 	limiters.DiskLimiter = nil
 
 	limiters.NetworkLimiter = nil
 
 	defer func() {
-
 		limiters.DiskLimiter = nil
 
 		limiters.NetworkLimiter = nil
-
 	}()
 
 	viper.Set(config.DiskRateLimitSetting, int64(512))
@@ -481,23 +423,19 @@ func TestConfigureLimiters_BothLimits(t *testing.T) {
 	assert.NotNil(t, limiters.DiskLimiter)
 
 	assert.NotNil(t, limiters.NetworkLimiter)
-
 }
 
 func TestConfigureLimiters_TurboSkipsLimiters(t *testing.T) {
-
 	limiters.DiskLimiter = nil
 
 	limiters.NetworkLimiter = nil
 
 	defer func() {
-
 		limiters.DiskLimiter = nil
 
 		limiters.NetworkLimiter = nil
 
 		config.Turbo = false
-
 	}()
 
 	viper.Set(config.DiskRateLimitSetting, int64(1024))
@@ -513,11 +451,9 @@ func TestConfigureLimiters_TurboSkipsLimiters(t *testing.T) {
 	assert.Nil(t, limiters.DiskLimiter)
 
 	assert.Nil(t, limiters.NetworkLimiter)
-
 }
 
 func TestConfigureStorage_NoStorageConfigured(t *testing.T) {
-
 	resetToDefaults()
 
 	st, err := internal.ConfigureStorage()
@@ -527,11 +463,9 @@ func TestConfigureStorage_NoStorageConfigured(t *testing.T) {
 	assert.IsType(t, internal.UnconfiguredStorageError{}, err)
 
 	assert.Nil(t, st)
-
 }
 
 func TestConfigureStorage_FileStorage(t *testing.T) {
-
 	dir := t.TempDir()
 
 	viper.Set("WALG_FILE_PREFIX", dir)
@@ -545,11 +479,9 @@ func TestConfigureStorage_FileStorage(t *testing.T) {
 	assert.NotNil(t, st)
 
 	assert.NotEmpty(t, st.ConfigHash())
-
 }
 
 func TestConfigureStorage_FileStorageWithPrefix(t *testing.T) {
-
 	dir := t.TempDir()
 
 	viper.Set("WALG_FILE_PREFIX", dir)
@@ -565,11 +497,9 @@ func TestConfigureStorage_FileStorageWithPrefix(t *testing.T) {
 	assert.NotNil(t, st)
 
 	assert.Contains(t, st.RootFolder().GetPath(), "myprefix")
-
 }
 
 func TestConfigureStorage_WithNetworkLimiter(t *testing.T) {
-
 	dir := t.TempDir()
 
 	viper.Set("WALG_FILE_PREFIX", dir)
@@ -577,11 +507,9 @@ func TestConfigureStorage_WithNetworkLimiter(t *testing.T) {
 	limiters.NetworkLimiter = rate.NewLimiter(rate.Limit(1024), 1024)
 
 	defer func() {
-
 		limiters.NetworkLimiter = nil
 
 		resetToDefaults()
-
 	}()
 
 	st, err := internal.ConfigureStorage()
@@ -593,5 +521,4 @@ func TestConfigureStorage_WithNetworkLimiter(t *testing.T) {
 	_, isLimited := st.RootFolder().(*internal.LimitedFolder)
 
 	assert.True(t, isLimited, "expected root folder to be wrapped in LimitedFolder")
-
 }

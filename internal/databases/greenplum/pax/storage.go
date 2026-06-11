@@ -25,7 +25,6 @@ const (
 // upload of the same file.
 
 func MakeFileStorageKey(relNameMd5 string, key FileKey, paxFilesID string) string {
-
 	//Storage object names are built from `<spc>_<db>_<md5>_<rel>_<filename>_<id>_pax`.
 
 	//* `<spc>` - Tablespace OID. 1663 for pg_default, 1664 for pg_global, otherwise the OID of a user-defined tablespace.
@@ -75,7 +74,6 @@ func MakeFileStorageKey(relNameMd5 string, key FileKey, paxFilesID string) strin
 		paxFilesID,
 
 		KeySuffix)
-
 }
 
 // LoadStoragePaxFiles loads the set of PAX file storage keys referenced by every
@@ -85,23 +83,17 @@ func MakeFileStorageKey(relNameMd5 string, key FileKey, paxFilesID string) strin
 // to decide whether a file may be skipped (already in storage) or must be uploaded.
 
 func LoadStoragePaxFiles(baseBackupsFolder storage.Folder) (map[string]struct{}, error) {
-
 	known := make(map[string]struct{})
 
 	err := iterateStoragePaxFilesWithFunc(baseBackupsFolder, func(_ string, desc BackupFileDesc) {
-
 		known[desc.StoragePath] = struct{}{}
-
 	})
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return known, nil
-
 }
 
 // iterateStoragePaxFilesWithFunc visits every PAX file referenced by any backup that
@@ -111,45 +103,33 @@ func LoadStoragePaxFiles(baseBackupsFolder storage.Folder) (map[string]struct{},
 // (older format, or non-PAX clusters) are silently skipped.
 
 func iterateStoragePaxFilesWithFunc(baseBackupsFolder storage.Folder, fn func(string, BackupFileDesc)) error {
-
 	backupObjects, _, err := baseBackupsFolder.ListFolder()
 
 	if err != nil {
-
 		return err
-
 	}
 
 	for _, b := range internal.GetBackupTimeSlices(backupObjects) {
-
 		var meta FilesMetadataDTO
 
 		err := internal.FetchDto(baseBackupsFolder, &meta, GetFilesMetadataPath(b.BackupName))
 
 		if err != nil {
-
 			if _, ok := err.(storage.ObjectNotFoundError); ok {
-
 				tracelog.DebugLogger.Printf("No PAX files metadata for backup %s in folder %s, skipping",
 
 					b.BackupName, baseBackupsFolder.GetPath())
 
 				continue
-
 			}
 
 			return err
-
 		}
 
 		for localPath, fileDesc := range meta.Files {
-
 			fn(localPath, fileDesc)
-
 		}
-
 	}
 
 	return nil
-
 }

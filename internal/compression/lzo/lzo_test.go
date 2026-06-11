@@ -23,7 +23,6 @@ import (
 // Test extraction of various lzo compressed tar files.
 
 func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
-
 	// Generate and save random bytes compare against
 
 	// compression-decompression cycle.
@@ -31,7 +30,6 @@ func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
 	sb := testtools.NewStrideByteReader(stride)
 
 	lr := &io.LimitedReader{
-
 		R: sb,
 
 		N: int64(nBytes),
@@ -48,9 +46,7 @@ func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
 	copy(bCopy, b)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Compress bytes and make a tar in memory.
@@ -60,7 +56,6 @@ func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
 	lzow := lzo.NewWriter(w)
 
 	go func() {
-
 		defer utility.LoggedClose(lzow, "")
 
 		defer utility.LoggedClose(w, "")
@@ -68,22 +63,16 @@ func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
 		bw := bufio.NewWriterSize(lzow, walg_lzo.LzopBlockSize)
 
 		defer func() {
-
 			if err := bw.Flush(); err != nil {
-
 				panic(err)
-
 			}
-
 		}()
 
 		testtools.CreateTar(bw, &io.LimitedReader{
-
 			R: bytes.NewBuffer(b),
 
 			N: int64(len(b)),
 		})
-
 	}()
 
 	tarContents := &bytes.Buffer{}
@@ -103,19 +92,14 @@ func testLzopRoundTrip(t *testing.T, stride, nBytes int) {
 	err = internal.ExtractAll(buf, files)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	assert.Equalf(t, bCopy, buf.Out, "extract: Decompressed output does not match input.")
-
 }
 
 func TestLzopUncompressableBytes(t *testing.T) {
-
 	testLzopRoundTrip(t, walg_lzo.LzopBlockSize*2, walg_lzo.LzopBlockSize*2)
-
 }
 
 func TestLzop1Byte(t *testing.T) { testLzopRoundTrip(t, 7924, 1) }
@@ -125,11 +109,9 @@ func TestLzop1MByte(t *testing.T) { testLzopRoundTrip(t, 7924, 1024*1024) }
 func TestLzop10MByte(t *testing.T) { testLzopRoundTrip(t, 7924, 10*1024*1024) }
 
 func setupRand(stride, nBytes int) *BufferReaderMaker {
-
 	sb := testtools.NewStrideByteReader(stride)
 
 	lr := &io.LimitedReader{
-
 		R: sb,
 
 		N: int64(nBytes),
@@ -142,29 +124,23 @@ func setupRand(stride, nBytes int) *BufferReaderMaker {
 	lzow := lzo.NewWriter(pw)
 
 	go func() {
-
 		testtools.CreateTar(lzow, lr)
 
 		defer utility.LoggedClose(lzow, "")
 
 		defer utility.LoggedClose(pw, "")
-
 	}()
 
 	_, err := io.Copy(b.Buf, pr)
 
 	if err != nil {
-
 		panic(err)
-
 	}
 
 	return b
-
 }
 
 func BenchmarkExtractAll(b *testing.B) {
-
 	b.SetBytes(int64(b.N * 1024 * 1024))
 
 	out := make([]internal.ReaderMaker, 1)
@@ -178,7 +154,6 @@ func BenchmarkExtractAll(b *testing.B) {
 	b.ResetTimer()
 
 	// f := &extract.FileTarInterpreter{
-
 	// 		DBDataDirectory: "",
 
 	// 	}
@@ -196,11 +171,8 @@ func BenchmarkExtractAll(b *testing.B) {
 	err := internal.ExtractAll(buf, out)
 
 	if err != nil {
-
 		b.Log(err)
-
 	}
-
 }
 
 // Used to mock files in memory.
@@ -222,11 +194,9 @@ func (b *BufferReaderMaker) FileType() internal.FileType { return internal.TarFi
 func (b *BufferReaderMaker) Mode() int64 { return 0 }
 
 func init() {
-
 	internal.ConfigureSettings("")
 
 	conf.InitConfig()
 
 	conf.Configure()
-
 }

@@ -28,7 +28,6 @@ const (
 
 var (
 	ops = []*models.Oplog{
-
 		{TS: models.Timestamp{TS: 1579002001, Inc: 1}},
 
 		{TS: models.Timestamp{TS: 1579002002, Inc: 1}},
@@ -44,11 +43,9 @@ var (
 )
 
 func TestMain(m *testing.M) {
-
 	fillOpsRawData()
 
 	os.Exit(m.Run())
-
 }
 
 type oplogMeta struct {
@@ -56,30 +53,22 @@ type oplogMeta struct {
 }
 
 func fillOpsRawData() {
-
 	for i := range ops {
-
 		opMeta := oplogMeta{
-
 			TS: models.BsonTimestampFromOplogTS(ops[i].TS),
 		}
 
 		raw, err := bson.Marshal(opMeta)
 
 		if err != nil {
-
 			panic(err)
-
 		}
 
 		ops[i].Data = raw
-
 	}
-
 }
 
 func ArchRawMocks(batches ...[]*models.Oplog) ([]models.Archive, [][]byte) {
-
 	archives := make([]models.Archive, 0, len(batches))
 
 	raws := make([][]byte, 0, len(batches))
@@ -87,21 +76,16 @@ func ArchRawMocks(batches ...[]*models.Oplog) ([]models.Archive, [][]byte) {
 	startTS := models.Timestamp{}
 
 	for _, ops := range batches {
-
 		buf := bytes.Buffer{}
 
 		for _, op := range ops {
-
 			buf.Write(op.Data)
-
 		}
 
 		arch, err := models.NewArchive(startTS, ops[len(ops)-1].TS, archiveExt, models.ArchiveTypeOplog)
 
 		if err != nil {
-
 			panic(err)
-
 		}
 
 		startTS = ops[len(ops)-1].TS
@@ -109,11 +93,9 @@ func ArchRawMocks(batches ...[]*models.Oplog) ([]models.Archive, [][]byte) {
 		archives = append(archives, arch)
 
 		raws = append(raws, buf.Bytes())
-
 	}
 
 	return archives, raws
-
 }
 
 type DownloaderFields struct {
@@ -123,7 +105,6 @@ type DownloaderFields struct {
 }
 
 func SetupDownloaderMocks(ops ...[]*models.Oplog) DownloaderFields {
-
 	dl := archiveMocks.Downloader{}
 
 	archives, raws := ArchRawMocks(ops...)
@@ -131,85 +112,63 @@ func SetupDownloaderMocks(ops ...[]*models.Oplog) DownloaderFields {
 	dl.On("DownloadOplogArchive", mock.Anything, mock.Anything).
 		Return(nil).
 		Run(func(args mock.Arguments) {
-
 			writer := args.Get(1).(io.WriteCloser)
 
 			arch := args.Get(0).(models.Archive)
 
 			for i, a := range archives {
-
 				if a == arch {
-
 					if _, err := writer.Write(raws[i]); err != nil {
-
 						panic(err)
-
 					}
 
 					return
-
 				}
-
 			}
 
 			panic("bad mock data")
-
 		}).Times(len(archives))
 
 	return DownloaderFields{downloader: &dl, path: archives}
-
 }
 
 func gatherOps(in chan *models.Oplog) chan []*models.Oplog {
-
 	ch := make(chan []*models.Oplog)
 
 	go func() {
-
 		outOps := make([]*models.Oplog, 0, 0)
 
 		for op := range in {
-
 			outOps = append(outOps, op)
-
 		}
 
 		ch <- outOps
 
 		close(ch)
-
 	}()
 
 	return ch
-
 }
 
 func countOps(in chan *models.Oplog) chan int {
-
 	ch := make(chan int)
 
 	cnt := 0
 
 	go func() {
-
 		for range in {
-
 			cnt++
-
 		}
 
 		ch <- cnt
 
 		close(ch)
-
 	}()
 
 	return ch
-
 }
 
 func TestStorageFetcher_OplogBetween(t *testing.T) {
-
 	type args struct {
 		ctx context.Context
 
@@ -231,15 +190,12 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 
 		wantErrc error
 	}{
-
 		{
-
 			name: "from_first_until_last,_one_archive",
 
 			fields: SetupDownloaderMocks(ops),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -253,13 +209,11 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 		},
 
 		{
-
 			name: "from_first_until_last,_three_archives",
 
 			fields: SetupDownloaderMocks(ops[0:2], ops[2:3], ops[3:]),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -273,13 +227,11 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 		},
 
 		{
-
 			name: "from_second_until_pre-last,_three_archives",
 
 			fields: SetupDownloaderMocks(ops[0:3], ops[3:4], ops[4:]),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[1].TS,
@@ -293,13 +245,11 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 		},
 
 		{
-
 			name: "error:_first_>_until",
 
 			fields: SetupDownloaderMocks(ops[0:2], ops[2:3], ops[3:]),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -313,13 +263,11 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 		},
 
 		{
-
 			name: "error:_until_is_not_reached",
 
 			fields: SetupDownloaderMocks(ops[0:2], ops[2:3], ops[3:]),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -334,11 +282,8 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			sf := &StorageFetcher{
-
 				downloader: tt.fields.downloader,
 
 				path: tt.fields.path,
@@ -347,11 +292,9 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 			outc, errc, err := sf.FetchBetween(tt.args.ctx, tt.args.from, tt.args.until)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -365,13 +308,9 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 			assert.Equal(t, tt.wantOps, outOps)
 
 			if tt.wantErrc != nil {
-
 				assert.EqualError(t, err, tt.wantErrc.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			// check if error chan is closed
@@ -381,11 +320,8 @@ func TestStorageFetcher_OplogBetween(t *testing.T) {
 			assert.False(t, ok)
 
 			tt.fields.downloader.AssertExpectations(t)
-
 		})
-
 	}
-
 }
 
 type MongoDriverFields struct {
@@ -395,7 +331,6 @@ type MongoDriverFields struct {
 }
 
 func SetupSecondaryMongoDriverMocks(op *models.Oplog) MongoDriverFields {
-
 	md := &mongoMocks.MongoDriver{}
 
 	cur := &mongoMocks.OplogCursor{}
@@ -408,21 +343,17 @@ func SetupSecondaryMongoDriverMocks(op *models.Oplog) MongoDriverFields {
 		On("Next", mock.Anything).Return(true).Once()
 
 	return MongoDriverFields{mongo: md, cursor: cur}
-
 }
 
 func SetupMongoDriverOkMock() *mongoMocks.MongoDriver {
-
 	md := &mongoMocks.MongoDriver{}
 
 	tsInFuture := models.OpTime{TS: models.Timestamp{TS: uint32(time.Now().Add(24 * time.Hour).Unix()), Inc: 1}}
 
 	isMaster := models.IsMaster{
-
 		IsMaster: true,
 
 		LastWrite: models.IsMasterLastWrite{
-
 			OpTime: tsInFuture,
 
 			MajorityOpTime: tsInFuture,
@@ -432,25 +363,20 @@ func SetupMongoDriverOkMock() *mongoMocks.MongoDriver {
 	md.On("IsMaster", mock.Anything).Return(isMaster, nil)
 
 	return md
-
 }
 
 func SetupMongoDriverMocks(ops []*models.Oplog, driverErr, curErr error, badOp bool) MongoDriverFields {
-
 	md := &mongoMocks.MongoDriver{}
 
 	cur := &mongoMocks.OplogCursor{}
 
 	if curErr == nil {
-
 		tsInFuture := models.OpTime{TS: models.Timestamp{TS: uint32(time.Now().Add(24 * time.Hour).Unix()), Inc: 1}}
 
 		isMaster := models.IsMaster{
-
 			IsMaster: true,
 
 			LastWrite: models.IsMasterLastWrite{
-
 				OpTime: tsInFuture,
 
 				MajorityOpTime: tsInFuture,
@@ -460,27 +386,20 @@ func SetupMongoDriverMocks(ops []*models.Oplog, driverErr, curErr error, badOp b
 		md.On("IsMaster", mock.Anything).Return(isMaster, nil)
 
 		for i := range ops {
-
 			cur.On("Data").Return(ops[i].Data).Once().
 				On("Next", mock.Anything).Return(true).Once()
-
 		}
-
 	}
 
 	if !badOp {
-
 		cur.On("Next", mock.Anything).Return(false).Once().
 			On("Err").Return(curErr).Once()
-
 	}
 
 	return MongoDriverFields{mongo: md, cursor: cur}
-
 }
 
 func TestDBFetcher_Fetch(t *testing.T) {
-
 	type args struct {
 		ctx context.Context
 
@@ -502,15 +421,12 @@ func TestDBFetcher_Fetch(t *testing.T) {
 
 		wantErrc error
 	}{
-
 		{
-
 			name: "from_first_until_last,_until_cursor_exhausted",
 
 			dbFields: SetupMongoDriverMocks(ops, nil, nil, false),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -524,13 +440,11 @@ func TestDBFetcher_Fetch(t *testing.T) {
 		},
 
 		{
-
 			name: "error:_cursor_error",
 
 			dbFields: SetupMongoDriverMocks(ops, nil, fmt.Errorf("cursor error"), false),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -544,13 +458,11 @@ func TestDBFetcher_Fetch(t *testing.T) {
 		},
 
 		{
-
 			name: "error:_primary_expected",
 
 			dbFields: SetupSecondaryMongoDriverMocks(ops[0]),
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: ops[0].TS,
@@ -565,11 +477,8 @@ func TestDBFetcher_Fetch(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			dbf := &CursorMajFetcher{
-
 				db: tt.dbFields.mongo,
 
 				cur: tt.dbFields.cursor,
@@ -580,11 +489,9 @@ func TestDBFetcher_Fetch(t *testing.T) {
 			outc, errc, err := dbf.Fetch(tt.args.ctx)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -598,13 +505,9 @@ func TestDBFetcher_Fetch(t *testing.T) {
 			assert.Equal(t, tt.wantOps, outOps)
 
 			if tt.wantErrc != nil {
-
 				assert.EqualError(t, err, tt.wantErrc.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			// check if error chan is closed
@@ -616,15 +519,11 @@ func TestDBFetcher_Fetch(t *testing.T) {
 			tt.dbFields.mongo.AssertExpectations(t)
 
 			tt.dbFields.cursor.AssertExpectations(t)
-
 		})
-
 	}
-
 }
 
 func TestDBFetcher_FetchBson(t *testing.T) {
-
 	type args struct {
 		ctx context.Context
 
@@ -644,15 +543,12 @@ func TestDBFetcher_FetchBson(t *testing.T) {
 
 		wantErrc error
 	}{
-
 		{
-
 			name: "10b_2kb_bson_oplog",
 
 			bsonFname: "../testdata/10_2048_oplog.bson",
 
 			args: args{
-
 				ctx: t.Context(),
 
 				from: models.Timestamp{TS: 1591288704, Inc: 73000},
@@ -665,15 +561,11 @@ func TestDBFetcher_FetchBson(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			bsonFile, err := os.Open(tt.bsonFname)
 
 			if err != nil {
-
 				t.Fatalf("Can not open bson file %s: %v\n", tt.bsonFname, err)
-
 			}
 
 			defer func() { _ = bsonFile.Close() }()
@@ -690,11 +582,9 @@ func TestDBFetcher_FetchBson(t *testing.T) {
 			outc, errc, err := dbf.Fetch(tt.args.ctx)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -706,13 +596,9 @@ func TestDBFetcher_FetchBson(t *testing.T) {
 			assert.Equal(t, tt.wantOpsCount, <-opsCount)
 
 			if tt.wantErrc != nil {
-
 				assert.EqualError(t, err, tt.wantErrc.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			// check if error chan is closed
@@ -720,9 +606,6 @@ func TestDBFetcher_FetchBson(t *testing.T) {
 			_, ok := <-errc
 
 			assert.False(t, ok)
-
 		})
-
 	}
-
 }

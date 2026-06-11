@@ -44,7 +44,6 @@ type BackupDetail struct {
 }
 
 func (bd *BackupDetail) PrintableFields() []printlist.TableField {
-
 	prettyModifyTime := internal.PrettyFormatTime(bd.ModifyTime)
 
 	prettyStartTime := internal.PrettyFormatTime(bd.StartLocalTime)
@@ -52,9 +51,7 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 	prettyStopTime := internal.PrettyFormatTime(bd.StopLocalTime)
 
 	return []printlist.TableField{
-
 		{
-
 			Name: "name",
 
 			PrettyName: "Name",
@@ -63,7 +60,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "last_modified",
 
 			PrettyName: "Last modified",
@@ -74,7 +70,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -85,7 +80,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "stop_time",
 
 			PrettyName: "Stop time",
@@ -96,7 +90,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "hostname",
 
 			PrettyName: "Hostname",
@@ -105,7 +98,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "binlog_start",
 
 			PrettyName: "Binlog start",
@@ -116,7 +108,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "binlog_end",
 
 			PrettyName: "Binlog end",
@@ -127,7 +118,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "uncompressed_size",
 
 			PrettyName: "Uncompressed size",
@@ -136,7 +126,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "compressed_size",
 
 			PrettyName: "Compressed size",
@@ -145,7 +134,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "is_permanent",
 
 			PrettyName: "Permanent",
@@ -153,15 +141,11 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 			Value: fmt.Sprintf("%v", bd.IsPermanent),
 		},
 	}
-
 }
 
 //nolint:gocritic
-
 func NewBackupDetail(backupTime internal.BackupTime, sentinel StreamSentinelDto) BackupDetail {
-
 	return BackupDetail{
-
 		BackupName: backupTime.BackupName,
 
 		ModifyTime: backupTime.Time,
@@ -184,13 +168,11 @@ func NewBackupDetail(backupTime internal.BackupTime, sentinel StreamSentinelDto)
 
 		UserData: sentinel.UserData,
 	}
-
 }
 
 // TODO: unit tests
 
 func HandleDetailedBackupList(folder storage.Folder, pretty, json bool) {
-
 	backupTimes, err := internal.GetBackups(folder)
 
 	err = internal.FilterOutNoBackupFoundError(err, json)
@@ -200,7 +182,6 @@ func HandleDetailedBackupList(folder storage.Folder, pretty, json bool) {
 	backupDetails := make([]BackupDetail, 0, len(backupTimes))
 
 	for _, backupTime := range backupTimes {
-
 		backup, err := internal.NewBackup(folder, backupTime.BackupName)
 
 		tracelog.ErrorLogger.FatalOnError(err)
@@ -212,19 +193,15 @@ func HandleDetailedBackupList(folder storage.Folder, pretty, json bool) {
 		tracelog.ErrorLogger.FatalfOnError("Failed to load sentinel for backup %s", err)
 
 		backupDetails = append(backupDetails, NewBackupDetail(backupTime, sentinel))
-
 	}
 
 	printableEntities := make([]printlist.Entity, len(backupDetails))
 
 	for i := range backupDetails {
-
 		printableEntities[i] = &backupDetails[i]
-
 	}
 
 	err = printlist.List(printableEntities, os.Stdout, pretty, json)
 
 	tracelog.ErrorLogger.FatalfOnError("Print backups: %v", err)
-
 }

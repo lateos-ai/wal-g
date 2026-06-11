@@ -33,51 +33,38 @@ type ConfigureStorageFunc func(
 ) (storage.HashableStorage, error)
 
 func (adapter *StorageAdapter) PrefixSettingKey() string {
-
 	return adapter.storageType + "_PREFIX"
-
 }
 
 func (adapter *StorageAdapter) loadSettings(config *viper.Viper) map[string]string {
-
 	settings := make(map[string]string)
 
 	for _, settingName := range adapter.settingNames {
-
 		settingValue := config.GetString(settingName)
 
 		if config.IsSet(settingName) {
-
 			settings[settingName] = settingValue
 
 			/* prefer config values */
 
 			continue
-
 		}
 
 		settingValue, ok := conf.GetWaleCompatibleSettingFrom(settingName, config)
 
 		if !ok {
-
 			settingValue, ok = conf.GetSetting(settingName)
-
 		}
 
 		if ok {
-
 			settings[settingName] = settingValue
-
 		}
-
 	}
 
 	return settings
-
 }
 
 var StorageAdapters = []StorageAdapter{
-
 	{"OSS", oss.SettingList, oss.ConfigureStorage},
 
 	{"S3", s3.SettingList, s3.ConfigureStorage},

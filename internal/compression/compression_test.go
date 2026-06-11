@@ -14,25 +14,18 @@ import (
 type BiasedRandomReader struct{}
 
 func NewBiasedRandomReader() *BiasedRandomReader {
-
 	return &BiasedRandomReader{}
-
 }
 
 func (reader *BiasedRandomReader) Read(p []byte) (n int, err error) {
-
 	for i := 0; i < len(p); i++ {
-
 		p[i] = byte(utility.Min(10, rand.Int()%256))
-
 	}
 
 	return len(p), nil
-
 }
 
 func testCompressor(compressor Compressor, testData bytes.Buffer, t *testing.T) {
-
 	initialData := testData
 
 	var compressed bytes.Buffer
@@ -58,9 +51,7 @@ func testCompressor(compressor Compressor, testData bytes.Buffer, t *testing.T) 
 	assert.NotNil(t, dr)
 
 	if dr == nil {
-
 		return
-
 	}
 
 	_, err = io.Copy(&decompressed, dr)
@@ -68,11 +59,9 @@ func testCompressor(compressor Compressor, testData bytes.Buffer, t *testing.T) 
 	assert.NoError(t, err)
 
 	assert.Equal(t, initialData.Bytes(), decompressed.Bytes())
-
 }
 
 func TestSmallDataCompression(t *testing.T) {
-
 	const SmallDataSize = 16 << 10
 
 	randomReader := io.LimitReader(NewBiasedRandomReader(), SmallDataSize)
@@ -82,17 +71,13 @@ func TestSmallDataCompression(t *testing.T) {
 	io.Copy(&testData, randomReader)
 
 	for _, compressingAlgorithm := range CompressingAlgorithms {
-
 		compressor := Compressors[compressingAlgorithm]
 
 		testCompressor(compressor, testData, t)
-
 	}
-
 }
 
 func TestBigDataCompression(t *testing.T) {
-
 	const BigDataSize = 10 << 20
 
 	randomReader := io.LimitReader(NewBiasedRandomReader(), BigDataSize)
@@ -102,11 +87,8 @@ func TestBigDataCompression(t *testing.T) {
 	io.Copy(&testData, randomReader)
 
 	for _, compressingAlgorithm := range CompressingAlgorithms {
-
 		compressor := Compressors[compressingAlgorithm]
 
 		testCompressor(compressor, testData, t)
-
 	}
-
 }

@@ -1,9 +1,10 @@
 package pg
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/spf13/cobra"
 )
 
 const (
@@ -11,17 +12,23 @@ const (
 )
 
 var (
+
 	// catchupPushCmd represents the catchup-push command
+
 	catchupPushCmd = &cobra.Command{
-		Use:   "catchup-push PGDATA --from-lsn LSN",
+		Use: "catchup-push PGDATA --from-lsn LSN",
+
 		Short: catchupPushShortDescription,
-		Args:  cobra.ExactArgs(1),
+
+		Args: cobra.ExactArgs(1),
+
 		Run: func(cmd *cobra.Command, args []string) {
 			internal.ConfigureLimiters()
 
 			postgres.HandleCatchupPush(cmd.Context(), args[0], postgres.LSN(fromLSN))
 		},
 	}
+
 	fromLSN uint64
 )
 

@@ -13,17 +13,14 @@ import (
 )
 
 func init() {
-
 	internal.ConfigureSettings("")
 
 	conf.InitConfig()
 
 	conf.Configure()
-
 }
 
 func TestFetch(t *testing.T) {
-
 	backupName := "test"
 
 	data := "Data"
@@ -45,7 +42,6 @@ func TestFetch(t *testing.T) {
 	isPermanent := false
 
 	testObject := greenplum.BackupSentinelDto{
-
 		RestorePoint: nil,
 
 		Segments: segments,
@@ -72,7 +68,6 @@ func TestFetch(t *testing.T) {
 	}
 
 	expectedResult := internal.GenericMetadata{
-
 		BackupName: backupName,
 
 		UncompressedSize: uncompressedSize,
@@ -119,15 +114,12 @@ func TestFetch(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedResult, actualResult)
-
 }
 
 func TestSetIsPermanent(t *testing.T) {
-
 	backupName := "test"
 
 	testObject := greenplum.BackupSentinelDto{
-
 		RestorePoint: nil,
 
 		Segments: nil,
@@ -164,11 +156,9 @@ func TestSetIsPermanent(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.True(t, backup.IsPermanent)
-
 }
 
 func TestSetUserData(t *testing.T) {
-
 	backupName := "test"
 
 	updatedData := "Updated Data"
@@ -176,7 +166,6 @@ func TestSetUserData(t *testing.T) {
 	oldData := "Old Data"
 
 	testObject := greenplum.BackupSentinelDto{
-
 		RestorePoint: nil,
 
 		Segments: nil,
@@ -213,5 +202,4 @@ func TestSetUserData(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, updatedData, backup.UserData)
-
 }

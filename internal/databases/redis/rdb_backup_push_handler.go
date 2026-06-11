@@ -21,7 +21,6 @@ type RDBBackupPushArgs struct {
 }
 
 func HandleRDBBackupPush(args RDBBackupPushArgs) error {
-
 	stdout, err := utility.StartCommandWithStdoutPipe(args.BackupCmd)
 
 	tracelog.ErrorLogger.FatalfOnError("failed to start backup create command: %v", err)
@@ -29,7 +28,6 @@ func HandleRDBBackupPush(args RDBBackupPushArgs) error {
 	redisUploader := rdb.NewRedisStorageUploader(args.Uploader)
 
 	uploadArgs := rdb.UploadBackupArgs{
-
 		Cmd: args.BackupCmd,
 
 		MetaConstructor: args.MetaConstructor,
@@ -40,5 +38,4 @@ func HandleRDBBackupPush(args RDBBackupPushArgs) error {
 	}
 
 	return redisUploader.UploadBackup(uploadArgs)
-
 }

@@ -49,56 +49,40 @@ type oplogPushMocks struct {
 }
 
 func (tm *oplogPushMocks) AssertExpectations(t *testing.T) {
-
 	if tm.fetcher != nil {
-
 		tm.fetcher.AssertExpectations(t)
-
 	}
 
 	if tm.applier != nil {
-
 		tm.applier.AssertExpectations(t)
-
 	}
-
 }
 
 func buildTestArgs(t *testing.T) oplogPushArgs {
-
 	return oplogPushArgs{
-
 		ctx: t.Context(),
 
 		fetcherReturn: &fetcherReturn{make(chan *models.Oplog), make(chan error), nil},
 
 		applierReturn: &applierReturn{make(chan error), nil},
 	}
-
 }
 
 func prepareOplogPushMocks(args oplogPushArgs, mocks oplogPushMocks) {
-
 	if mocks.fetcher != nil {
-
 		mocks.fetcher.On("Fetch", mock.Anything).
 			Return(args.fetcherReturn.outChan, args.fetcherReturn.errChan, args.fetcherReturn.err).
 			Once()
-
 	}
 
 	if mocks.applier != nil {
-
 		mocks.applier.On("Apply", mock.Anything, args.fetcherReturn.outChan).
 			Return(args.applierReturn.errChan, args.applierReturn.err).
 			Once()
-
 	}
-
 }
 
 func TestHandleOplogPush(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -112,9 +96,7 @@ func TestHandleOplogPush(t *testing.T) {
 
 		expectedErr error
 	}{
-
 		{
-
 			name: "fetcher call returns error",
 
 			args: buildTestArgs(t),
@@ -127,7 +109,6 @@ func TestHandleOplogPush(t *testing.T) {
 		},
 
 		{
-
 			name: "applier call returns error",
 
 			args: buildTestArgs(t),
@@ -140,7 +121,6 @@ func TestHandleOplogPush(t *testing.T) {
 		},
 
 		{
-
 			name: "fetcher returns error via error channel",
 
 			args: buildTestArgs(t),
@@ -148,20 +128,17 @@ func TestHandleOplogPush(t *testing.T) {
 			mocks: oplogPushMocks{&mocks.Fetcher{}, &mocks.Applier{}},
 
 			failErrChan: func(args oplogPushArgs) {
-
 				args.fetcherReturn.errChan <- fmt.Errorf("fetcher chan err")
 
 				close(args.fetcherReturn.errChan)
 
 				close(args.applierReturn.errChan)
-
 			},
 
 			expectedErr: fmt.Errorf("fetcher chan err"),
 		},
 
 		{
-
 			name: "applier returns error via error channel",
 
 			args: buildTestArgs(t),
@@ -169,13 +146,11 @@ func TestHandleOplogPush(t *testing.T) {
 			mocks: oplogPushMocks{&mocks.Fetcher{}, &mocks.Applier{}},
 
 			failErrChan: func(args oplogPushArgs) {
-
 				args.applierReturn.errChan <- fmt.Errorf("applier chan err")
 
 				close(args.applierReturn.errChan)
 
 				close(args.fetcherReturn.errChan)
-
 			},
 
 			expectedErr: fmt.Errorf("applier chan err"),
@@ -183,19 +158,13 @@ func TestHandleOplogPush(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-
 		t.Run(tc.name, func(t *testing.T) {
-
 			if tc.failErrRet != nil {
-
 				tc.failErrRet(tc.args)
-
 			}
 
 			if tc.failErrChan != nil {
-
 				go tc.failErrChan(tc.args)
-
 			}
 
 			prepareOplogPushMocks(tc.args, tc.mocks)
@@ -203,25 +172,17 @@ func TestHandleOplogPush(t *testing.T) {
 			err := HandleOplogPush(tc.args.ctx, tc.mocks.fetcher, tc.mocks.applier)
 
 			if tc.expectedErr != nil {
-
 				assert.EqualError(t, err, tc.expectedErr.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			tc.mocks.AssertExpectations(t)
-
 		})
-
 	}
-
 }
 
 func TestHandleOplogPush_CancelLongUpload(t *testing.T) {
-
 	ctx, cancelCtx := context.WithCancel(t.Context())
 
 	defer cancelCtx()
@@ -237,26 +198,20 @@ func TestHandleOplogPush_CancelLongUpload(t *testing.T) {
 		Once()
 
 	nextOplog := func() *models.Oplog {
-
 		ts := models.Timestamp{TS: uint32(time.Now().Unix()), Inc: uint32(time.Now().Nanosecond())}
 
 		data, err := bson.Marshal(map[string]interface{}{
-
 			"ts": ts.ToBsonTS(),
 		})
 
 		require.NoError(t, err)
 
 		return &models.Oplog{TS: ts, Data: data}
-
 	}
 
 	go func() {
-
 		for i := 0; i < 5; i++ {
-
 			oplogc <- nextOplog()
-
 		}
 
 		oplogc <- nextOplog()
@@ -268,11 +223,9 @@ func TestHandleOplogPush_CancelLongUpload(t *testing.T) {
 		close(oplogc)
 
 		close(errc)
-
 	}()
 
 	uploaderMock := &uploaderMock{
-
 		t: t,
 
 		waitForCancelAfter: 5,
@@ -302,7 +255,6 @@ func TestHandleOplogPush_CancelLongUpload(t *testing.T) {
 	require.Error(t, err)
 
 	require.Contains(t, err.Error(), "can not upload oplog archive: stop uploading oplog: context canceled")
-
 }
 
 var _ archive.Uploader = &uploaderMock{}
@@ -314,19 +266,14 @@ type uploaderMock struct {
 }
 
 func (u *uploaderMock) UploadOplogArchive(ctx context.Context, stream io.Reader, firstTS, lastTS models.Timestamp) error {
-
 	if u.waitForCancelAfter <= 0 {
-
 		u.t.Log("Wait for context is cancelled")
 
 		select {
-
 		case <-ctx.Done():
 
 			return fmt.Errorf("stop uploading oplog: %w", ctx.Err())
-
 		}
-
 	}
 
 	u.waitForCancelAfter--
@@ -334,21 +281,16 @@ func (u *uploaderMock) UploadOplogArchive(ctx context.Context, stream io.Reader,
 	u.t.Logf("Uploaded oplog: firstTS %v, lastTS %v", firstTS, lastTS)
 
 	return nil
-
 }
 
 func (u *uploaderMock) UploadGapArchive(err error, firstTS, lastTS models.Timestamp) error {
-
 	u.t.Fatal("unexpected call")
 
 	return nil
-
 }
 
 func (u *uploaderMock) UploadBackup(stream io.Reader, cmd internal.ErrWaiter, metaConstructor internal.MetaConstructor) error {
-
 	u.t.Fatal("unexpected call")
 
 	return nil
-
 }

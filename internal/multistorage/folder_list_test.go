@@ -16,9 +16,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestListFolder(t *testing.T) {
-
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.List = policies.ListPolicyFirst
@@ -26,15 +24,12 @@ func TestListFolder(t *testing.T) {
 		_, _, err := folder.ListFolder()
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	assertListedObjects := func(t *testing.T, got []storage.Object, want map[listedObj]bool) {
-
 		assert.Equal(t, len(want), len(got))
 
 		for _, obj := range got {
-
 			multiObj, ok := obj.(multiObject)
 
 			assert.True(t, ok)
@@ -42,19 +37,15 @@ func TestListFolder(t *testing.T) {
 			gotObj := listedObj{obj.GetName(), multiObj.GetStorage()}
 
 			delete(want, gotObj)
-
 		}
 
 		assert.Empty(t, want)
-
 	}
 
 	assertListedSubFolders := func(t *testing.T, testFolder Folder, got []storage.Folder, want map[string]bool) {
-
 		assert.Equal(t, len(want), len(got))
 
 		for _, subf := range got {
-
 			multiFolder, ok := subf.(Folder)
 
 			assert.True(t, ok)
@@ -66,25 +57,20 @@ func TestListFolder(t *testing.T) {
 			assert.Equal(t, len(testFolder.usedFolders), len(multiFolder.usedFolders))
 
 			for _, st := range multiFolder.usedFolders {
-
 				rootf := testFolder.configuredRootFolders[st.StorageName]
 
 				assert.Equal(t, path.Join(rootf.GetPath(), subf.GetPath())+"/", st.GetPath())
-
 			}
 
 			gotPath := subf.GetPath()
 
 			delete(want, gotPath)
-
 		}
 
 		assert.Empty(t, want)
-
 	}
 
 	t.Run("list first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.List = policies.ListPolicyFirst
@@ -104,23 +90,19 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"aaa", "s1"}: true,
 
 			{"bbb", "s1"}: true,
 		})
 
 		assertListedSubFolders(t, folder, subFolders, map[string]bool{
-
 			"aaa/": true,
 
 			"ccc/": true,
 		})
-
 	})
 
 	t.Run("list unique files and folders from all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.List = policies.ListPolicyFoundFirst
@@ -154,7 +136,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"aaa", "s1"}: true,
 
 			{"bbb", "s2"}: true,
@@ -163,18 +144,15 @@ func TestListFolder(t *testing.T) {
 		})
 
 		assertListedSubFolders(t, folder, subFolders, map[string]bool{
-
 			"aaa/": true,
 
 			"bbb/": true,
 
 			"ccc/": true,
 		})
-
 	})
 
 	t.Run("list all files and folders from all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.List = policies.ListPolicyAll
@@ -208,7 +186,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"aaa", "s1"}: true,
 
 			{"aaa", "s2"}: true,
@@ -223,18 +200,15 @@ func TestListFolder(t *testing.T) {
 		})
 
 		assertListedSubFolders(t, folder, subFolders, map[string]bool{
-
 			"aaa/": true,
 
 			"bbb/": true,
 
 			"ccc/": true,
 		})
-
 	})
 
 	t.Run("list files with relative paths and subfolders with absolute paths", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1")
 
 		folder.policies.List = policies.ListPolicyFirst
@@ -256,37 +230,27 @@ func TestListFolder(t *testing.T) {
 		objects, subFolders, err := subFolder.ListFolder()
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"aaa", "s1"}: true,
 		})
 
 		assertListedSubFolders(t, folder, subFolders, map[string]bool{
-
 			"sub/sub2/": true,
 		})
-
 	})
 
 	getSubFolder := func(t *testing.T, subFolders []storage.Folder, name string) storage.Folder {
-
 		for _, subf := range subFolders {
-
 			if subf.GetPath() == name {
-
 				return subf
-
 			}
-
 		}
 
 		t.Fatalf("no %q subfolder", name)
 
 		return nil
-
 	}
 
 	t.Run("list subfolders", func(t *testing.T) {
-
 		rootFolder := newTestFolder(t, "s1", "s2", "s3")
 
 		rootFolder.policies.List = policies.ListPolicyAll
@@ -314,7 +278,6 @@ func TestListFolder(t *testing.T) {
 		assertListedObjects(t, objects, map[listedObj]bool{})
 
 		assertListedSubFolders(t, rootFolder, subFolders, map[string]bool{
-
 			"a/": true,
 
 			"a1/": true,
@@ -327,12 +290,10 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s1"}: true,
 		})
 
 		assertListedSubFolders(t, rootFolder, subFolders, map[string]bool{
-
 			"a/b/": true,
 
 			"a/b2/": true,
@@ -345,12 +306,10 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s2"}: true,
 		})
 
 		assertListedSubFolders(t, rootFolder, subFolders, map[string]bool{
-
 			"a/b/c/": true,
 
 			"a/b/c3/": true,
@@ -363,7 +322,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s1"}: true,
 
 			{"file", "s2"}: true,
@@ -372,11 +330,9 @@ func TestListFolder(t *testing.T) {
 		})
 
 		assertListedSubFolders(t, rootFolder, subFolders, map[string]bool{})
-
 	})
 
 	t.Run("policies can be changed and returned back for subfolders", func(t *testing.T) {
-
 		rootFolder := newTestFolder(t, "s1", "s2")
 
 		rootFolder.policies.List = policies.ListPolicyAll
@@ -398,7 +354,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s1"}: true,
 
 			{"file", "s2"}: true,
@@ -413,7 +368,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s1"}: true,
 		})
 
@@ -426,16 +380,13 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file", "s1"}: true,
 
 			{"file", "s2"}: true,
 		})
-
 	})
 
 	t.Run("storages can be changed and returned back for subfolders", func(t *testing.T) {
-
 		rootFolder := newTestFolder(t, "s1", "s2")
 
 		rootFolder.policies.List = policies.ListPolicyAll
@@ -459,7 +410,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file1", "s1"}: true,
 
 			{"file1", "s2"}: true,
@@ -478,7 +428,6 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file2", "s1"}: true,
 		})
 
@@ -497,14 +446,11 @@ func TestListFolder(t *testing.T) {
 		require.NoError(t, err)
 
 		assertListedObjects(t, objects, map[listedObj]bool{
-
 			{"file3", "s1"}: true,
 
 			{"file3", "s2"}: true,
 		})
-
 	})
-
 }
 
 type listedObj struct {

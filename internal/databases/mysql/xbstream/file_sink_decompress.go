@@ -28,7 +28,6 @@ type fileSinkDecompress struct {
 var _ fileSink = &fileSinkDecompress{}
 
 func newFileSinkDecompress(filePath string, dataDir string, decompressor compression.Decompressor) fileSink {
-
 	// xbstream is a simple archive format. Compression / encryption / delta-files are xtrabackup features.
 
 	// so, all chunks of one compressed file is a _single_ stream
@@ -46,7 +45,6 @@ func newFileSinkDecompress(filePath string, dataDir string, decompressor compres
 	tracelog.ErrorLogger.FatalfOnError("Cannot open new file for write: %v", err)
 
 	sink := &fileSinkDecompress{
-
 		dataDir: dataDir,
 
 		file: file,
@@ -59,7 +57,6 @@ func newFileSinkDecompress(filePath string, dataDir string, decompressor compres
 	}
 
 	go func() {
-
 		_, err := io.Copy(file, readHere)
 
 		tracelog.ErrorLogger.FatalfOnError("Cannot copy data: %v", err)
@@ -67,43 +64,32 @@ func newFileSinkDecompress(filePath string, dataDir string, decompressor compres
 		err = innodb.RepairSparse(file)
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("Error during repairSparse(): %v", err)
-
 		}
 
 		utility.LoggedClose(file, "datasink.Close()")
 
 		close(sink.fileCloseChan)
-
 	}()
 
 	return sink
-
 }
 
 func (sink *fileSinkDecompress) Process(chunk *Chunk) error {
-
 	if chunk.Type == ChunkTypeEOF {
-
 		close(sink.writeHere)
 
 		<-sink.fileCloseChan // file will be closed in goroutine, wait for it...
 
 		return ErrSinkEOF
-
 	}
 
 	if len(chunk.SparseMap) != 0 {
-
 		tracelog.ErrorLogger.Fatalf("Found compressed file %v with sparse map", chunk.Path)
-
 	}
 
 	if sink.xbOffset != chunk.Offset {
-
 		tracelog.ErrorLogger.Fatalf("Offset mismatch for file %v: expected=%v, actual=%v", chunk.Path, sink.xbOffset, chunk.Offset)
-
 	}
 
 	sink.xbOffset += chunk.PayloadLen
@@ -119,5 +105,4 @@ func (sink *fileSinkDecompress) Process(chunk *Chunk) error {
 	sink.writeHere <- buffer
 
 	return nil
-
 }

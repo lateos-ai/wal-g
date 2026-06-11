@@ -17,9 +17,7 @@ type RegularDeltaBackupConfigurator struct {
 }
 
 func NewRegularDeltaBackupConfigurator(deltaBaseSelector internal.BackupSelector) RegularDeltaBackupConfigurator {
-
 	return RegularDeltaBackupConfigurator{deltaBaseSelector}
-
 }
 
 func (c RegularDeltaBackupConfigurator) Configure(
@@ -27,13 +25,10 @@ func (c RegularDeltaBackupConfigurator) Configure(
 	folder storage.Folder, isPermanent bool,
 
 ) (prevBackupInfo PrevBackupInfo, incrementCount int, err error) {
-
 	maxDeltas, fromFull := internal.GetDeltaConfig()
 
 	if maxDeltas == 0 {
-
 		return PrevBackupInfo{}, 0, nil
-
 	}
 
 	baseBackupFolder := folder.GetSubFolder(utility.BaseBackupPath)
@@ -41,17 +36,13 @@ func (c RegularDeltaBackupConfigurator) Configure(
 	previousBackup, err := c.deltaBaseSelector.Select(folder)
 
 	if err != nil {
-
 		if _, ok := err.(internal.NoBackupsFoundError); ok {
-
 			tracelog.InfoLogger.Println("Couldn't find previous backup. Doing full backup.")
 
 			return PrevBackupInfo{}, 0, nil
-
 		}
 
 		return PrevBackupInfo{}, 0, err
-
 	}
 
 	previousPgBackup := ToPgBackup(previousBackup)
@@ -61,81 +52,61 @@ func (c RegularDeltaBackupConfigurator) Configure(
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	if prevBackupSentinelDto.IncrementCount != nil {
-
 		incrementCount = *prevBackupSentinelDto.IncrementCount + 1
-
 	} else {
-
 		incrementCount = 1
-
 	}
 
 	if incrementCount > maxDeltas {
-
 		tracelog.InfoLogger.Println("Reached max delta steps. Doing full backup.")
 
 		return PrevBackupInfo{}, 0, nil
-
 	}
 
 	if prevBackupSentinelDto.BackupStartLSN == nil {
-
 		tracelog.InfoLogger.Println("LATEST backup was made without support for delta feature. " +
 
 			"Fallback to full backup with LSN marker for future deltas.")
 
 		return PrevBackupInfo{}, 0, nil
-
 	}
 
 	previousBackupMeta, err := previousPgBackup.FetchMeta()
 
 	if err != nil {
-
 		tracelog.InfoLogger.Printf(
 
 			"Failed to get previous backup metadata: %s. Doing full backup.\n", err.Error())
 
 		return PrevBackupInfo{}, 0, nil
-
 	}
 
 	if !isPermanent && !fromFull && previousBackupMeta.IsPermanent {
-
 		tracelog.InfoLogger.Println("Can't do a delta backup from permanent backup. Doing full backup.")
 
 		return PrevBackupInfo{}, 0, nil
-
 	}
 
 	if fromFull {
-
 		tracelog.InfoLogger.Println("Delta will be made from full backup.")
 
 		prevName := previousPgBackup.Name
 
 		if prevBackupSentinelDto.IncrementFullName != nil {
-
 			prevName = *prevBackupSentinelDto.IncrementFullName
-
 		}
 
 		previousPgBackup, err = NewBackup(baseBackupFolder, prevName)
 
 		if err != nil {
-
 			return PrevBackupInfo{}, 0, err
-
 		}
 
 		prevBackupSentinelDto, err = previousPgBackup.GetSentinel()
 
 		if err != nil {
-
 			return PrevBackupInfo{}, 0, err
-
 		}
-
 	}
 
 	tracelog.InfoLogger.Printf("Delta backup from %v with LSN %s.\n", previousPgBackup.Name,
@@ -147,7 +118,6 @@ func (c RegularDeltaBackupConfigurator) Configure(
 	prevBackupInfo.sentinelDto, prevBackupInfo.filesMetadataDto, err = previousPgBackup.GetSentinelAndFilesMetadata()
 
 	return prevBackupInfo, incrementCount, err
-
 }
 
 type CatchupDeltaBackupConfigurator struct {
@@ -155,20 +125,15 @@ type CatchupDeltaBackupConfigurator struct {
 }
 
 func NewCatchupDeltaBackupConfigurator(fakePreviousBackupSentinelDto BackupSentinelDto) CatchupDeltaBackupConfigurator {
-
 	return CatchupDeltaBackupConfigurator{
-
 		fakePrevSentinel: fakePreviousBackupSentinelDto,
 	}
-
 }
 
 func (c CatchupDeltaBackupConfigurator) Configure(storage.Folder, bool) (prevBackupInfo PrevBackupInfo, incrementCount int, err error) {
-
 	prevBackupInfo.sentinelDto = c.fakePrevSentinel
 
 	prevBackupInfo.filesMetadataDto = FilesMetadataDto{}
 
 	return prevBackupInfo, 1, nil
-
 }

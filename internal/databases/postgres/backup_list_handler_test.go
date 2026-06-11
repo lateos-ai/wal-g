@@ -20,17 +20,13 @@ import (
 )
 
 func TestHandleDetailedBackupList(t *testing.T) {
-
 	curTime := time.Time{}
 
 	curTimeFunc := func() time.Time {
-
 		return curTime.UTC()
-
 	}
 
 	t.Run("print correct backup details in correct order", func(t *testing.T) {
-
 		folder := memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc)))
 
 		curTime = time.Unix(1690000000, 0)
@@ -68,7 +64,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		want := `[
 
     {
-
         "backup_name": "base_111",
 
         "time": "2023-07-22T04:26:40Z",
@@ -100,11 +95,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
         "uncompressed_size": 0,
 
         "compressed_size": 0
-
     },
 
     {
-
         "backup_name": "base_222",
 
         "time": "2023-07-22T04:26:41Z",
@@ -136,11 +129,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
         "uncompressed_size": 0,
 
         "compressed_size": 0
-
     },
 
     {
-
         "backup_name": "base_333",
 
         "time": "2023-07-22T04:26:42Z",
@@ -172,7 +163,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
         "uncompressed_size": 0,
 
         "compressed_size": 0
-
     }
 
 ]
@@ -180,11 +170,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
 `
 
 		assert.Equal(t, want, string(captured))
-
 	})
 
 	t.Run("print backups from different storages", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		t.Cleanup(mockCtrl.Finish)
@@ -200,7 +188,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		collectorMock.EXPECT().ReportOperationResult(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 		memFolders := map[string]storage.Folder{
-
 			"storage_1": memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc))),
 
 			"storage_2": memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc))),
@@ -243,7 +230,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		want := `[
 
     {
-
         "backup_name": "base_111",
 
         "time": "2023-07-22T04:26:40Z",
@@ -275,11 +261,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
         "uncompressed_size": 0,
 
         "compressed_size": 0
-
     },
 
     {
-
         "backup_name": "base_111",
 
         "time": "2023-07-22T04:26:41Z",
@@ -311,7 +295,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
         "uncompressed_size": 0,
 
         "compressed_size": 0
-
     }
 
 ]
@@ -319,11 +302,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
 `
 
 		assert.Equal(t, want, string(captured))
-
 	})
 
 	t.Run("handle error with no backups", func(t *testing.T) {
-
 		folder := memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc)))
 
 		infoOutput := new(bytes.Buffer)
@@ -351,7 +332,5 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		assert.Empty(t, string(captured))
 
 		assert.Contains(t, infoOutput.String(), "No backups found")
-
 	})
-
 }

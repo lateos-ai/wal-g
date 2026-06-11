@@ -18,7 +18,6 @@ import (
 const composeChunkLimit = 32
 
 func NewFolder(bucket *gcs.BucketHandle, path string, encryptionKey []byte, config *Config) *Folder {
-
 	// Trim leading slash because there's no difference between absolute and relative paths in GCS.
 
 	path = strings.TrimPrefix(path, "/")
@@ -28,7 +27,6 @@ func NewFolder(bucket *gcs.BucketHandle, path string, encryptionKey []byte, conf
 	copy(encryptionKeyCopy, encryptionKey)
 
 	return &Folder{
-
 		bucket: bucket,
 
 		path: path,
@@ -37,7 +35,6 @@ func NewFolder(bucket *gcs.BucketHandle, path string, encryptionKey []byte, conf
 
 		config: config,
 	}
-
 }
 
 // Folder represents folder in GCP
@@ -55,29 +52,22 @@ type Folder struct {
 }
 
 func (folder *Folder) GetPath() string {
-
 	return folder.path
-
 }
 
 // BuildObjectHandle creates a new object handle.
 
 func (folder *Folder) BuildObjectHandle(path string) *gcs.ObjectHandle {
-
 	objectHandle := folder.bucket.Object(path)
 
 	if len(folder.encryptionKey) != 0 {
-
 		objectHandle = objectHandle.Key(folder.encryptionKey)
-
 	}
 
 	return objectHandle
-
 }
 
 func (folder *Folder) ListFolder() (objects []storage.Object, subFolders []storage.Folder, err error) {
-
 	prefix := storage.AddDelimiterToPath(folder.path)
 
 	ctx, cancel := folder.createTimeoutContext(context.Background())
@@ -87,25 +77,18 @@ func (folder *Folder) ListFolder() (objects []storage.Object, subFolders []stora
 	iter := folder.bucket.Objects(ctx, &gcs.Query{Delimiter: "/", Prefix: prefix})
 
 	for {
-
 		objAttrs, err := iter.Next()
 
 		if err == iterator.Done {
-
 			break
-
 		}
 
 		if err != nil {
-
 			return nil, nil, fmt.Errorf("iterate GCS folder %q: %w", folder.path, err)
-
 		}
 
 		if objAttrs.Prefix != "" {
-
 			if objAttrs.Prefix != prefix+"/" {
-
 				// Sometimes GCS returns "//" folder - skip it
 
 				subFolders = append(subFolders,
@@ -120,39 +103,27 @@ func (folder *Folder) ListFolder() (objects []storage.Object, subFolders []stora
 
 						folder.config,
 					))
-
 			}
-
 		} else {
-
 			objName := strings.TrimPrefix(objAttrs.Name, prefix)
 
 			if objName != "" {
-
 				// GCS returns the current directory - skip it.
 
 				objects = append(objects, storage.NewLocalObject(objName, objAttrs.Updated, objAttrs.Size))
-
 			}
-
 		}
-
 	}
 
 	return objects, subFolders, err
-
 }
 
 func (folder *Folder) createTimeoutContext(ctx context.Context) (context.Context, context.CancelFunc) {
-
 	return context.WithTimeout(ctx, folder.config.ContextTimeout)
-
 }
 
 func (folder *Folder) DeleteObjects(objectsWithRelativePaths []storage.Object) error {
-
 	for _, object := range objectsWithRelativePaths {
-
 		objPath := folder.joinPath(folder.path, object.GetName())
 
 		object := folder.BuildObjectHandle(objPath)
@@ -164,23 +135,18 @@ func (folder *Folder) DeleteObjects(objectsWithRelativePaths []storage.Object) e
 		err := object.Delete(ctx)
 
 		if err != nil && err != gcs.ErrObjectNotExist {
-
 			ctxCancel()
 
 			return fmt.Errorf("delete GCS object %q: %w", objPath, err)
-
 		}
 
 		ctxCancel()
-
 	}
 
 	return nil
-
 }
 
 func (folder *Folder) Exists(objectRelativePath string) (bool, error) {
-
 	objPath := folder.joinPath(folder.path, objectRelativePath)
 
 	object := folder.BuildObjectHandle(objPath)
@@ -192,23 +158,17 @@ func (folder *Folder) Exists(objectRelativePath string) (bool, error) {
 	_, err := object.Attrs(ctx)
 
 	if err == gcs.ErrObjectNotExist {
-
 		return false, nil
-
 	}
 
 	if err != nil {
-
 		return false, fmt.Errorf("get GCS object stats %q: %w", objPath, err)
-
 	}
 
 	return true, nil
-
 }
 
 func (folder *Folder) GetSubFolder(subFolderRelativePath string) storage.Folder {
-
 	return NewFolder(
 
 		folder.bucket,
@@ -219,11 +179,9 @@ func (folder *Folder) GetSubFolder(subFolderRelativePath string) storage.Folder 
 
 		folder.config,
 	)
-
 }
 
 func (folder *Folder) ReadObject(objectRelativePath string) (io.ReadCloser, error) {
-
 	objPath := folder.joinPath(folder.path, objectRelativePath)
 
 	object := folder.BuildObjectHandle(objPath)
@@ -231,27 +189,21 @@ func (folder *Folder) ReadObject(objectRelativePath string) (io.ReadCloser, erro
 	reader, err := object.NewReader(context.Background())
 
 	if err == gcs.ErrObjectNotExist {
-
 		return nil, storage.NewObjectNotFoundError(objPath)
-
 	}
 
 	return io.NopCloser(reader), err
-
 }
 
 func (folder *Folder) PutObject(name string, content io.Reader) error {
-
 	ctx, cancel := folder.createTimeoutContext(context.Background())
 
 	defer cancel()
 
 	return folder.PutObjectWithContext(ctx, name, content)
-
 }
 
 func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, content io.Reader) error {
-
 	tracelog.DebugLogger.Printf("Put %v into %v\n", name, folder.path)
 
 	objectPath := folder.joinPath(folder.path, name)
@@ -267,7 +219,6 @@ func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, con
 	tmpChunks := make([]*gcs.ObjectHandle, 0)
 
 	for {
-
 		tmpChunkName := folder.joinPath(name+"_chunks", "chunk"+strconv.Itoa(chunkNum))
 
 		objectChunk := folder.BuildObjectHandle(folder.joinPath(folder.path, tmpChunkName))
@@ -279,21 +230,16 @@ func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, con
 		n, err := fillBuffer(content, dataChunk)
 
 		if err != nil && err != io.EOF {
-
 			tracelog.ErrorLogger.Printf("Unable to read content of %s, err: %v", objectPath, err)
 
 			return fmt.Errorf("read a chunk of object %q to upload to GCS: %w", objectPath, err)
-
 		}
 
 		if n == 0 {
-
 			break
-
 		}
 
 		chunk := chunk{
-
 			name: tmpChunkName,
 
 			index: chunkNum,
@@ -304,9 +250,7 @@ func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, con
 		}
 
 		if err := chunkUploader.UploadChunk(ctx, chunk); err != nil {
-
 			return fmt.Errorf("upload a chunk of object %q to GCS: %w", objectPath, err)
-
 		}
 
 		tmpChunks = append(tmpChunks, objectChunk)
@@ -314,13 +258,10 @@ func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, con
 		chunkNum++
 
 		if err == io.EOF {
-
 			break
-
 		}
 
 		if len(tmpChunks) == composeChunkLimit {
-
 			// Since there is a limit to the number of components that can be composed in a single operation, merge chunks partially.
 
 			compositeChunkName := folder.joinPath(name+"_chunks", "composite"+strconv.Itoa(chunkNum))
@@ -330,43 +271,31 @@ func (folder *Folder) PutObjectWithContext(ctx context.Context, name string, con
 			tracelog.DebugLogger.Printf("Compose temporary chunks into an intermediate chunk %v\n", compositeChunkName)
 
 			if err := composeChunks(ctx, NewUploader(compositeChunk, folder.config.Uploader), tmpChunks); err != nil {
-
 				return fmt.Errorf("compose GCS temporary chunks into an intermediate chunk: %w", err)
-
 			}
 
 			tmpChunks = []*gcs.ObjectHandle{compositeChunk}
-
 		}
-
 	}
 
 	tracelog.DebugLogger.Printf("Compose file %v from chunks\n", object.ObjectName())
 
 	if err := composeChunks(ctx, NewUploader(object, folder.config.Uploader), tmpChunks); err != nil {
-
 		return fmt.Errorf("compose GCS temporary chunks into an object: %w", err)
-
 	}
 
 	tracelog.DebugLogger.Printf("Put %v done\n", name)
 
 	return nil
-
 }
 
 func (folder *Folder) CopyObject(srcPath string, dstPath string) error {
-
 	if exists, err := folder.Exists(srcPath); !exists {
-
 		if err == nil {
-
 			return storage.NewObjectNotFoundError(srcPath)
-
 		}
 
 		return fmt.Errorf("check the existence of %q for copying in GCS: %w", srcPath, err)
-
 	}
 
 	source := path.Join(folder.path, srcPath)
@@ -378,47 +307,33 @@ func (folder *Folder) CopyObject(srcPath string, dstPath string) error {
 	_, err := folder.bucket.Object(dst).CopierFrom(folder.bucket.Object(source)).Run(ctx)
 
 	if err != nil {
-
 		return fmt.Errorf("copy GCS object %q to %q: %w", srcPath, dstPath, err)
-
 	}
 
 	return nil
-
 }
 
 func (folder *Folder) joinPath(one string, another string) string {
-
 	if folder.config.NormalizePrefix {
-
 		return storage.JoinPath(one, another)
-
 	}
 
 	if one[len(one)-1] == '/' {
-
 		one = one[:len(one)-1]
-
 	}
 
 	if another[0] == '/' {
-
 		another = another[1:]
-
 	}
 
 	return one + "/" + another
-
 }
 
 // composeChunks merges uploaded chunks into a new one and cleans up temporary objects.
 
 func composeChunks(ctx context.Context, uploader *Uploader, chunks []*gcs.ObjectHandle) error {
-
 	if err := uploader.ComposeObject(ctx, chunks); err != nil {
-
 		return fmt.Errorf("compose object %q: %w", uploader.objHandle.ObjectName(), err)
-
 	}
 
 	tracelog.DebugLogger.Printf("Remove temporary chunks for %v\n", uploader.objHandle.ObjectName())
@@ -426,13 +341,11 @@ func composeChunks(ctx context.Context, uploader *Uploader, chunks []*gcs.Object
 	uploader.CleanUpChunks(ctx, chunks)
 
 	return nil
-
 }
 
 // fillBuffer fills the buffer with data from the reader.
 
 func fillBuffer(r io.Reader, b []byte) (int, error) {
-
 	var (
 		err error
 
@@ -440,27 +353,20 @@ func fillBuffer(r io.Reader, b []byte) (int, error) {
 	)
 
 	for offset < len(b) {
-
 		n, err = r.Read(b[offset:])
 
 		offset += n
 
 		if err != nil {
-
 			break
-
 		}
-
 	}
 
 	return offset, err
-
 }
 
 func (folder *Folder) Validate() error {
-
 	return nil
-
 }
 
 // NOT IMPLEMENTED
@@ -470,7 +376,5 @@ func (folder *Folder) SetVersioningEnabled(enable bool) {}
 // NOT IMPLEMENTED
 
 func (folder *Folder) GetVersioningEnabled() bool {
-
 	return false
-
 }

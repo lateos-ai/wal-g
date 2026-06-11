@@ -14,9 +14,7 @@ import (
 )
 
 func Test_reportReadCloser(t *testing.T) {
-
 	t.Run("wraps a reader", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		defer mockCtrl.Finish()
@@ -56,11 +54,9 @@ func Test_reportReadCloser(t *testing.T) {
 		assert.ErrorIs(t, err, io.EOF)
 
 		assert.Equal(t, 0, n)
-
 	})
 
 	t.Run("report operation result on close", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		defer mockCtrl.Finish()
@@ -80,11 +76,9 @@ func Test_reportReadCloser(t *testing.T) {
 		err = rrc.Close()
 
 		require.NoError(t, err)
-
 	})
 
 	t.Run("report operation result on EOF", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		defer mockCtrl.Finish()
@@ -104,11 +98,9 @@ func Test_reportReadCloser(t *testing.T) {
 		_, err = rrc.Read(make([]byte, 100))
 
 		assert.ErrorIs(t, err, io.EOF)
-
 	})
 
 	t.Run("report operation result on error", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		defer mockCtrl.Finish()
@@ -124,11 +116,9 @@ func Test_reportReadCloser(t *testing.T) {
 		_, err := rrc.Read(make([]byte, 100))
 
 		require.Error(t, err)
-
 	})
 
 	t.Run("do not report operation result twice", func(t *testing.T) {
-
 		mockCtrl := gomock.NewController(t)
 
 		defer mockCtrl.Finish()
@@ -152,15 +142,11 @@ func Test_reportReadCloser(t *testing.T) {
 		err = rrc.Close()
 
 		require.NoError(t, err)
-
 	})
-
 }
 
 type errorReader struct{}
 
 func (er *errorReader) Read(_ []byte) (n int, err error) {
-
 	return 100500, errors.New("TEST ERROR")
-
 }

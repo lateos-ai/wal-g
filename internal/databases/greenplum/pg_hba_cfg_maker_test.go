@@ -10,11 +10,8 @@ import (
 )
 
 func TestGeneratePgHbaConf(t *testing.T) {
-
 	segments := map[int][]*cluster.SegConfig{
-
 		-1: {{
-
 			DbID: 1,
 
 			ContentID: -1,
@@ -29,7 +26,6 @@ func TestGeneratePgHbaConf(t *testing.T) {
 		}},
 
 		0: {{
-
 			DbID: 2,
 
 			ContentID: 0,
@@ -44,7 +40,6 @@ func TestGeneratePgHbaConf(t *testing.T) {
 		}},
 
 		1: {{
-
 			DbID: 3,
 
 			ContentID: 1,
@@ -80,15 +75,11 @@ host    replication     gpadmin         sdw2              trust`
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedOutput, output, "generated pg_hba.conf does not match the expected one")
-
 }
 
 func TestGeneratePgHbaConf_IP(t *testing.T) {
-
 	segments := map[int][]*cluster.SegConfig{
-
 		-1: {{
-
 			DbID: 1,
 
 			ContentID: -1,
@@ -103,7 +94,6 @@ func TestGeneratePgHbaConf_IP(t *testing.T) {
 		}},
 
 		0: {{
-
 			DbID: 2,
 
 			ContentID: 0,
@@ -118,7 +108,6 @@ func TestGeneratePgHbaConf_IP(t *testing.T) {
 		}},
 
 		1: {{
-
 			DbID: 3,
 
 			ContentID: 1,
@@ -154,5 +143,4 @@ host    replication     gpadmin         192.168.1.3/32              trust`
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedOutput, output, "generated pg_hba.conf does not match the expected one")
-
 }

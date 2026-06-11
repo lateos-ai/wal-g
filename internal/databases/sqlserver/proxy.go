@@ -13,7 +13,6 @@ import (
 )
 
 func RunProxy(folder storage.Folder) {
-
 	ctx, cancel := context.WithCancel(context.Background())
 
 	signalHandler := utility.NewSignalHandler(ctx, cancel, []os.Signal{syscall.SIGINT, syscall.SIGTERM})
@@ -33,5 +32,4 @@ func RunProxy(folder storage.Folder) {
 	err = bs.Run(ctx)
 
 	tracelog.ErrorLogger.FatalfOnError("proxy run error: %v", err)
-
 }

@@ -24,7 +24,6 @@ var DeltaFilePath = path.Join(WalgTestDataFolderPath, DeltaFilename)
 var RealLocation = *walparser.NewBlockLocation(postgres.DefaultSpcNode, 16384, 16397, 2062)
 
 func TestRecordBlockLocationsFromPage(t *testing.T) {
-
 	walParser := walparser.NewWalParser()
 
 	walFile, err := os.Open(WalFilePath)
@@ -48,7 +47,6 @@ func TestRecordBlockLocationsFromPage(t *testing.T) {
 	blockLocationConsumer := make(chan walparser.BlockLocation)
 
 	recordingReader := postgres.WalDeltaRecordingReader{
-
 		WalParser: *walParser,
 
 		PageDataLeftover: page2,
@@ -57,37 +55,30 @@ func TestRecordBlockLocationsFromPage(t *testing.T) {
 	}
 
 	go func() {
-
 		err = recordingReader.RecordBlockLocationsFromPage()
 
 		assert.NoError(t, err)
 
 		close(blockLocationConsumer)
-
 	}()
 
 	locations := make([]walparser.BlockLocation, 0)
 
 	for location := range blockLocationConsumer {
-
 		locations = append(locations, location)
-
 	}
 
 	assert.Len(t, locations, 1)
 
 	assert.Equal(t, RealLocation, locations[0])
-
 }
 
 func TestRead_CorrectData(t *testing.T) {
-
 	data, err := os.ReadFile(WalFilePath)
 
 	assert.NoError(t, err)
 
 	reader := postgres.WalDeltaRecordingReader{
-
 		PageReader: *walparser.NewWalPageReader(bytes.NewReader(data)),
 	}
 
@@ -100,11 +91,9 @@ func TestRead_CorrectData(t *testing.T) {
 	assert.Equal(t, len(data), n)
 
 	assert.Equal(t, data, actualData)
-
 }
 
 func TestRead_CorrectRecording(t *testing.T) {
-
 	walFile, err := os.Open(WalFilePath)
 
 	assert.NoError(t, err)
@@ -132,17 +121,13 @@ func TestRead_CorrectRecording(t *testing.T) {
 	assert.Len(t, locations, 1)
 
 	assert.Equal(t, RealLocation, locations[0])
-
 }
 
 func TestRead_RecordingFail(t *testing.T) {
-
 	walData := make([]byte, walparser.WalPageSize*3)
 
 	for i := range walData {
-
 		walData[i] = 1
-
 	}
 
 	dataFolder := testtools.NewMockDataFolder()
@@ -162,5 +147,4 @@ func TestRead_RecordingFail(t *testing.T) {
 	assert.Equal(t, walData, actualData)
 
 	assert.True(t, dataFolder.IsEmpty())
-
 }

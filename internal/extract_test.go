@@ -31,31 +31,25 @@ const (
 )
 
 func TestExtractAll_noFilesProvided(t *testing.T) {
-
 	buf := &testtools.NOPTarInterpreter{}
 
 	err := internal.ExtractAllWithSleeper(buf, []internal.ReaderMaker{}, NOPSleeper{})
 
 	assert.IsType(t, err, internal.NoFilesToExtractError{})
-
 }
 
 func TestExtractAll_fileDoesntExist(t *testing.T) {
-
 	readerMaker := &testtools.FileReaderMaker{Key: "testdata/booba.tar"}
 
 	err := internal.ExtractAllWithSleeper(&testtools.NOPTarInterpreter{}, []internal.ReaderMaker{readerMaker}, NOPSleeper{})
 
 	assert.Error(t, err)
-
 }
 
 func generateRandomBytes() []byte {
-
 	sb := testtools.NewStrideByteReader(seed)
 
 	lr := &io.LimitedReader{
-
 		R: sb,
 
 		N: int64(randomBytesAmount),
@@ -64,11 +58,9 @@ func generateRandomBytes() []byte {
 	b, _ := io.ReadAll(lr)
 
 	return b
-
 }
 
 func makeTar(name string) (BufferReaderMaker, []byte) {
-
 	b := generateRandomBytes()
 
 	bCopy := make([]byte, len(b))
@@ -78,28 +70,21 @@ func makeTar(name string) (BufferReaderMaker, []byte) {
 	r, w := io.Pipe()
 
 	go func() {
-
 		bw := bufio.NewWriterSize(w, minBufferSize)
 
 		defer utility.LoggedClose(w, "")
 
 		defer func() {
-
 			if err := bw.Flush(); err != nil {
-
 				panic(err)
-
 			}
-
 		}()
 
 		testtools.CreateNamedTar(bw, &io.LimitedReader{
-
 			R: bytes.NewBuffer(b),
 
 			N: int64(len(b)),
 		}, name)
-
 	}()
 
 	tarContents := &bytes.Buffer{}
@@ -107,13 +92,11 @@ func makeTar(name string) (BufferReaderMaker, []byte) {
 	io.Copy(tarContents, r)
 
 	return BufferReaderMaker{tarContents, "/usr/local.tar"}, bCopy
-
 }
 
 // Returns byte array and encrypted, compressed and corrupted tar
 
 func makeCorruptedTar(name string) (BufferReaderMaker, []byte) {
-
 	b := generateRandomBytes()
 
 	bCopy := make([]byte, len(b))
@@ -123,19 +106,14 @@ func makeCorruptedTar(name string) (BufferReaderMaker, []byte) {
 	r, w := io.Pipe()
 
 	go func() {
-
 		bw := bufio.NewWriterSize(w, minBufferSize)
 
 		defer utility.LoggedClose(w, "")
 
 		defer func() {
-
 			if err := bw.Flush(); err != nil {
-
 				panic(err)
-
 			}
-
 		}()
 
 		crypter := openpgp.CrypterFromKeyPath(PrivateKeyFilePath, noPassphrase)
@@ -147,18 +125,14 @@ func makeCorruptedTar(name string) (BufferReaderMaker, []byte) {
 		temp, err := io.ReadAll(compressed)
 
 		if err != nil {
-
 			panic(err)
-
 		}
 
 		testtools.CreateNamedTar(bw, &io.LimitedReader{
-
 			R: bytes.NewBuffer(temp[0 : len(temp)-1]),
 
 			N: int64(len(temp) - 1),
 		}, name)
-
 	}()
 
 	tarContents := &bytes.Buffer{}
@@ -166,11 +140,9 @@ func makeCorruptedTar(name string) (BufferReaderMaker, []byte) {
 	io.Copy(tarContents, r)
 
 	return BufferReaderMaker{tarContents, "/usr/local2.tar.lz4"}, bCopy
-
 }
 
 func TestExtractAll_simpleTar(t *testing.T) {
-
 	os.Setenv(conf.DownloadConcurrencySetting, "1")
 
 	defer os.Unsetenv(conf.DownloadConcurrencySetting)
@@ -184,17 +156,13 @@ func TestExtractAll_simpleTar(t *testing.T) {
 	err := internal.ExtractAllWithSleeper(buf, files, NOPSleeper{})
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	assert.Equalf(t, b, buf.Out, "ExtractAll: Output does not match input.")
-
 }
 
 func TestRetryExtractWithSleeper(t *testing.T) {
-
 	os.Setenv(conf.DownloadConcurrencySetting, "1")
 
 	os.Setenv(conf.DownloadFileRetriesSetting, "7")
@@ -210,21 +178,15 @@ func TestRetryExtractWithSleeper(t *testing.T) {
 	reader, writer, err := os.Pipe()
 
 	if err != nil {
-
 		t.Fatalf("couldn't get os Pipe: %v", err)
-
 	}
 
 	defer func() {
-
 		err := reader.Close()
 
 		if err != nil {
-
 			t.Fatalf("couldn't close os Pipe: %v", err)
-
 		}
-
 	}()
 
 	// set warnings output to buffer
@@ -240,9 +202,7 @@ func TestRetryExtractWithSleeper(t *testing.T) {
 	err1 := writer.Close()
 
 	if err1 != nil {
-
 		t.Fatalf("couldn't close os Pipe: %v", err)
-
 	}
 
 	retriesLeft := 6
@@ -250,13 +210,9 @@ func TestRetryExtractWithSleeper(t *testing.T) {
 	scanner := bufio.NewScanner(reader)
 
 	for scanner.Scan() {
-
 		if strings.Contains(scanner.Text(), fmt.Sprintf("retries left: %d", retriesLeft)) {
-
 			retriesLeft--
-
 		}
-
 	}
 
 	// file is corrupted so we expect error
@@ -264,11 +220,9 @@ func TestRetryExtractWithSleeper(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Equal(t, -1, retriesLeft)
-
 }
 
 func TestExtractAll_multipleTars(t *testing.T) {
-
 	conf.GetMaxDownloadConcurrency()
 
 	os.Setenv(conf.DownloadConcurrencySetting, "1")
@@ -282,13 +236,11 @@ func TestExtractAll_multipleTars(t *testing.T) {
 	brms := []internal.ReaderMaker{}
 
 	for i := 0; i < fileAmount; i++ {
-
 		brm, b := makeTar(strconv.Itoa(i))
 
 		bufs = append(bufs, b)
 
 		brms = append(brms, &brm)
-
 	}
 
 	buf := testtools.NewConcurrentConcatBufferTarInterpreter()
@@ -296,21 +248,15 @@ func TestExtractAll_multipleTars(t *testing.T) {
 	err := internal.ExtractAllWithSleeper(buf, brms, NOPSleeper{})
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	for i := 0; i < fileAmount; i++ {
-
 		assert.Equal(t, bufs[i], buf.Out[strconv.Itoa(i)], "Some of outputs do not match input")
-
 	}
-
 }
 
 func TestExtractAll_multipleConcurrentTars(t *testing.T) {
-
 	os.Setenv(conf.DownloadConcurrencySetting, "4")
 
 	defer os.Unsetenv(conf.DownloadConcurrencySetting)
@@ -322,13 +268,11 @@ func TestExtractAll_multipleConcurrentTars(t *testing.T) {
 	brms := []internal.ReaderMaker{}
 
 	for i := 0; i < fileAmount; i++ {
-
 		brm, b := makeTar(strconv.Itoa(i))
 
 		bufs = append(bufs, b)
 
 		brms = append(brms, &brm)
-
 	}
 
 	buf := testtools.NewConcurrentConcatBufferTarInterpreter()
@@ -336,27 +280,19 @@ func TestExtractAll_multipleConcurrentTars(t *testing.T) {
 	err := internal.ExtractAllWithSleeper(buf, brms, NOPSleeper{})
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	for i := 0; i < fileAmount; i++ {
-
 		assert.Equal(t, bufs[i], buf.Out[strconv.Itoa(i)], "Some of outputs do not match input")
-
 	}
-
 }
 
 func noPassphrase() (string, bool) {
-
 	return "", false
-
 }
 
 func TestDecryptAndDecompressTar_unencrypted(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	bCopy := make([]byte, len(b))
@@ -374,25 +310,19 @@ func TestDecryptAndDecompressTar_unencrypted(t *testing.T) {
 	reader, err := internal.DecryptAndDecompressTar(compressedBuffer, "/usr/local/test.tar.lz4", nil)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	decompressed, readErr := io.ReadAll(reader)
 
 	if readErr != nil {
-
 		t.Logf("%+v\n", readErr)
-
 	}
 
 	assert.Equalf(t, bCopy, decompressed, "decompressed tar does not match the input")
-
 }
 
 func TestDecryptAndDecompressTar_encrypted(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	// Copy generated bytes to another slice to make the test more robust against modifications of "b".
@@ -410,25 +340,19 @@ func TestDecryptAndDecompressTar_encrypted(t *testing.T) {
 	reader, err := internal.DecryptAndDecompressTar(compressed, "/usr/local/test.tar.lz4", crypter)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	decompressed, readErr := io.ReadAll(reader)
 
 	if readErr != nil {
-
 		t.Logf("%+v\n", readErr)
-
 	}
 
 	assert.Equalf(t, bCopy, decompressed, "decompressed tar does not match the input")
-
 }
 
 func TestDecryptAndDecompressTar_noCrypter(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	// Copy generated bytes to another slice to make the test more robust against modifications of "b".
@@ -446,25 +370,19 @@ func TestDecryptAndDecompressTar_noCrypter(t *testing.T) {
 	reader, err := internal.DecryptAndDecompressTar(compressed, "/usr/local/test.tar.lz4", nil)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	_, readErr := io.ReadAll(reader)
 
 	if readErr != nil {
-
 		t.Logf("%+v\n", readErr)
-
 	}
 
 	assert.Error(t, readErr)
-
 }
 
 func TestDecryptAndDecompressTar_wrongCrypter(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	// Copy generated bytes to another slice to make the test more robust against modifications of "b".
@@ -482,17 +400,13 @@ func TestDecryptAndDecompressTar_wrongCrypter(t *testing.T) {
 	_, err := internal.DecryptAndDecompressTar(compressed, "/usr/local/test.tar.lzma", crypter)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	assert.Error(t, err)
-
 }
 
 func TestDecryptAndDecompressTar_unknownFormat(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	// Copy generated bytes to another slice to make the test more robust against modifications of "b".
@@ -504,19 +418,15 @@ func TestDecryptAndDecompressTar_unknownFormat(t *testing.T) {
 	_, err := internal.DecryptAndDecompressTar(bytes.NewBuffer(b), "/usr/local/test.some_unsupported_file_format", nil)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	assert.Error(t, err)
 
 	assert.IsType(t, internal.UnsupportedFileTypeError{}, err)
-
 }
 
 func TestDecryptAndDecompressTar_uncompressed(t *testing.T) {
-
 	b := generateRandomBytes()
 
 	bCopy := make([]byte, len(b))
@@ -532,21 +442,16 @@ func TestDecryptAndDecompressTar_uncompressed(t *testing.T) {
 	reader, err := internal.DecryptAndDecompressTar(compressedBuffer, "/usr/local/test.tar", nil)
 
 	if err != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	decompressed, readErr := io.ReadAll(reader)
 
 	if readErr != nil {
-
 		t.Logf("%+v\n", err)
-
 	}
 
 	assert.Equalf(t, bCopy, decompressed, "decompressed tar does not match the input")
-
 }
 
 // Used to mock files in memory.

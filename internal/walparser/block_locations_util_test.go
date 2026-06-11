@@ -12,7 +12,6 @@ import (
 )
 
 func TestExtractBlockLocations(t *testing.T) {
-
 	record, _ := testtools.GetXLogRecordData()
 
 	expectedLocations := []walparser.BlockLocation{record.Blocks[0].Header.BlockLocation}
@@ -20,11 +19,9 @@ func TestExtractBlockLocations(t *testing.T) {
 	actualLocations := walparser.ExtractBlockLocations([]walparser.XLogRecord{record})
 
 	assert.Equal(t, expectedLocations, actualLocations)
-
 }
 
 func TestExtractLocationsFromWalFile(t *testing.T) {
-
 	record, recordData := testtools.GetXLogRecordData()
 
 	fileData := testtools.CreateWalPagesWithRecords(recordData)
@@ -38,11 +35,9 @@ func TestExtractLocationsFromWalFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedLocations, actualLocations)
-
 }
 
 func TestExtractLocationsFromWalFile_MultipleRecords(t *testing.T) {
-
 	record, recordData := testtools.GetXLogRecordData()
 
 	fileData := testtools.CreateWalPagesWithRecords(recordData, recordData)
@@ -50,7 +45,6 @@ func TestExtractLocationsFromWalFile_MultipleRecords(t *testing.T) {
 	walFile := io.NopCloser(bytes.NewReader(fileData))
 
 	expectedLocations := []walparser.BlockLocation{
-
 		record.Blocks[0].Header.BlockLocation, record.Blocks[0].Header.BlockLocation}
 
 	actualLocations, err := walparser.ExtractLocationsFromWalFile(walparser.NewWalParser(), walFile)
@@ -58,5 +52,4 @@ func TestExtractLocationsFromWalFile_MultipleRecords(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedLocations, actualLocations)
-
 }

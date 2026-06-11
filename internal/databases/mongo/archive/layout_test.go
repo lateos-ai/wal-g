@@ -14,32 +14,25 @@ import (
 )
 
 func shuffledArchives(s []models.Archive) []models.Archive {
-
 	a := copyArchives(s)
 
 	rand.Shuffle(len(a), func(i, j int) {
-
 		a[i], a[j] = a[j], a[i]
-
 	})
 
 	return a
-
 }
 
 func copyArchives(a []models.Archive) []models.Archive {
-
 	b := make([]models.Archive, len(a))
 
 	copy(b, a)
 
 	return b
-
 }
 
 var (
 	continuousArchives = []models.Archive{
-
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579001001, Inc: 2}, Ext: "br", Type: "oplog"},
 
 		{Start: models.Timestamp{TS: 1579001001, Inc: 2}, End: models.Timestamp{TS: 1579002001, Inc: 1}, Ext: "br", Type: "oplog"},
@@ -52,7 +45,6 @@ var (
 	}
 
 	continuousArchivesOverlappedFirst = []models.Archive{
-
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579001001, Inc: 2}, Ext: "br", Type: "oplog"},
 
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579002001, Inc: 3}, Ext: "br", Type: "oplog"},
@@ -67,7 +59,6 @@ var (
 	}
 
 	continuousArchivesOverlappedMiddle = []models.Archive{
-
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579001001, Inc: 2}, Ext: "br", Type: "oplog"},
 
 		{Start: models.Timestamp{TS: 1579001001, Inc: 2}, End: models.Timestamp{TS: 1579002001, Inc: 1}, Ext: "br", Type: "oplog"},
@@ -82,7 +73,6 @@ var (
 	}
 
 	gapArchives = []models.Archive{
-
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579001001, Inc: 2}, Ext: "br", Type: "oplog"},
 
 		{Start: models.Timestamp{TS: 1579001001, Inc: 2}, End: models.Timestamp{TS: 1579002001, Inc: 1}, Ext: "br", Type: "oplog"},
@@ -93,7 +83,6 @@ var (
 	}
 
 	gapArchivesWithMarks = []models.Archive{
-
 		{Start: models.Timestamp{TS: 1579000001, Inc: 1}, End: models.Timestamp{TS: 1579001001, Inc: 2}, Ext: "br", Type: "oplog"},
 
 		{Start: models.Timestamp{TS: 1579001001, Inc: 2}, End: models.Timestamp{TS: 1579002001, Inc: 1}, Ext: "br", Type: "oplog"},
@@ -107,7 +96,6 @@ var (
 )
 
 func TestSequenceBetweenTS(t *testing.T) {
-
 	type args struct {
 		since models.Timestamp
 
@@ -115,7 +103,6 @@ func TestSequenceBetweenTS(t *testing.T) {
 	}
 
 	archivesCases := map[string][]models.Archive{
-
 		"continuous archives": shuffledArchives(continuousArchives),
 
 		"continuous archives, first archives overlapped": continuousArchivesOverlappedFirst,
@@ -132,13 +119,10 @@ func TestSequenceBetweenTS(t *testing.T) {
 
 		err error
 	}{
-
 		{
-
 			name: "ts are borders of archives",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 2},
@@ -150,11 +134,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "since ts is in second archive, until is in last",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000011, Inc: 2},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 1},
@@ -166,11 +148,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "since ts is in second archive, until is in last",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579001011, Inc: 2},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 1},
@@ -182,11 +162,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "since ts is in first archive, until is in pre-last",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000011, Inc: 2},
 
 				until: models.Timestamp{TS: 1579002001, Inc: 100},
@@ -198,11 +176,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "ts are in one (first) archive",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579001001, Inc: 1},
@@ -214,11 +190,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "ts are in one (last) archive",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579003011, Inc: 3},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 2},
@@ -230,11 +204,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "ts are in one (middle) archive",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579002001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579002001, Inc: 4},
@@ -248,11 +220,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		// Failures test
 
 		{
-
 			name: "error: ts are out of bounds",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000000, Inc: 1},
 
 				until: models.Timestamp{TS: 1579005001, Inc: 1},
@@ -264,11 +234,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "error: since ts is out of bounds",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000000, Inc: 1},
 
 				until: models.Timestamp{TS: 1579003001, Inc: 2},
@@ -280,11 +248,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "error: until ts is out of bounds",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579005001, Inc: 1},
@@ -296,11 +262,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "error: since ts is out of bounds (start ts is not included in archive)",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 1},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 2},
@@ -312,11 +276,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "error: since ts is in last archive, until is out of bounds",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579003011, Inc: 1},
 
 				until: models.Timestamp{TS: 1579005001, Inc: 2},
@@ -328,11 +290,9 @@ func TestSequenceBetweenTS(t *testing.T) {
 		},
 
 		{
-
 			name: "error: since ts is greater than until ts",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579002001, Inc: 1},
 
 				until: models.Timestamp{TS: 1579001001, Inc: 2},
@@ -345,39 +305,25 @@ func TestSequenceBetweenTS(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		for archivesDesc, archives := range archivesCases {
-
 			t.Run(fmt.Sprintf("%s; %s", tt.name, archivesDesc), func(t *testing.T) {
-
 				got, err := SequenceBetweenTS(archives, tt.args.since, tt.args.until)
 
 				if tt.err != nil {
-
 					assert.EqualError(t, err, tt.err.Error())
-
 				} else {
-
 					assert.Nil(t, err)
-
 				}
 
 				if !reflect.DeepEqual(got, tt.want) {
-
 					t.Errorf("SequenceBetweenTS() got = %v, want %v", got, tt.want)
-
 				}
-
 			})
-
 		}
-
 	}
-
 }
 
 func TestSequenceBetweenTSGaps(t *testing.T) {
-
 	type args struct {
 		since models.Timestamp
 
@@ -385,7 +331,6 @@ func TestSequenceBetweenTSGaps(t *testing.T) {
 	}
 
 	archivesCases := map[string][]models.Archive{
-
 		"gap archives": shuffledArchives(gapArchives),
 	}
 
@@ -396,13 +341,10 @@ func TestSequenceBetweenTSGaps(t *testing.T) {
 
 		err error
 	}{
-
 		{
-
 			name: "error: ts are borders of archives",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 2},
@@ -413,25 +355,17 @@ func TestSequenceBetweenTSGaps(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		for archivesDesc, archives := range archivesCases {
-
 			t.Run(fmt.Sprintf("%s; %s", tt.name, archivesDesc), func(t *testing.T) {
-
 				_, err := SequenceBetweenTS(archives, tt.args.since, tt.args.until)
 
 				assert.EqualError(t, err, tt.err.Error())
-
 			})
-
 		}
-
 	}
-
 }
 
 func TestSequenceBetweenTSMarkedGaps(t *testing.T) {
-
 	type args struct {
 		since models.Timestamp
 
@@ -439,7 +373,6 @@ func TestSequenceBetweenTSMarkedGaps(t *testing.T) {
 	}
 
 	archivesCases := map[string][]models.Archive{
-
 		"gap archives": shuffledArchives(gapArchivesWithMarks),
 	}
 
@@ -450,13 +383,10 @@ func TestSequenceBetweenTSMarkedGaps(t *testing.T) {
 
 		err error
 	}{
-
 		{
-
 			name: "error: ts are borders of archives",
 
 			args: args{
-
 				since: models.Timestamp{TS: 1579000001, Inc: 2},
 
 				until: models.Timestamp{TS: 1579004001, Inc: 2},
@@ -467,21 +397,14 @@ func TestSequenceBetweenTSMarkedGaps(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		for archivesDesc, archives := range archivesCases {
-
 			t.Run(fmt.Sprintf("%s; %s", tt.name, archivesDesc), func(t *testing.T) {
-
 				_, err := SequenceBetweenTS(archives, tt.args.since, tt.args.until)
 
 				assert.EqualError(t, err, tt.err.Error())
-
 			})
-
 		}
-
 	}
-
 }
 
 var (
@@ -493,7 +416,6 @@ var (
 )
 
 func TestSequence_Reverse(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -501,9 +423,7 @@ func TestSequence_Reverse(t *testing.T) {
 
 		after Sequence
 	}{
-
 		{
-
 			name: "3 archive seq",
 
 			before: Sequence{arch1, arch2, arch3},
@@ -512,7 +432,6 @@ func TestSequence_Reverse(t *testing.T) {
 		},
 
 		{
-
 			name: "2 archive seq",
 
 			before: Sequence{arch1, arch2},
@@ -521,7 +440,6 @@ func TestSequence_Reverse(t *testing.T) {
 		},
 
 		{
-
 			name: "1 archive seq",
 
 			before: Sequence{arch1},
@@ -530,7 +448,6 @@ func TestSequence_Reverse(t *testing.T) {
 		},
 
 		{
-
 			name: "empty archive seq",
 
 			before: Sequence{},
@@ -540,22 +457,16 @@ func TestSequence_Reverse(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			tt.before.Reverse()
 
 			assert.Equal(t, tt.before, tt.after)
-
 		})
-
 	}
-
 }
 
 var (
 	LastTSBackups = []*models.Backup{
-
 		{MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 1579000001, Inc: 2}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 1579000001, Inc: 9}}}},
 
 		{MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 1579000010, Inc: 1}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 1579000011, Inc: 9}}}},
@@ -565,7 +476,6 @@ var (
 )
 
 func TestLastKnownInBackupTS(t *testing.T) {
-
 	type args struct {
 		backups []*models.Backup
 	}
@@ -579,13 +489,10 @@ func TestLastKnownInBackupTS(t *testing.T) {
 
 		err error
 	}{
-
 		{
-
 			name: "empty backups error",
 
 			args: args{
-
 				backups: []*models.Backup{},
 			},
 
@@ -595,11 +502,9 @@ func TestLastKnownInBackupTS(t *testing.T) {
 		},
 
 		{
-
 			name: "it works",
 
 			args: args{
-
 				backups: LastTSBackups,
 			},
 
@@ -610,27 +515,18 @@ func TestLastKnownInBackupTS(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got, err := LastKnownInBackupTS(tt.args.backups)
 
 			if tt.err != nil {
-
 				assert.EqualError(t, err, tt.err.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			assert.Equal(t, tt.want, got)
-
 		})
-
 	}
-
 }
 
 var (
@@ -653,7 +549,6 @@ var (
 	MockBackup8Perm = &models.Backup{BackupName: "perm8", StartLocalTime: time.Unix(1579000000, 0), FinishLocalTime: time.Unix(1579000001, 0), Permanent: true}
 
 	SplitBackups = []*models.Backup{
-
 		MockBackup1,
 
 		MockBackup2,
@@ -668,7 +563,6 @@ var (
 	}
 
 	SplitBackupsPermanent = []*models.Backup{
-
 		MockBackup1,
 
 		MockBackup2,
@@ -688,25 +582,18 @@ var (
 )
 
 func IntPtr(i int) *int {
-
 	return &i
-
 }
 
 func TimePtr(t time.Time) *time.Time {
-
 	return &t
-
 }
 
 func TimestampPtr(ts models.Timestamp) *models.Timestamp {
-
 	return &ts
-
 }
 
 func TestSplitPurgingBackups(t *testing.T) {
-
 	type args struct {
 		backups []*models.Backup
 
@@ -726,13 +613,10 @@ func TestSplitPurgingBackups(t *testing.T) {
 
 		err error
 	}{
-
 		{
-
 			name: "Purge_all,count=0,after=nil",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(0),
@@ -748,11 +632,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_all,count=0,after=nil",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(0),
@@ -768,11 +650,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_all,time_in_future",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: nil,
@@ -788,11 +668,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_none,count=100",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(100),
@@ -808,11 +686,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_none,count=6",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(6),
@@ -828,11 +704,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_none,time_in_past",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: nil,
@@ -848,11 +722,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_1,count=5",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(5),
@@ -868,11 +740,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_2,count=4",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(4),
@@ -888,11 +758,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_2,count=4,time_in_future",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(4),
@@ -908,11 +776,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_2,count=4_eq_time_after_4",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(4),
@@ -928,11 +794,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_1,count=4_gt_time_after_5",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(3),
@@ -948,11 +812,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_3,count=2_gt_time_after_3",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(2),
@@ -968,11 +830,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_2,count=4_lt_time_after_2",
 
 			args: args{
-
 				backups: SplitBackups,
 
 				retainCount: IntPtr(4),
@@ -988,11 +848,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 		},
 
 		{
-
 			name: "Purge_3,count=2_gt_time_after_3",
 
 			args: args{
-
 				backups: SplitBackupsPermanent,
 
 				retainCount: IntPtr(2),
@@ -1001,7 +859,6 @@ func TestSplitPurgingBackups(t *testing.T) {
 			},
 
 			wantPurge: []*models.Backup{
-
 				MockBackup4,
 
 				MockBackup6,
@@ -1010,7 +867,6 @@ func TestSplitPurgingBackups(t *testing.T) {
 			},
 
 			wantRetain: []*models.Backup{
-
 				MockBackup1,
 
 				MockBackup2,
@@ -1027,9 +883,7 @@ func TestSplitPurgingBackups(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			backups := MongoModelToTimedBackup(tt.args.backups)
 
 			internal.SortTimedBackup(backups)
@@ -1037,13 +891,9 @@ func TestSplitPurgingBackups(t *testing.T) {
 			purgeList, retainList, err := internal.SplitPurgingBackups(backups, tt.args.retainCount, tt.args.retainAfter)
 
 			if tt.err != nil {
-
 				assert.EqualError(t, err, tt.err.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			gotPurge, gotRetain := SplitMongoBackups(tt.args.backups, purgeList, retainList)
@@ -1051,15 +901,11 @@ func TestSplitPurgingBackups(t *testing.T) {
 			assert.Equal(t, tt.wantPurge, gotPurge, "wrong purge list")
 
 			assert.Equal(t, tt.wantRetain, gotRetain, "wrong retain list")
-
 		})
-
 	}
-
 }
 
 func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
-
 	type args struct {
 		archives []models.Archive
 
@@ -1073,13 +919,10 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 
 		want []models.Archive
 	}{
-
 		{
-
 			name: "purge_none,empty_archive_list",
 
 			args: args{
-
 				archives: []models.Archive{},
 
 				purgeBeforeTS: models.Timestamp{TS: 1, Inc: 1},
@@ -1089,11 +932,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_none,before_ts_in_past",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: models.Timestamp{TS: 1578000001, Inc: 1},
@@ -1103,11 +944,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_none,before_ts_is_start_of_oldest_archive",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: continuousArchives[0].Start,
@@ -1117,11 +956,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_none,before_ts_is_end_of_oldest_archive",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: continuousArchives[0].End,
@@ -1131,11 +968,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_all_except_newest,before_ts_is_end_of_newest_archive",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: continuousArchives[len(continuousArchives)-1].End,
@@ -1145,11 +980,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_all,before_ts_is_end_of_newest_archive",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: continuousArchives[len(continuousArchives)-1].End,
@@ -1159,11 +992,9 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_half",
 
 			args: args{
-
 				archives: continuousArchives,
 
 				purgeBeforeTS: continuousArchives[3].End,
@@ -1174,21 +1005,15 @@ func TestSplitPurgingOplogArchivesByTS(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got := SplitPurgingOplogArchivesByTS(tt.args.archives, tt.args.purgeBeforeTS)
 
 			assert.Equal(t, tt.want, got, "wrong oplog archives list")
-
 		})
-
 	}
-
 }
 
 func TestOldestBackupAfterTime(t *testing.T) {
-
 	type args struct {
 		backups []*models.Backup
 
@@ -1204,9 +1029,7 @@ func TestOldestBackupAfterTime(t *testing.T) {
 
 		wantErr error
 	}{
-
 		{
-
 			name: "retain_point_in_the_middle",
 
 			want: SplitBackups[3],
@@ -1215,7 +1038,6 @@ func TestOldestBackupAfterTime(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_point_between_backups",
 
 			want: SplitBackups[3],
@@ -1224,7 +1046,6 @@ func TestOldestBackupAfterTime(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_point_in_the_future",
 
 			wantErr: fmt.Errorf("no backups newer than retain point"),
@@ -1233,7 +1054,6 @@ func TestOldestBackupAfterTime(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_point_in_the_past",
 
 			want: SplitBackups[len(SplitBackups)-1],
@@ -1242,13 +1062,11 @@ func TestOldestBackupAfterTime(t *testing.T) {
 		},
 
 		{
-
 			name: "backups_wrong_sorting",
 
 			want: nil,
 
 			args: args{[]*models.Backup{
-
 				{BackupName: "wrong1", StartLocalTime: time.Unix(1579000200, 0), FinishLocalTime: time.Unix(1579000300, 0)},
 
 				MockBackup2,
@@ -1261,32 +1079,24 @@ func TestOldestBackupAfterTime(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			oldestBackup, err := OldestBackupAfterTime(tt.args.backups, tt.args.retainAfter)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
 
 			assert.Equal(t, oldestBackup, tt.want)
-
 		})
-
 	}
-
 }
 
 var (
 	Backups = []*models.Backup{
-
 		{MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 800}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 900}}}},
 
 		{MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 600}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 700}}}},
@@ -1297,7 +1107,6 @@ var (
 	}
 
 	Archives = []models.Archive{
-
 		{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 		{Start: models.Timestamp{TS: 200}, End: models.Timestamp{TS: 300}},
@@ -1327,7 +1136,6 @@ var (
 )
 
 func TestSelectPurgingOplogArchives(t *testing.T) {
-
 	type args struct {
 		archives []models.Archive
 
@@ -1343,13 +1151,10 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 
 		want []models.Archive
 	}{
-
 		{
-
 			name: "retain_after_in_the_middle",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: Backups,
@@ -1358,7 +1163,6 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 			},
 
 			want: []models.Archive{
-
 				{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 				{Start: models.Timestamp{TS: 550}, End: models.Timestamp{TS: 560}},
@@ -1368,11 +1172,9 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_after_in_the_middle_of_overlapped_backups",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: Backups,
@@ -1381,17 +1183,14 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 			},
 
 			want: []models.Archive{
-
 				{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 			},
 		},
 
 		{
-
 			name: "retain_after_in_the_past",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: Backups,
@@ -1403,11 +1202,9 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_after_in_the_future",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: Backups,
@@ -1416,7 +1213,6 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 			},
 
 			want: []models.Archive{
-
 				{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 				{Start: models.Timestamp{TS: 550}, End: models.Timestamp{TS: 560}},
@@ -1432,11 +1228,9 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_after_is_nil",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: Backups,
@@ -1445,7 +1239,6 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 			},
 
 			want: []models.Archive{
-
 				{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 				{Start: models.Timestamp{TS: 550}, End: models.Timestamp{TS: 560}},
@@ -1461,11 +1254,9 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 		},
 
 		{
-
 			name: "retain_after_in_the_middle,_empty_backups",
 
 			args: args{
-
 				archives: Archives,
 
 				backups: []*models.Backup{},
@@ -1478,15 +1269,10 @@ func TestSelectPurgingOplogArchives(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got := SelectPurgingOplogArchives(tt.args.archives, tt.args.backups, tt.args.retainAfterTS, nil)
 
 			assert.Equal(t, tt.want, got)
-
 		})
-
 	}
-
 }

@@ -17,39 +17,30 @@ import (
 )
 
 func TestConfigure(t *testing.T) {
-
 	bucketPath := "s3://bucket/server"
 
 	doConfigureWithBucketPath(t, bucketPath, "server")
-
 }
 
 func TestConfigureBucketRoot(t *testing.T) {
-
 	bucketPath := "s3://bucket/"
 
 	doConfigureWithBucketPath(t, bucketPath, "")
-
 }
 
 func TestConfigureBucketRoot2(t *testing.T) {
-
 	bucketPath := "s3://bucket"
 
 	doConfigureWithBucketPath(t, bucketPath, "")
-
 }
 
 func TestConfigureDeepBucket(t *testing.T) {
-
 	bucketPath := "s3://bucket/subdir/server"
 
 	doConfigureWithBucketPath(t, bucketPath, "subdir/server")
-
 }
 
 func doConfigureWithBucketPath(t *testing.T, bucketPath string, expectedServer string) {
-
 	// Test empty environment variables
 
 	os.Unsetenv("WALE_S3_PREFIX")
@@ -57,9 +48,7 @@ func doConfigureWithBucketPath(t *testing.T, bucketPath string, expectedServer s
 	uploader, err := internal.ConfigureUploader()
 
 	if _, ok := (errors.Cause(err)).(internal.UnconfiguredStorageError); !ok {
-
 		t.Errorf("upload: Expected error 'UnconfiguredStorageError' but got %s", err)
-
 	}
 
 	assert.Nil(t, uploader)
@@ -113,11 +102,9 @@ func doConfigureWithBucketPath(t *testing.T, bucketPath string, expectedServer s
 	_, err = internal.ConfigureUploader()
 
 	assert.NoError(t, err)
-
 }
 
 func TestUpload(t *testing.T) {
-
 	reader := bytes.NewReader([]byte("some text"))
 
 	compressor, errComp := internal.ConfigureCompressor()
@@ -139,11 +126,9 @@ func TestUpload(t *testing.T) {
 	_, objErr := uploader.UploadingFolder.ReadObject("")
 
 	assert.NoError(t, objErr)
-
 }
 
 func TestUploadMock(t *testing.T) {
-
 	mockCtrl := gomock.NewController(t)
 
 	folder := mocks.NewMockFolder(mockCtrl)
@@ -169,5 +154,4 @@ func TestUploadMock(t *testing.T) {
 	uploadWithErr := uploader.Upload(t.Context(), "path/to/incorrect/file", reader)
 
 	assert.Error(t, uploadWithErr)
-
 }

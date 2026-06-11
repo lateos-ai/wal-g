@@ -9,7 +9,6 @@ import (
 )
 
 func HandleBinlogFind(folder storage.Folder, gtid string) {
-
 	db, err := getMySQLConnection()
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -23,17 +22,13 @@ func HandleBinlogFind(folder storage.Folder, gtid string) {
 	var gtidSet gomysql.GTIDSet
 
 	if gtid == "" {
-
 		gtidSet, err = getMySQLGTIDExecuted(db, flavor)
 
 		tracelog.ErrorLogger.FatalOnError(err)
-
 	} else {
-
 		gtidSet, err = gomysql.ParseGTIDSet(flavor, gtid)
 
 		tracelog.ErrorLogger.FatalOnError(err)
-
 	}
 
 	name, err := getLastUploadedBinlogBeforeGTID(folder, gtidSet, flavor)
@@ -41,5 +36,4 @@ func HandleBinlogFind(folder storage.Folder, gtid string) {
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	tracelog.InfoLogger.Println(name)
-
 }

@@ -40,11 +40,9 @@ type MongodService struct {
 }
 
 func CreateMongodService(ctx context.Context, appName, mongodbURI string, timeout time.Duration) (*MongodService, error) {
-
 	mongoClient, err := backoff.Retry(ctx,
 
 		func() (*mongo.Client, error) {
-
 			client, err := mongo.Connect(ctx,
 
 				options.Client().ApplyURI(mongodbURI).
@@ -56,51 +54,38 @@ func CreateMongodService(ctx context.Context, appName, mongodbURI string, timeou
 					SetRetryReads(false))
 
 			if err != nil {
-
 				return nil, errors.Wrap(err, "unable to connect to mongod")
-
 			}
 
 			if err := client.Ping(ctx, nil); err != nil {
-
 				return nil, errors.Wrap(err, "ping to mongod is failed")
-
 			}
 
 			return client, nil
-
 		},
 
 		backoff.WithMaxTries(mongoConnectRetries+1),
 
 		backoff.WithNotify(func(err error, duration time.Duration) {
-
 			tracelog.InfoLogger.Printf("Unable to connect due '%+v', next retry: %v", err, duration)
-
 		}),
 	)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return &MongodService{
-
 		Context: ctx,
 
 		MongoClient: mongoClient,
 	}, nil
-
 }
 
 func CreateBackgroundMongodService(ctx context.Context, appName, mongodbURI string) (*MongodService, error) {
-
 	mongoClient, err := backoff.Retry(ctx,
 
 		func() (*mongo.Client, error) {
-
 			client, err := mongo.Connect(ctx,
 
 				options.Client().ApplyURI(mongodbURI).
@@ -114,47 +99,35 @@ func CreateBackgroundMongodService(ctx context.Context, appName, mongodbURI stri
 					SetRetryReads(false))
 
 			if err != nil {
-
 				return nil, errors.Wrap(err, "unable to connect to mongod")
-
 			}
 
 			if err := client.Ping(ctx, nil); err != nil {
-
 				return nil, errors.Wrap(err, "ping to mongod is failed")
-
 			}
 
 			return client, nil
-
 		},
 
 		backoff.WithMaxTries(mongoConnectRetries+1),
 
 		backoff.WithNotify(func(err error, duration time.Duration) {
-
 			tracelog.InfoLogger.Printf("Unable to connect due '%+v', next retry: %v", err, duration)
-
 		}),
 	)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return &MongodService{
-
 		Context: ctx,
 
 		MongoClient: mongoClient,
 	}, nil
-
 }
 
 func (mongodService *MongodService) MongodVersion() (string, error) {
-
 	versionHolder := struct {
 		Version string `bson:"version"`
 	}{}
@@ -167,7 +140,6 @@ func (mongodService *MongodService) MongodVersion() (string, error) {
 	).Decode(&versionHolder)
 
 	return versionHolder.Version, err
-
 }
 
 type MongodConfig struct {
@@ -183,7 +155,6 @@ type MongodConfig struct {
 }
 
 func (mongodService *MongodService) MongodConfig() (*MongodConfig, error) {
-
 	getCmdLineOpts := struct {
 		Parsed MongodConfig `bson:"parsed" json:"parsed"`
 	}{}
@@ -196,11 +167,9 @@ func (mongodService *MongodService) MongodConfig() (*MongodConfig, error) {
 	).Decode(&getCmdLineOpts)
 
 	return &getCmdLineOpts.Parsed, err
-
 }
 
 func (mongodService *MongodService) GetReplSetName() (string, error) {
-
 	replSetNameHolder := struct {
 		ReplSetName string `bson:"setName"`
 	}{}
@@ -213,142 +182,99 @@ func (mongodService *MongodService) GetReplSetName() (string, error) {
 	).Decode(&replSetNameHolder)
 
 	return replSetNameHolder.ReplSetName, err
-
 }
 
 func (mongodService *MongodService) GetBackupCursor() (cursor *mongo.Cursor, err error) {
-
 	for i := 0; i < cursorCreateRetries; i++ {
-
 		cursor, err = mongodService.MongoClient.Database(adminDB).Aggregate(mongodService.Context, mongo.Pipeline{
-
 			{{Key: "$backupCursor", Value: bson.D{}}},
 		})
 
 		if err == nil {
-
 			break // success!
-
 		}
 
 		if !backupCursorErrorIsRetried(err) {
-
 			return nil, err
-
 		}
 
 		if i < cursorCreateRetries {
-
 			minutes := time.Duration(i + 1)
 
 			tracelog.WarningLogger.Printf("%+v. Sleep %d minutes and retry", err, minutes)
 
 			time.Sleep(time.Minute * minutes)
-
 		}
-
 	}
 
 	return cursor, err
-
 }
 
 func backupCursorErrorIsRetried(err error) bool {
-
 	return strings.Contains(err.Error(), "(Location50915)") ||
 
 		strings.Contains(err.Error(), "(BackupCursorOpenConflictWithCheckpoint)") // mongodb take checkpoint
-
 }
 
 func (mongodService *MongodService) GetBackupCursorExtended(backupCursorMeta *BackupCursorMeta) (*mongo.Cursor, error) {
-
 	return mongodService.MongoClient.Database(adminDB).Aggregate(mongodService.Context, mongo.Pipeline{
-
 		{{
-
 			Key: "$backupCursorExtend", Value: bson.D{
-
 				{Key: "backupId", Value: backupCursorMeta.ID},
 
 				{Key: "timestamp", Value: backupCursorMeta.OplogEnd.TS},
 			},
 		}},
 	})
-
 }
 
 func (mongodService *MongodService) FixReplset(rsConfig RsConfig) error {
-
 	ctx := mongodService.Context
 
 	localDatabase := mongodService.MongoClient.Database(localDB)
 
 	if err := replaceData(ctx, localDatabase.Collection("replset.election"), true, nil); err != nil {
-
 		return errors.Wrap(err, "unable to fix data in local.replset.election")
-
 	}
 
 	if rsConfig.Empty() {
-
 		if err := replaceData(ctx, localDatabase.Collection("system.replset"), false, nil); err != nil {
-
 			return errors.Wrap(err, "unable to fix data in local.system.replset")
-
 		}
-
 	} else {
-
 		if err := updateRsConfig(ctx, localDatabase, rsConfig); err != nil {
-
 			return err
-
 		}
-
 	}
 
 	return nil
-
 }
 
 func (mongodService *MongodService) FixShardIdentity(shConfig ShConfig) error {
-
 	ctx := mongodService.Context
 
 	adminDatabase := mongodService.MongoClient.Database(adminDB)
 
 	if shConfig.Empty() {
-
 		_, err := adminDatabase.Collection("system.version").DeleteOne(ctx, bson.D{
-
 			{Key: "_id", Value: "shardIdentity"},
 		})
 
 		if err != nil {
-
 			return errors.Wrap(err, "unable to fix data in admin.system.version")
-
 		}
-
 	} else {
-
 		val := adminDatabase.Collection("system.version").FindOne(ctx, bson.D{{Key: "_id", Value: "shardIdentity"}})
 
 		if val.Err() != nil {
-
 			tracelog.WarningLogger.Printf("Unable to find system.version in admin database. Skipping this step, assuming oplog replay will fix this")
-
 		} else {
-
 			var systemShConfig bson.M
 
 			err := val.Decode(&systemShConfig)
 
 			if err != nil {
-
 				return errors.Wrap(err, "couldn't decode shard config")
-
 			}
 
 			systemShConfig["shardName"] = shConfig.ShardName
@@ -363,50 +289,37 @@ func (mongodService *MongodService) FixShardIdentity(shConfig ShConfig) error {
 					bson.D{{Key: "$set", Value: systemShConfig}})
 
 			if err != nil {
-
 				return errors.Wrap(err, "unable to update shardIdentity in system.version")
-
 			}
 
 			tracelog.InfoLogger.Printf("Successfully fixed admin.system.version document with proper shardIdentity")
-
 		}
-
 	}
 
 	return nil
-
 }
 
 func (mongodService *MongodService) ClearMinvalid() error {
-
 	minvalidCol := mongodService.MongoClient.Database(localDB).Collection("replset.minvalid")
 
 	_, err := minvalidCol.DeleteMany(mongodService.Context, bson.M{})
 
 	if err != nil {
-
 		return err
-
 	}
 
 	_, err = minvalidCol.InsertOne(mongodService.Context, bson.M{
-
 		"ts": primitive.Timestamp{T: 0, I: 1},
 
 		"t": -1,
 	})
 
 	return err
-
 }
 
 func (mongodService *MongodService) FixMongoCfg(mongocfgConfig MongoCfgConfig) error {
-
 	if mongocfgConfig.Empty() {
-
 		return nil
-
 	}
 
 	ctx := mongodService.Context
@@ -416,47 +329,35 @@ func (mongodService *MongodService) FixMongoCfg(mongocfgConfig MongoCfgConfig) e
 	_, err := configDatabase.Collection("mongos").DeleteMany(ctx, bson.D{})
 
 	if err != nil {
-
 		return errors.Wrap(err, "failed to drop config.mongos collection")
-
 	}
 
 	_, err = configDatabase.Collection("lockpings").DeleteMany(ctx, bson.D{})
 
 	if err != nil {
-
 		return errors.Wrap(err, "failed to drop config.lockpings collection")
-
 	}
 
 	_, err = configDatabase.Collection("shards").DeleteMany(ctx, bson.D{})
 
 	if err != nil {
-
 		return errors.Wrap(err, "failed to drop config.shards collection")
-
 	}
 
 	for shardName, connStr := range mongocfgConfig.Shards {
-
 		_, err := configDatabase.Collection("shards").InsertOne(ctx, bson.D{{Key: "_id", Value: shardName}, {Key: "host", Value: connStr}})
 
 		if err != nil {
-
 			return errors.Wrap(err, fmt.Sprintf("unable to insert shard info for name '%s'", shardName))
-
 		}
-
 	}
 
 	tracelog.InfoLogger.Printf("Successfully updated config.shards collection")
 
 	return nil
-
 }
 
 func (mongodService *MongodService) CleanCacheAndSessions(shConfig ShConfig) error {
-
 	ctx := mongodService.Context
 
 	configDatabase := mongodService.MongoClient.Database("config")
@@ -464,90 +365,67 @@ func (mongodService *MongodService) CleanCacheAndSessions(shConfig ShConfig) err
 	colls, err := configDatabase.ListCollectionNames(ctx, bson.D{{Key: "name", Value: bson.M{"$regex": `^cache\.`}}})
 
 	if err != nil {
-
 		return errors.Wrap(err, "failed to list config.cache.* collections")
-
 	}
 
 	for _, coll := range colls {
-
 		_, err := configDatabase.Collection(coll).DeleteMany(ctx, bson.D{})
 
 		if err != nil {
-
 			return errors.Wrapf(err, "failed to drop %s collection", coll)
-
 		}
-
 	}
 
 	const retry = 5
 
 	for i := 0; i < retry; i++ {
-
 		_, err = configDatabase.Collection("system.sessions").DeleteMany(ctx, bson.D{})
 
 		if err == nil || !strings.Contains(err.Error(), "(BackgroundOperationInProgressForNamespace)") {
-
 			break
-
 		}
 
 		tracelog.DebugLogger.Printf("drop config.system.sessions: BackgroundOperationInProgressForNamespace, retrying")
 
 		time.Sleep(time.Second * time.Duration(i+1))
-
 	}
 
 	if err != nil {
-
 		return errors.Wrap(err, "drop config.system.sessions")
-
 	}
 
 	return nil
-
 }
 
 func updateRsConfig(ctx context.Context, localDatabase *mongo.Database, rsConfig RsConfig) error {
-
 	var systemRsConfig bson.M
 
 	err := localDatabase.Collection("system.replset").FindOne(ctx, bson.D{}).Decode(&systemRsConfig)
 
 	if err != nil {
-
 		return errors.Wrap(err, "unable to read rs config from system.replset")
-
 	}
 
 	systemRsConfig["members"] = makeBsonRsMembers(rsConfig)
 
 	if systemRsConfig["_id"] != rsConfig.RsName {
-
 		systemRsConfig["_id"] = rsConfig.RsName
 
 		_, err = localDatabase.Collection("system.replset").InsertOne(ctx, systemRsConfig)
 
 		if err != nil {
-
 			return errors.Wrap(err, "unable to insert updated rs config to system.replset")
-
 		}
 
 		deleteResult, err := localDatabase.Collection("system.replset").
 			DeleteMany(ctx, bson.D{{Key: "_id", Value: bson.D{{Key: "$ne", Value: rsConfig.RsName}}}})
 
 		if err != nil {
-
 			return errors.Wrap(err, "unable to delete other documents to system.replset")
-
 		}
 
 		tracelog.DebugLogger.Printf("Removed %d documents from system.replset", deleteResult.DeletedCount)
-
 	} else {
-
 		updateResult, err := localDatabase.Collection("system.replset").
 			UpdateMany(ctx,
 
@@ -556,122 +434,88 @@ func updateRsConfig(ctx context.Context, localDatabase *mongo.Database, rsConfig
 				bson.D{{Key: "$set", Value: systemRsConfig}})
 
 		if err != nil {
-
 			return errors.Wrap(err, "unable to update rs config in system.replset")
-
 		}
 
 		if updateResult.MatchedCount != 1 {
-
 			return errors.Errorf("MatchedCount = %v during update rs config in system.replset",
 
 				updateResult.MatchedCount)
-
 		}
 
 		tracelog.InfoLogger.Printf("Updated %d documents in system.replset", updateResult.MatchedCount)
-
 	}
 
 	return nil
-
 }
 
 func replaceData(ctx context.Context, collection *mongo.Collection, drop bool, insertData bson.M) error {
-
 	findCursor, err := collection.Find(ctx, bson.D{})
 
 	if err != nil {
-
 		return errors.Wrap(err, fmt.Sprintf("unable to find all from %v", collection.Name()))
-
 	}
 
 	data := bson.D{}
 
 	for findCursor.Next(ctx) {
-
 		err := findCursor.Decode(&data)
 
 		if err != nil {
-
 			return errors.Wrap(err, fmt.Sprintf("unable to decode item from %v", collection.Name()))
-
 		}
 
 		bytes, err := json.Marshal(data)
 
 		if err != nil {
-
 			return errors.Wrap(err, fmt.Sprintf("unable to marchal data from %v", collection.Name()))
-
 		}
 
 		tracelog.InfoLogger.Printf("[%v] %v", collection.Name(), string(bytes))
-
 	}
 
 	if drop {
-
 		err = collection.Drop(ctx)
-
 	} else {
-
 		_, err = collection.DeleteMany(ctx, bson.D{})
-
 	}
 
 	if err != nil {
-
 		return errors.Wrap(err, fmt.Sprintf("unable to drop data from %v", collection.Name()))
-
 	}
 
 	if insertData != nil {
-
 		_, err = collection.InsertOne(ctx, insertData)
 
 		if err != nil {
-
 			return errors.Wrap(err, fmt.Sprintf("unable to insert data to %v", collection.Name()))
-
 		}
-
 	}
 
 	return nil
-
 }
 
 func makeBsonRsMembers(rsConfig RsConfig) bson.A {
-
 	bsonMembers := bson.A{}
 
 	for i := 0; i != len(rsConfig.RsMembers); i++ {
-
 		bsonMembers = append(bsonMembers, bson.M{"_id": rsConfig.RsMemberIDs[i], "host": rsConfig.RsMembers[i]})
-
 	}
 
 	return bsonMembers
-
 }
 
 func (mongodService *MongodService) Shutdown() error {
-
 	err := mongodService.MongoClient.Database(adminDB).RunCommand(context.Background(),
 
 		bson.D{{Key: "shutdown", Value: 1}},
 	).Err()
 
 	if err != nil && !strings.Contains(err.Error(), "socket was unexpectedly closed") {
-
 		return errors.Wrap(err, "unable to shutdown mongod")
-
 	}
 
 	return nil
-
 }
 
 type BackupCursorOplogTS struct {
@@ -763,39 +607,29 @@ type MongoCfgConfig struct {
 }
 
 func NewRsConfig(rsName string, rsMembers []string, rsMemberIDs []int) RsConfig {
-
 	if len(rsMemberIDs) == 0 {
-
 		rsMemberIDs = make([]int, len(rsMembers))
 
 		for i := 0; i < len(rsMembers); i++ {
-
 			rsMemberIDs[i] = i
-
 		}
-
 	}
 
 	return RsConfig{
-
 		RsName: rsName,
 
 		RsMembers: rsMembers,
 
 		RsMemberIDs: rsMemberIDs,
 	}
-
 }
 
 func NewShConfig(shardName string, connectionString string) ShConfig {
-
 	return ShConfig{
-
 		ShardName: shardName,
 
 		MongoCfgConnectionString: connectionString,
 	}
-
 }
 
 func NewReplyOplogConfig(
@@ -803,7 +637,6 @@ func NewReplyOplogConfig(
 	sincePitrStr, untilPitrStr string, partial, withCatchUpReconfig bool, minimalConfigPath string,
 
 ) (ReplyOplogConfig, error) {
-
 	var roConfig ReplyOplogConfig
 
 	var err error
@@ -815,57 +648,41 @@ func NewReplyOplogConfig(
 	downloader, err := archive.NewStorageDownloader(archive.NewDefaultStorageSettings())
 
 	if err != nil {
-
 		return roConfig, err
-
 	}
 
 	roConfig.Since, err = processTimestamp(sincePitrStr, downloader)
 
 	if err != nil {
-
 		return roConfig, err
-
 	}
 
 	roConfig.Until, err = processTimestamp(untilPitrStr, downloader)
 
 	if err != nil {
-
 		return roConfig, err
-
 	}
 
 	if ignoreErrCodesStr, ok := conf.GetSetting(conf.OplogReplayIgnoreErrorCodes); ok {
-
 		if err = json.Unmarshal([]byte(ignoreErrCodesStr), &roConfig.IgnoreErrCodes); err != nil {
-
 			return roConfig, err
-
 		}
-
 	}
 
 	oplogAlwaysUpsert, hasOplogAlwaysUpsert, err := conf.GetBoolSetting(conf.OplogReplayOplogAlwaysUpsert)
 
 	if err != nil {
-
 		return roConfig, err
-
 	}
 
 	if hasOplogAlwaysUpsert {
-
 		roConfig.OplogAlwaysUpsert = &oplogAlwaysUpsert
-
 	}
 
 	if oplogApplicationMode, hasOplogApplicationMode := conf.GetSetting(
 
 		conf.OplogReplayOplogApplicationMode); hasOplogApplicationMode {
-
 		roConfig.OplogApplicationMode = &oplogApplicationMode
-
 	}
 
 	roConfig.Partial = partial
@@ -875,13 +692,10 @@ func NewReplyOplogConfig(
 	roConfig.MinimalConfigPath = minimalConfigPath
 
 	return roConfig, err
-
 }
 
 func processTimestamp(arg string, downloader *archive.StorageDownloader) (models.Timestamp, error) {
-
 	switch arg {
-
 	case internal.LatestString:
 
 		return downloader.LastKnownArchiveTS()
@@ -891,17 +705,13 @@ func processTimestamp(arg string, downloader *archive.StorageDownloader) (models
 		lastBackupName, err := downloader.LastBackupName()
 
 		if err != nil {
-
 			return models.Timestamp{}, err
-
 		}
 
 		backupMeta, err := downloader.BackupMeta(lastBackupName)
 
 		if err != nil {
-
 			return models.Timestamp{}, err
-
 		}
 
 		return models.TimestampFromBson(backupMeta.MongoMeta.BackupLastTS), nil
@@ -913,92 +723,63 @@ func processTimestamp(arg string, downloader *archive.StorageDownloader) (models
 	default:
 
 		return models.TimestampFromStr(arg)
-
 	}
-
 }
 
 func NewMongoCfgConfig(shardConnectionStrings []string) (MongoCfgConfig, error) {
-
 	res := MongoCfgConfig{
-
 		Shards: make(map[string]string),
 	}
 
 	for _, shardConnStr := range shardConnectionStrings {
-
 		shardName, _, found := strings.Cut(shardConnStr, "/")
 
 		if !found {
-
 			return res, fmt.Errorf("%s does not contain shard name separator '/'", shardConnStr)
-
 		}
 
 		res.Shards[shardName] = shardConnStr
-
 	}
 
 	return res, nil
-
 }
 
 func (rsConfig RsConfig) Empty() bool {
-
 	return rsConfig.RsName == "" && len(rsConfig.RsMembers) == 0
-
 }
 
 func (shConfig ShConfig) Empty() bool {
-
 	return shConfig.ShardName == ""
-
 }
 
 func (mongocfgConfig MongoCfgConfig) Empty() bool {
-
 	return len(mongocfgConfig.Shards) == 0
-
 }
 
 func (rsConfig RsConfig) Validate() error {
-
 	if rsConfig.RsName == "" && len(rsConfig.RsMembers) > 0 || rsConfig.RsName != "" && len(rsConfig.RsMembers) == 0 {
-
 		return errors.Errorf("rsConfig should be all empty or full populated, but rsConfig = %+v", rsConfig)
-
 	}
 
 	if len(rsConfig.RsMembers) > len(rsConfig.RsMemberIDs) {
-
 		return errors.Errorf("not all replica set members have corresponding ID")
-
 	}
 
 	if len(rsConfig.RsMembers) < len(rsConfig.RsMemberIDs) {
-
 		return errors.Errorf("excessive number of replica set IDs")
-
 	}
 
 	return nil
-
 }
 
 func (shConfig ShConfig) Validate() error {
-
 	if (shConfig.ShardName == "") != (shConfig.MongoCfgConnectionString == "") {
-
 		return fmt.Errorf("got shard name %s, but mongocfg connection string is %s", shConfig.ShardName, shConfig.MongoCfgConnectionString)
-
 	}
 
 	return nil
-
 }
 
 func (args RestoreArgs) IsPartial() bool {
-
 	return len(args.Whitelist)+len(args.Blacklist) > 0
-
 }

@@ -31,23 +31,17 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 	newBackupName string, filePackOptions TarBallFilePackerOptions,
 
 	withoutFilesMetadata bool) (TarBallComposerMaker, error) {
-
 	folder := uploader.Folder()
 
 	if withoutFilesMetadata {
-
 		if composerType != RegularComposer {
-
 			tracelog.InfoLogger.Printf("No files metadata mode is enabled. Choosing the regular tar ball composer.")
-
 		}
 
 		return NewRegularTarBallComposerMaker(filePackOptions, &internal.NopBundleFiles{}, internal.NewNopTarFileSets()), nil
-
 	}
 
 	switch composerType {
-
 	case RegularComposer:
 
 		return NewRegularTarBallComposerMaker(filePackOptions, &internal.RegularBundleFiles{}, internal.NewRegularTarFileSets()), nil
@@ -57,9 +51,7 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 		relFileStats, err := newRelFileStatistics(queryRunner)
 
 		if err != nil {
-
 			return nil, err
-
 		}
 
 		return NewRatingTarBallComposerMaker(relFileStats, filePackOptions)
@@ -69,7 +61,6 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 		previousBackup, err := internal.GetLatestBackup(folder)
 
 		if err != nil {
-
 			tracelog.InfoLogger.Printf(
 
 				"Failed to init the CopyComposer, will use the RegularComposer instead:"+
@@ -77,7 +68,6 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 					" couldn't get the previous backup name: %v", err)
 
 			return NewRegularTarBallComposerMaker(filePackOptions, &internal.RegularBundleFiles{}, internal.NewRegularTarFileSets()), nil
-
 		}
 
 		previousPGBackup := ToPgBackup(previousBackup)
@@ -85,31 +75,23 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 		prevBackupSentinelDto, _, err := previousPGBackup.GetSentinelAndFilesMetadata()
 
 		if err != nil {
-
 			return nil, err
-
 		}
 
 		if prevBackupSentinelDto.IncrementFullName != nil {
-
 			previousName := *prevBackupSentinelDto.IncrementFullName
 
 			previousPGBackup, err = NewBackup(folder, previousName)
 
 			if err != nil {
-
 				return nil, err
-
 			}
 
 			_, _, err = previousPGBackup.GetSentinelAndFilesMetadata()
 
 			if err != nil {
-
 				return nil, err
-
 			}
-
 		}
 
 		return NewCopyTarBallComposerMaker(previousPGBackup, newBackupName, filePackOptions), nil
@@ -121,7 +103,5 @@ func NewTarBallComposerMaker(composerType TarBallComposerType, queryRunner *PgQu
 	default:
 
 		return nil, errors.New("NewTarBallComposerMaker: Unknown TarBallComposerType")
-
 	}
-
 }

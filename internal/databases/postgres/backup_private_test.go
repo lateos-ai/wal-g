@@ -12,29 +12,22 @@ import (
 )
 
 func createTempDir(prefix string) (name string, err error) {
-
 	cwd, err := filepath.Abs("./")
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	dir, err := os.MkdirTemp(cwd, prefix)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	return dir, nil
-
 }
 
 func TestIsDirectoryEmpty_ReturnsTrue_WhenDirectoryIsEmpty(t *testing.T) {
-
 	dir, err := createTempDir("empty")
 
 	assert.NoError(t, err)
@@ -44,11 +37,9 @@ func TestIsDirectoryEmpty_ReturnsTrue_WhenDirectoryIsEmpty(t *testing.T) {
 	actual, _ := utility.IsDirectoryEmpty(dir, nil)
 
 	assert.True(t, actual)
-
 }
 
 func TestIsDirectoryEmpty_ReturnsFalse_WhenOneFileIsInDirectory(t *testing.T) {
-
 	dir, err := createTempDir("not_empty")
 
 	assert.NoError(t, err)
@@ -64,11 +55,9 @@ func TestIsDirectoryEmpty_ReturnsFalse_WhenOneFileIsInDirectory(t *testing.T) {
 	actual, _ := utility.IsDirectoryEmpty(dir, nil)
 
 	assert.False(t, actual)
-
 }
 
 func TestIsDirectoryEmpty_ReturnsFalse_WhenSeveralFilesAreInDirectory(t *testing.T) {
-
 	dir, err := createTempDir("not_empty")
 
 	assert.NoError(t, err)
@@ -76,23 +65,19 @@ func TestIsDirectoryEmpty_ReturnsFalse_WhenSeveralFilesAreInDirectory(t *testing
 	defer os.Remove(dir)
 
 	for i := 0; i < 3; i++ {
-
 		file, err := os.CreateTemp(dir, "file")
 
 		assert.NoError(t, err)
 
 		defer os.Remove(file.Name())
-
 	}
 
 	actual, _ := utility.IsDirectoryEmpty(dir, nil)
 
 	assert.False(t, actual)
-
 }
 
 func TestIsDirectoryEmpty_ReturnsFalse_WhenNestedDirectoryIsInDirectory(t *testing.T) {
-
 	dir, err := createTempDir("not_empty")
 
 	assert.NoError(t, err)
@@ -108,11 +93,9 @@ func TestIsDirectoryEmpty_ReturnsFalse_WhenNestedDirectoryIsInDirectory(t *testi
 	actual, _ := utility.IsDirectoryEmpty(dir, nil)
 
 	assert.False(t, actual)
-
 }
 
 func TestIsDirectoryEmpty_ReturnsTrue_WhenDirectoryDoesntExist(t *testing.T) {
-
 	dir, err := createTempDir("not_existing")
 
 	assert.NoError(t, err)
@@ -124,11 +107,9 @@ func TestIsDirectoryEmpty_ReturnsTrue_WhenDirectoryDoesntExist(t *testing.T) {
 	actual, _ := utility.IsDirectoryEmpty(dir, nil)
 
 	assert.True(t, actual)
-
 }
 
 func TestIsDirectoryEmpty_ReturnsTrue_WhenWhitelistFilesInDirectory(t *testing.T) {
-
 	dir, err := createTempDir("whitelisted_dir")
 
 	assert.NoError(t, err)
@@ -136,13 +117,11 @@ func TestIsDirectoryEmpty_ReturnsTrue_WhenWhitelistFilesInDirectory(t *testing.T
 	defer os.Remove(dir)
 
 	for i := 0; i < 3; i++ {
-
 		file, err := os.CreateTemp(dir, "whitelist_file")
 
 		assert.NoError(t, err)
 
 		defer os.Remove(file.Name())
-
 	}
 
 	whitelistRegexp := regexp.MustCompile(`^whitelist_file`)
@@ -150,5 +129,4 @@ func TestIsDirectoryEmpty_ReturnsTrue_WhenWhitelistFilesInDirectory(t *testing.T
 	actual, _ := utility.IsDirectoryEmpty(dir, whitelistRegexp)
 
 	assert.True(t, actual)
-
 }

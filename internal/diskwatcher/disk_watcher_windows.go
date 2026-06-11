@@ -9,7 +9,6 @@ import (
 )
 
 func (w *DiskWatcher) CheckUpperLimit() {
-
 	kernel32 := syscall.MustLoadDLL("kernel32.dll")
 	getDiskFreeSpaceEx := kernel32.MustFindProc("GetDiskFreeSpaceExW")
 
@@ -43,5 +42,4 @@ func (w *DiskWatcher) CheckUpperLimit() {
 	if totalNumberOfFreeBytes*100/totalNumberOfBytes < (100 - uint64(w.Threshold)) {
 		w.Signaling <- true
 	}
-
 }

@@ -17,17 +17,14 @@ import (
 )
 
 func TestStartCopy_WhenThereAreNoObjectsToCopy(t *testing.T) {
-
 	var infos = make([]copy.InfoProvider, 0)
 
 	var err = copy.Infos(infos)
 
 	assert.NoError(t, err)
-
 }
 
 func TestStartCopy_WhenThereAreObjectsToCopy(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolderWithPermanentBackups(t)
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -41,25 +38,19 @@ func TestStartCopy_WhenThereAreObjectsToCopy(t *testing.T) {
 	assert.NoError(t, err)
 
 	for _, info := range infos {
-
 		var result, err = to.Exists(info.SrcObj.GetName())
 
 		assert.NoError(t, err)
 
 		if !result {
-
 			tracelog.InfoLogger.Println("Filename '" + info.SrcObj.GetName() + "' not found")
-
 		}
 
 		assert.True(t, result)
-
 	}
-
 }
 
 func TestGetBackupCopyingInfo_WhenFolderIsEmpty(t *testing.T) {
-
 	var from = testtools.MakeDefaultInMemoryStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -73,11 +64,9 @@ func TestGetBackupCopyingInfo_WhenFolderIsEmpty(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestGetBackupCopyingInfo_WhenFolderIsNotEmpty(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolderWithPermanentBackups(t)
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -93,11 +82,9 @@ func TestGetBackupCopyingInfo_WhenFolderIsNotEmpty(t *testing.T) {
 	assert.Equal(t, 2, len(infos))
 
 	assert.NotEmpty(t, infos)
-
 }
 
 func TestGetHistoryCopyingInfo_WhenFolderIsEmpty(t *testing.T) {
-
 	var from = testtools.MakeDefaultInMemoryStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -111,11 +98,9 @@ func TestGetHistoryCopyingInfo_WhenFolderIsEmpty(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestGetHistoryCopyingInfo_WhenThereIsNoHistoryObjects(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -137,11 +122,9 @@ func TestGetHistoryCopyingInfo_WhenThereIsNoHistoryObjects(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestGetHistoryCopyingInfo_WithAllHistory(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -185,11 +168,9 @@ func TestGetHistoryCopyingInfo_WithAllHistory(t *testing.T) {
 	assert.Equal(t, 7, len(infos))
 
 	assert.NotEmpty(t, infos)
-
 }
 
 func TestGetHistoryCopyingInfo_WithoutAllHistory(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -233,11 +214,9 @@ func TestGetHistoryCopyingInfo_WithoutAllHistory(t *testing.T) {
 	assert.Equal(t, 5, len(infos))
 
 	assert.NotEmpty(t, infos)
-
 }
 
 func TestGetAllCopyingInfo_WhenFromFolderIsEmpty(t *testing.T) {
-
 	var from = testtools.MakeDefaultInMemoryStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -247,11 +226,9 @@ func TestGetAllCopyingInfo_WhenFromFolderIsEmpty(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestGetAllCopyingInfo_WhenFromFolderIsNotEmpty(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolderWithPermanentBackups(t)
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -263,19 +240,15 @@ func TestGetAllCopyingInfo_WhenFromFolderIsNotEmpty(t *testing.T) {
 	assert.NotEmpty(t, infos)
 
 	for _, info := range infos {
-
 		var result, err = from.Exists(info.SrcObj.GetName())
 
 		assert.NoError(t, err)
 
 		assert.True(t, result)
-
 	}
-
 }
 
 func TestBuildCopyingInfos_WhenThereNoObjectsInFolder(t *testing.T) {
-
 	var from = testtools.MakeDefaultInMemoryStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -296,11 +269,9 @@ func TestBuildCopyingInfos_WhenThereNoObjectsInFolder(t *testing.T) {
 	)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestBuildCopyingInfos_WhenConditionIsJustFalse(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -325,11 +296,9 @@ func TestBuildCopyingInfos_WhenConditionIsJustFalse(t *testing.T) {
 	)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestBuildCopyingInfos_WhenComplexCondition(t *testing.T) {
-
 	var from = testtools.CreateMockStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -343,13 +312,9 @@ func TestBuildCopyingInfos_WhenComplexCondition(t *testing.T) {
 	var expectedCount int
 
 	for _, object := range objects {
-
 		if condition(object) {
-
 			expectedCount += 1
-
 		}
-
 	}
 
 	assert.NotZero(t, expectedCount)
@@ -359,9 +324,6 @@ func TestBuildCopyingInfos_WhenComplexCondition(t *testing.T) {
 	assert.Equal(t, expectedCount, len(infos))
 
 	for _, info := range infos {
-
 		assert.True(t, condition(info.SrcObj))
-
 	}
-
 }

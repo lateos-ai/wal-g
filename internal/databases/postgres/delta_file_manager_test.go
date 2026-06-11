@@ -13,7 +13,6 @@ import (
 )
 
 func TestGetCanceledDeltaFiles_MidWalFile(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(testtools.NewMockDataFolder())
 
 	manager.CancelRecording(WalFilename)
@@ -25,11 +24,9 @@ func TestGetCanceledDeltaFiles_MidWalFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Contains(t, manager.CanceledDeltaFiles, deltaFilename)
-
 }
 
 func TestGetCanceledDeltaFiles_LastWalFile(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(testtools.NewMockDataFolder())
 
 	manager.CancelRecording(LastWalFilename)
@@ -51,11 +48,9 @@ func TestGetCanceledDeltaFiles_LastWalFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Contains(t, manager.CanceledDeltaFiles, nextDeltaFilename)
-
 }
 
 func TestGetBlockLocationConsumer_Exists(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(nil)
 
 	deltaFileChanWriter := postgres.NewDeltaFileChanWriter(nil)
@@ -67,11 +62,9 @@ func TestGetBlockLocationConsumer_Exists(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, deltaFileChanWriter.BlockLocationConsumer, consumer)
-
 }
 
 func TestGetBlockLocationConsumer_CreateNew(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -89,11 +82,9 @@ func TestGetBlockLocationConsumer_CreateNew(t *testing.T) {
 	assert.True(t, exists)
 
 	assert.Equal(t, expectedConsumer.BlockLocationConsumer, consumer)
-
 }
 
 func TestGetBlockLocationConsumer_Load(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	writer, err := dataFolder.OpenWriteOnlyFile(DeltaFilename)
@@ -131,11 +122,9 @@ func TestGetBlockLocationConsumer_Load(t *testing.T) {
 	assert.Equal(t, deltaFile, expectedConsumer.DeltaFile)
 
 	assert.Equal(t, expectedConsumer.BlockLocationConsumer, consumer)
-
 }
 
 func TestGetPartFile_Exists(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(nil)
 
 	expectedPartFile := postgres.NewWalPartFile()
@@ -149,11 +138,9 @@ func TestGetPartFile_Exists(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedPartFile, actualPartFile)
-
 }
 
 func TestGetPartFile_CreateNew(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -173,11 +160,9 @@ func TestGetPartFile_CreateNew(t *testing.T) {
 	assert.True(t, exists)
 
 	assert.Equal(t, expectedPartFile, actualPartFile)
-
 }
 
 func TestGetPartFile_Load(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	writer, err := dataFolder.OpenWriteOnlyFile(postgres.ToPartFilename(DeltaFilename))
@@ -207,11 +192,9 @@ func TestGetPartFile_Load(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, partFile, actualPartFile)
-
 }
 
 func TestFlushPartFiles_CanceledFile(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -225,21 +208,17 @@ func TestFlushPartFiles_CanceledFile(t *testing.T) {
 	assert.Empty(t, completedPartFiles)
 
 	assert.True(t, dataFolder.IsEmpty())
-
 }
 
 func TestFlushPartFiles_CompleteFile(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	xLogRecord, xLogRecordData := testtools.GetXLogRecordData()
 
 	for i := 0; i < int(postgres.WalFileInDelta); i++ {
-
 		partFile.WalTails[i] = make([]byte, 0)
 
 		partFile.WalHeads[i] = make([]byte, 0)
-
 	}
 
 	partFile.PreviousWalHead = xLogRecordData[:12]
@@ -275,11 +254,9 @@ func TestFlushPartFiles_CompleteFile(t *testing.T) {
 	locations := walparser.ExtractBlockLocations([]walparser.XLogRecord{xLogRecord})
 
 	assert.Equal(t, locations, deltaFileWriter.DeltaFile.Locations)
-
 }
 
 func TestFlushPartFiles_PartialFile(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -307,11 +284,9 @@ func TestFlushPartFiles_PartialFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, partFile, actualPartFile)
-
 }
 
 func TestFlushDeltaFiles_CanceledFile(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(nil)
 
 	deltaFile, err := postgres.NewDeltaFile(walparser.NewWalParser())
@@ -323,14 +298,11 @@ func TestFlushDeltaFiles_CanceledFile(t *testing.T) {
 	manager.CanceledDeltaFiles[DeltaFilename] = true
 
 	manager.FlushDeltaFiles(t.Context(), nil, map[string]bool{
-
 		postgres.ToPartFilename(DeltaFilename): true,
 	})
-
 }
 
 func TestFlushDeltaFiles_CompleteFile(t *testing.T) {
-
 	manager := postgres.NewDeltaFileManager(nil)
 
 	deltaFile, err := postgres.NewDeltaFile(walparser.NewWalParser())
@@ -344,7 +316,6 @@ func TestFlushDeltaFiles_CompleteFile(t *testing.T) {
 	storage := memory.NewKVS()
 
 	manager.FlushDeltaFiles(t.Context(), testtools.NewStoringMockUploader(storage), map[string]bool{
-
 		postgres.ToPartFilename(DeltaFilename): true,
 	})
 
@@ -357,11 +328,9 @@ func TestFlushDeltaFiles_CompleteFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, deltaFile, actualDeltaFile)
-
 }
 
 func TestFlushDeltaFiles_PartialFile(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -385,21 +354,17 @@ func TestFlushDeltaFiles_PartialFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, deltaFile, actualDeltaFile)
-
 }
 
 func TestCombinePartFile(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	xLogRecord, xLogRecordData := testtools.GetXLogRecordData()
 
 	for i := 0; i < int(postgres.WalFileInDelta); i++ {
-
 		partFile.WalTails[i] = make([]byte, 0)
 
 		partFile.WalHeads[i] = make([]byte, 0)
-
 	}
 
 	partFile.PreviousWalHead = xLogRecordData[:12]
@@ -433,5 +398,4 @@ func TestCombinePartFile(t *testing.T) {
 	locations := walparser.ExtractBlockLocations([]walparser.XLogRecord{xLogRecord})
 
 	assert.Equal(t, locations, deltaFileWriter.DeltaFile.Locations)
-
 }

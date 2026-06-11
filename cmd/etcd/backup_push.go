@@ -1,40 +1,50 @@
 package etcd
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/etcd"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"github.com/wal-g/tracelog"
 )
 
 const (
 	backupPushShortDescription = "Creates new backup and pushes it to storage"
 
 	addUserDataFlag = "add-user-data"
-	permanentFlag   = "permanent"
+
+	permanentFlag = "permanent"
 
 	permanentShorthand = "p"
 )
 
 var backupPushCmd = &cobra.Command{
-	Use:   "backup-push",
+	Use: "backup-push",
+
 	Short: backupPushShortDescription,
+
 	PreRun: func(cmd *cobra.Command, args []string) {
 		conf.RequiredSettings[conf.NameStreamCreateCmd] = true
+
 		err := internal.AssertRequiredSettingsSet()
+
 		tracelog.ErrorLogger.FatalOnError(err)
 	},
+
 	Run: func(cmd *cobra.Command, args []string) {
 		internal.ConfigureLimiters()
 
 		uploader, err := internal.ConfigureUploader()
+
 		tracelog.ErrorLogger.FatalOnError(err)
+
 		uploader.ChangeDirectory(utility.BaseBackupPath)
 
 		backupCmd, err := internal.GetCommandSetting(conf.NameStreamCreateCmd)
+
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		if userDataRaw == "" {
@@ -47,14 +57,18 @@ var backupPushCmd = &cobra.Command{
 
 var (
 	userDataRaw = ""
-	permanent   = false
+
+	permanent = false
 )
 
 func init() {
 	cmd.AddCommand(backupPushCmd)
 
 	backupPushCmd.Flags().BoolVarP(&permanent, permanentFlag, permanentShorthand,
+
 		false, "Pushes permanent backup")
+
 	backupPushCmd.Flags().StringVar(&userDataRaw, addUserDataFlag,
+
 		"", "Write the provided user data to the backup sentinel and metadata files.")
 }

@@ -20,17 +20,13 @@ type FileNotExistError struct {
 }
 
 func NewFileNotExistError(path string) FileNotExistError {
-
 	return FileNotExistError{errors.Errorf(
 
 		"%s does not exist, probably deleted during the backup creation\n", path)}
-
 }
 
 func (err FileNotExistError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type TarBallFilePacker interface {
@@ -44,30 +40,22 @@ type RegularTarBallFilePacker struct {
 }
 
 func NewRegularTarBallFilePacker(files BundleFiles, skipFileNotExists bool) *RegularTarBallFilePacker {
-
 	return &RegularTarBallFilePacker{
-
 		files: files,
 
 		skipFileNotExists: skipFileNotExists,
 	}
-
 }
 
 func (p *RegularTarBallFilePacker) PackFileIntoTar(cfi *ComposeFileInfo, tarBall TarBall) error {
-
 	fileReadCloser, err := StartReadingFile(cfi.Header, cfi.FileInfo, cfi.Path)
 
 	if err != nil {
-
 		if !p.skipFileNotExists {
-
 			return err
-
 		}
 
 		switch err.(type) {
-
 		case FileNotExistError:
 
 			// File was deleted before opening.
@@ -81,9 +69,7 @@ func (p *RegularTarBallFilePacker) PackFileIntoTar(cfi *ComposeFileInfo, tarBall
 		default:
 
 			return err
-
 		}
-
 	}
 
 	p.files.AddFile(cfi.Header, cfi.FileInfo, cfi.IsIncremented)
@@ -93,47 +79,35 @@ func (p *RegularTarBallFilePacker) PackFileIntoTar(cfi *ComposeFileInfo, tarBall
 	packedFileSize, err := PackFileTo(tarBall, cfi.Header, fileReadCloser)
 
 	if err != nil {
-
 		return errors.Wrap(err, "PackFileIntoTar: operation failed")
-
 	}
 
 	if packedFileSize != cfi.Header.Size {
-
 		return newTarSizeError(packedFileSize, cfi.Header.Size)
-
 	}
 
 	return nil
-
 }
 
 // TODO : unit tests
 
 func StartReadingFile(fileInfoHeader *tar.Header, info os.FileInfo, path string) (io.ReadSeekCloser, error) {
-
 	fileInfoHeader.Size = info.Size()
 
 	file, err := fsutil.OpenReadOnlyMayBeDirectIO(path)
 
 	if err != nil {
-
 		if errors.Is(err, os.ErrNotExist) {
-
 			return nil, NewFileNotExistError(path)
-
 		}
 
 		return nil, errors.Wrapf(err, "startReadingFile: failed to open file '%s'\n", path)
-
 	}
 
 	diskLimitedFileReader := limiters.NewDiskLimitReader(file)
 
 	fileReader := &ioextensions.ReadSeekCloserImpl{
-
 		Reader: &io.LimitedReader{
-
 			R: io.MultiReader(diskLimitedFileReader, &ioextensions.ZeroReader{}),
 
 			N: fileInfoHeader.Size,
@@ -145,5 +119,4 @@ func StartReadingFile(fileInfoHeader *tar.Header, info os.FileInfo, path string)
 	}
 
 	return fileReader, nil
-
 }

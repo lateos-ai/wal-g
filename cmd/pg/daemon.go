@@ -1,21 +1,27 @@
 package pg
 
 import (
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/spf13/cobra"
+
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 const DaemonShortDescription = "Runs WAL-G in daemon mode which executes commands sent from the lightweight walg-daemon-client."
 
 // daemonCmd represents the daemon archive command
+
 var daemonCmd = &cobra.Command{
-	Use:   "daemon daemon_socket_path",
+	Use: "daemon daemon_socket_path",
+
 	Short: DaemonShortDescription,
-	Args:  cobra.ExactArgs(1),
+
+	Args: cobra.ExactArgs(1),
+
 	Run: func(cmd *cobra.Command, args []string) {
 		daemonOpts := postgres.DaemonOptions{
 			SocketPath: args[0],
 		}
+
 		postgres.HandleDaemon(daemonOpts)
 	},
 }

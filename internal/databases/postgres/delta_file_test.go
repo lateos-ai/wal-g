@@ -11,11 +11,8 @@ import (
 )
 
 func TestSaveLoadDeltaFile(t *testing.T) {
-
 	deltaFile := &postgres.DeltaFile{
-
 		Locations: []walparser.BlockLocation{
-
 			*walparser.NewBlockLocation(1, 2, 3, 4),
 
 			*walparser.NewBlockLocation(5, 6, 7, 8),
@@ -35,5 +32,4 @@ func TestSaveLoadDeltaFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, deltaFile, loadedDeltaFile)
-
 }

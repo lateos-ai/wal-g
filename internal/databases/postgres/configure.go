@@ -19,39 +19,30 @@ import (
 // and `<nil>` values.
 
 func ConfigureWalUploader(baseUploader internal.Uploader) (uploader *WalUploader, err error) {
-
 	useWalDelta, deltaDataFolder, err := configureWalDeltaUsage()
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "failed to configure WAL Delta usage")
-
 	}
 
 	var deltaFileManager *DeltaFileManager
 
 	if useWalDelta {
-
 		deltaFileManager = NewDeltaFileManager(deltaDataFolder)
-
 	}
 
 	uploader = NewWalUploader(baseUploader, deltaFileManager)
 
 	return uploader, err
-
 }
 
 // TODO : unit tests
 
 func configureWalDeltaUsage() (useWalDelta bool, deltaDataFolder fsutil.DataFolder, err error) {
-
 	useWalDelta = viper.GetBool(conf.UseWalDeltaSetting)
 
 	if !useWalDelta {
-
 		return
-
 	}
 
 	dataFolderPath := internal.GetDataFolderPath()
@@ -59,7 +50,6 @@ func configureWalDeltaUsage() (useWalDelta bool, deltaDataFolder fsutil.DataFold
 	deltaDataFolder, err = fsutil.NewDiskDataFolder(dataFolderPath)
 
 	if err != nil {
-
 		useWalDelta = false
 
 		tracelog.WarningLogger.Printf("can't use wal delta feature because can't open delta data folder '%s'"+
@@ -67,29 +57,21 @@ func configureWalDeltaUsage() (useWalDelta bool, deltaDataFolder fsutil.DataFold
 			" due to error: '%v'\n", dataFolderPath, err)
 
 		err = nil
-
 	}
 
 	return
-
 }
 
 func getStopBackupTimeoutSetting() (time.Duration, error) {
-
 	if !viper.IsSet(conf.PgStopBackupTimeout) {
-
 		return 0, nil
-
 	}
 
 	timeout, err := conf.GetDurationSetting(conf.PgStopBackupTimeout)
 
 	if err != nil {
-
 		return 0, err
-
 	}
 
 	return timeout, nil
-
 }

@@ -13,7 +13,6 @@ import (
 )
 
 func TestPrepareContentIDsToFetch(t *testing.T) {
-
 	testcases := []struct {
 		fetchContentId []int
 
@@ -21,9 +20,7 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 
 		contentIDsToFetch map[int]bool
 	}{
-
 		{
-
 			fetchContentId: []int{},
 
 			segmentConfig: []cluster.SegConfig{},
@@ -32,7 +29,6 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 		},
 
 		{
-
 			fetchContentId: []int{},
 
 			segmentConfig: []cluster.SegConfig{{ContentID: 21}, {ContentID: 42}},
@@ -41,7 +37,6 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 		},
 
 		{
-
 			fetchContentId: []int{1},
 
 			segmentConfig: []cluster.SegConfig{{ContentID: 1231}, {ContentID: 6743}, {ContentID: 7643}},
@@ -50,7 +45,6 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 		},
 
 		{
-
 			fetchContentId: []int{65, 42, 12, 76, 22},
 
 			segmentConfig: []cluster.SegConfig{},
@@ -59,7 +53,6 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 		},
 
 		{
-
 			fetchContentId: []int{5, 4, 3, 2, 1},
 
 			segmentConfig: []cluster.SegConfig{{ContentID: 4}, {ContentID: 5}, {ContentID: 6}},
@@ -68,7 +61,6 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 		},
 
 		{
-
 			fetchContentId: []int{6, 7, 8, 9, 10},
 
 			segmentConfig: []cluster.SegConfig{{ContentID: 1}, {ContentID: 5}, {ContentID: 7}},
@@ -78,23 +70,17 @@ func TestPrepareContentIDsToFetch(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-
 		contentIDsToFetch := prepareContentIDsToFetch(tc.fetchContentId, tc.segmentConfig)
 
 		assert.Equal(t, tc.contentIDsToFetch, contentIDsToFetch)
-
 	}
-
 }
 
 func TestBuildFetchCommand(t *testing.T) {
-
 	beforeValue := config.CfgFile
 
 	defer func() {
-
 		config.CfgFile = beforeValue
-
 	}()
 
 	config.CfgFile = "testConfig"
@@ -106,11 +92,8 @@ func TestBuildFetchCommand(t *testing.T) {
 
 		cmdLine string
 	}{
-
 		{
-
 			&FetchHandler{
-
 				cluster: nil,
 
 				backupIDByContentID: nil,
@@ -132,9 +115,7 @@ func TestBuildFetchCommand(t *testing.T) {
 		},
 
 		{
-
 			&FetchHandler{
-
 				cluster: nil,
 
 				backupIDByContentID: nil,
@@ -156,11 +137,8 @@ func TestBuildFetchCommand(t *testing.T) {
 		},
 
 		{
-
 			&FetchHandler{
-
 				cluster: &cluster.Cluster{
-
 					ContentIDs: nil,
 
 					Hostnames: nil,
@@ -168,11 +146,8 @@ func TestBuildFetchCommand(t *testing.T) {
 					Segments: nil,
 
 					ByContent: map[int][]*cluster.SegConfig{
-
 						1: {
-
 							{
-
 								DbID: 1,
 
 								ContentID: 2,
@@ -194,7 +169,6 @@ func TestBuildFetchCommand(t *testing.T) {
 				},
 
 				backupIDByContentID: map[int]string{
-
 					1: "testing",
 				},
 
@@ -227,11 +201,8 @@ func TestBuildFetchCommand(t *testing.T) {
 		},
 
 		{
-
 			&FetchHandler{
-
 				cluster: &cluster.Cluster{
-
 					ContentIDs: nil,
 
 					Hostnames: nil,
@@ -239,11 +210,8 @@ func TestBuildFetchCommand(t *testing.T) {
 					Segments: nil,
 
 					ByContent: map[int][]*cluster.SegConfig{
-
 						1: {
-
 							{
-
 								DbID: 1,
 
 								ContentID: 2,
@@ -265,7 +233,6 @@ func TestBuildFetchCommand(t *testing.T) {
 				},
 
 				backupIDByContentID: map[int]string{
-
 					1: "other-value-from-testing",
 				},
 
@@ -278,7 +245,6 @@ func TestBuildFetchCommand(t *testing.T) {
 				restorePoint: "",
 
 				partialRestoreArgs: []string{
-
 					"test1", "test2",
 				},
 			},
@@ -306,27 +272,18 @@ func TestBuildFetchCommand(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-
 		cmdLine := tc.handler.buildFetchCommand(tc.contentID)
 
 		assert.Equal(t, tc.cmdLine, cmdLine)
-
 	}
-
 }
 
 func TestBuildFetchCommandCrushes(t *testing.T) {
-
 	handler := &FetchHandler{
-
 		cluster: &cluster.Cluster{
-
 			ByContent: map[int][]*cluster.SegConfig{
-
 				1: {
-
 					{
-
 						DbID: 1,
 
 						ContentID: 2,
@@ -351,11 +308,9 @@ func TestBuildFetchCommandCrushes(t *testing.T) {
 	}
 
 	if os.Getenv("FROM_TEST_BUILD_FETCH_COMMAND") == "1" {
-
 		handler.buildFetchCommand(1)
 
 		return
-
 	}
 
 	cmd := exec.Command(os.Args[0], "-test.run=TestBuildFetchCommandCrushes")
@@ -365,11 +320,8 @@ func TestBuildFetchCommandCrushes(t *testing.T) {
 	err := cmd.Run()
 
 	if e, ok := err.(*exec.ExitError); ok && !e.Success() {
-
 		return
-
 	}
 
 	t.Fatalf("process ran with err %v, want exit status 1", err)
-
 }

@@ -9,9 +9,7 @@ import (
 func NewFetchConfig(dbDataDirectory string, backup Backup, rootFolder storage.Folder, spec *TablespaceSpec,
 
 	filesToUnwrap map[string]bool, skipRedundantTars bool, manager ExtractProvider) *FetchConfig {
-
 	fetchConfig := &FetchConfig{
-
 		filesToUnwrap: filesToUnwrap,
 
 		missingBlocks: make(map[string]int64),
@@ -30,7 +28,6 @@ func NewFetchConfig(dbDataDirectory string, backup Backup, rootFolder storage.Fo
 	}
 
 	return fetchConfig
-
 }
 
 type FetchConfig struct {
@@ -54,69 +51,50 @@ type FetchConfig struct {
 }
 
 func (fc *FetchConfig) SkipRedundantFiles(unwrapResult *UnwrapResult) {
-
 	fc.processCreatedPageFiles(unwrapResult.createdPageFiles)
 
 	fc.processWrittenIncrementFiles(unwrapResult.writtenIncrementFiles)
 
 	fc.excludeCompletedFiles(unwrapResult.completedFiles)
-
 }
 
 func (fc *FetchConfig) excludeCompletedFile(filePath string) {
-
 	delete(fc.filesToUnwrap, filePath)
 
 	tracelog.DebugLogger.Printf("Excluded file %s\n", filePath)
-
 }
 
 func (fc *FetchConfig) processCreatedPageFiles(createdPageFiles map[string]int64) {
-
 	for filePath, missingBlockCount := range createdPageFiles {
-
 		_, ok := fc.filesToUnwrap[filePath]
 
 		if !ok {
-
 			// file is already excluded, skip it
 
 			continue
-
 		}
 
 		if missingBlockCount == 0 {
-
 			fc.excludeCompletedFile(filePath)
-
 		} else {
-
 			fc.missingBlocks[filePath] = missingBlockCount
-
 		}
-
 	}
-
 }
 
 func (fc *FetchConfig) processWrittenIncrementFiles(writtenIncrementFiles map[string]int64) {
-
 	for filePath, restoredBlockCount := range writtenIncrementFiles {
-
 		_, ok := fc.filesToUnwrap[filePath]
 
 		if !ok {
-
 			// file is already excluded, skip it
 
 			continue
-
 		}
 
 		missingBlockCount, ok := fc.missingBlocks[filePath]
 
 		if !ok {
-
 			// file is not in file blocks to restore, skip it
 
 			tracelog.WarningLogger.Printf("New written increment blocks, "+
@@ -124,31 +102,20 @@ func (fc *FetchConfig) processWrittenIncrementFiles(writtenIncrementFiles map[st
 				"but file doesn't exist in missingBlocks: '%s'", filePath)
 
 			continue
-
 		}
 
 		missingBlockCount -= restoredBlockCount
 
 		if missingBlockCount <= 0 {
-
 			fc.excludeCompletedFile(filePath)
-
 		} else {
-
 			fc.missingBlocks[filePath] = missingBlockCount
-
 		}
-
 	}
-
 }
 
 func (fc *FetchConfig) excludeCompletedFiles(completedFiles []string) {
-
 	for _, filePath := range completedFiles {
-
 		fc.excludeCompletedFile(filePath)
-
 	}
-
 }

@@ -11,11 +11,8 @@ import (
 )
 
 func TestBackupDetail_PrintableFields(t *testing.T) {
-
 	bd := &BackupDetail{
-
 		BackupTime: internal.BackupTime{
-
 			BackupName: "my first backup",
 
 			Time: time.Unix(1692800000, 0).UTC(),
@@ -26,7 +23,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		ExtendedMetadataDto: ExtendedMetadataDto{
-
 			StartTime: time.Unix(1692811111, 0).UTC(),
 
 			FinishTime: time.Unix(1692822222, 0).UTC(),
@@ -56,9 +52,7 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 	prettyFinishTime := "Wednesday, 23-Aug-23 20:23:42 UTC"
 
 	want := []printlist.TableField{
-
 		{
-
 			Name: "backup_name",
 
 			PrettyName: "Backup name",
@@ -69,7 +63,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "modified",
 
 			PrettyName: "Modified",
@@ -80,7 +73,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "wal_file_name",
 
 			PrettyName: "WAL file name",
@@ -91,7 +83,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "storage_name",
 
 			PrettyName: "Storage name",
@@ -102,7 +93,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -113,7 +103,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "finish_time",
 
 			PrettyName: "Finish time",
@@ -124,7 +113,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "hostname",
 
 			PrettyName: "Hostname",
@@ -135,7 +123,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "data_dir",
 
 			PrettyName: "Datadir",
@@ -146,7 +133,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "pg_version",
 
 			PrettyName: "PG version",
@@ -157,7 +143,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_lsn",
 
 			PrettyName: "Start LSN",
@@ -168,7 +153,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "finish_lsn",
 
 			PrettyName: "Finish LSN",
@@ -179,7 +163,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "is_permanent",
 
 			PrettyName: "Permanent",
@@ -191,5 +174,4 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 	}
 
 	assert.Equal(t, want, got)
-
 }

@@ -49,21 +49,16 @@ const NewAoSegFilesID = "test"
 const PrivateKeyFilePath = "../../../test/testdata/waleGpgKey"
 
 func TestRegularAoUpload(t *testing.T) {
-
 	baseFiles := make(greenplum.BackupAOFiles)
 
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 100, 3),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -76,13 +71,10 @@ func TestRegularAoUpload(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.AppendOptimized, 60, 4),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -95,13 +87,10 @@ func TestRegularAoUpload(t *testing.T) {
 		},
 
 		"1337.60": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.AppendOptimized, 77, 5),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -115,9 +104,7 @@ func TestRegularAoUpload(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1337.60": {
-
 			StoragePath: "0_13_md5summock_1337_60_5_test_aoseg",
 
 			IsSkipped: false,
@@ -132,7 +119,6 @@ func TestRegularAoUpload(t *testing.T) {
 		},
 
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_3_test_aoseg",
 
 			IsSkipped: false,
@@ -147,7 +133,6 @@ func TestRegularAoUpload(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			StoragePath: "0_13_md5summock_1337_120_4_test_aoseg",
 
 			IsSkipped: false,
@@ -163,17 +148,13 @@ func TestRegularAoUpload(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestAoUpload_MaxAge(t *testing.T) {
-
 	initialUploadTS := time.Now().Add(-(deduplicationAgeLimit + 1*time.Minute)) // file should be reuploaded
 
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -196,7 +177,6 @@ func TestAoUpload_MaxAge(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			StoragePath: "0_13_md5summock_1337_120_4_test_D_5_aoseg",
 
 			IsSkipped: false,
@@ -222,15 +202,11 @@ func TestAoUpload_MaxAge(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 70, 4),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -243,13 +219,10 @@ func TestAoUpload_MaxAge(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.AppendOptimized, 70, 5),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -263,9 +236,7 @@ func TestAoUpload_MaxAge(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -280,7 +251,6 @@ func TestAoUpload_MaxAge(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			StoragePath: "0_13_md5summock_1337_120_5_test_aoseg",
 
 			IsSkipped: false,
@@ -296,15 +266,11 @@ func TestAoUpload_MaxAge(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestIncrementalAoUpload(t *testing.T) {
-
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1337.120": {
-
 			StoragePath: "0_13_md5summock_1337_120_4_test_aoseg",
 
 			IsSkipped: false,
@@ -330,15 +296,11 @@ func TestIncrementalAoUpload(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 100, 3),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -351,13 +313,10 @@ func TestIncrementalAoUpload(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.AppendOptimized, 70, 5),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -370,13 +329,10 @@ func TestIncrementalAoUpload(t *testing.T) {
 		},
 
 		"1337.60": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.AppendOptimized, 77, 5),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 0,
 
 					DBNode: 13,
@@ -390,9 +346,7 @@ func TestIncrementalAoUpload(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1337.60": {
-
 			StoragePath: "0_13_md5summock_1337_60_5_test_aoseg",
 
 			IsSkipped: false,
@@ -407,7 +361,6 @@ func TestIncrementalAoUpload(t *testing.T) {
 		},
 
 		"1663.1": {
-
 			StoragePath: "0_13_md5summock_1663_1_3_test_aoseg",
 
 			IsSkipped: false,
@@ -422,7 +375,6 @@ func TestIncrementalAoUpload(t *testing.T) {
 		},
 
 		"1337.120": {
-
 			StoragePath: "0_13_md5summock_1337_120_4_test_D_5_aoseg",
 
 			IsSkipped: false,
@@ -438,15 +390,11 @@ func TestIncrementalAoUpload(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestIncrementalAoUpload_EqualEof_DifferentModCount(t *testing.T) {
-
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -472,15 +420,11 @@ func TestIncrementalAoUpload_EqualEof_DifferentModCount(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 100, 5),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -494,9 +438,7 @@ func TestIncrementalAoUpload_EqualEof_DifferentModCount(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_5_test_aoseg",
 
 			IsSkipped: false,
@@ -512,15 +454,11 @@ func TestIncrementalAoUpload_EqualEof_DifferentModCount(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestIncrementalAoUpload_DifferentEof_EqualModCount(t *testing.T) {
-
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -546,15 +484,11 @@ func TestIncrementalAoUpload_DifferentEof_EqualModCount(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 100, 4),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -568,9 +502,7 @@ func TestIncrementalAoUpload_DifferentEof_EqualModCount(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -586,15 +518,11 @@ func TestIncrementalAoUpload_DifferentEof_EqualModCount(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestIncrementalAoUpload_FullAfterDelta(t *testing.T) {
-
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_D_aoseg",
 
 			IsSkipped: false,
@@ -620,15 +548,11 @@ func TestIncrementalAoUpload_FullAfterDelta(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 70, 4),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -642,9 +566,7 @@ func TestIncrementalAoUpload_FullAfterDelta(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -660,15 +582,11 @@ func TestIncrementalAoUpload_FullAfterDelta(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, false)
-
 }
 
 func TestAoUpload_SkippedFile(t *testing.T) {
-
 	baseFiles := greenplum.BackupAOFiles{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: false,
@@ -694,15 +612,11 @@ func TestAoUpload_SkippedFile(t *testing.T) {
 	bundleFiles := &internal.RegularBundleFiles{}
 
 	testFiles := map[string]TestFileInfo{
-
 		"1663.1": {
-
 			AoRelFileMetadata: greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 70, 4),
 
 			BlockLocation: walparser.BlockLocation{
-
 				RelationFileNode: walparser.RelFileNode{
-
 					SpcNode: 1009,
 
 					DBNode: 13,
@@ -716,9 +630,7 @@ func TestAoUpload_SkippedFile(t *testing.T) {
 	}
 
 	expectedResults := map[string]ExpectedResult{
-
 		"1663.1": {
-
 			StoragePath: "1009_13_md5summock_1663_1_4_test_aoseg",
 
 			IsSkipped: true,
@@ -734,11 +646,9 @@ func TestAoUpload_SkippedFile(t *testing.T) {
 	}
 
 	runSingleTest(t, baseFiles, bundleFiles, testFiles, expectedResults, deduplicationAgeLimit, true)
-
 }
 
 func TestAoUpload_NotExistFile(t *testing.T) {
-
 	name := "1663.1"
 
 	baseFiles := greenplum.BackupAOFiles{}
@@ -752,9 +662,7 @@ func TestAoUpload_NotExistFile(t *testing.T) {
 	meta := greenplum.NewAoRelFileMetadata("md5summock", greenplum.ColumnOriented, 70, 4)
 
 	location := walparser.BlockLocation{
-
 		RelationFileNode: walparser.RelFileNode{
-
 			SpcNode: 0,
 
 			DBNode: 13,
@@ -768,25 +676,19 @@ func TestAoUpload_NotExistFile(t *testing.T) {
 	f, err := os.Create(name)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	fInfo, err := f.Stat()
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	header, err := tar.FileInfoHeader(fInfo, f.Name())
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	header.Name = name
@@ -802,7 +704,6 @@ func TestAoUpload_NotExistFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, uploader.GetFiles().Files)
-
 }
 
 func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
@@ -810,7 +711,6 @@ func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
 	bundleFiles *internal.RegularBundleFiles, testFiles map[string]TestFileInfo, expectedResults map[string]ExpectedResult,
 
 	deduplicationAgeLimit time.Duration, isAploaderIncremental bool) {
-
 	uploader := newAoStorageUploader(baseFiles, bundleFiles, isAploaderIncremental, deduplicationAgeLimit)
 
 	testDir, testFiles := generateData("data", testFiles, t)
@@ -818,7 +718,6 @@ func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
 	defer os.RemoveAll(testDir)
 
 	for _, testFile := range testFiles {
-
 		cfi := testFile.ComposeFileInfo
 
 		aoMeta := testFile.AoRelFileMetadata
@@ -828,7 +727,6 @@ func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
 		err := uploader.AddFile(&cfi, aoMeta, &location)
 
 		assert.NoError(t, err)
-
 	}
 
 	filesMetaDto := uploader.GetFiles()
@@ -838,7 +736,6 @@ func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
 	bundleFilesMap := bundleFiles.GetUnderlyingMap()
 
 	for name, resFile := range filesMetaDto.Files {
-
 		assert.Contains(t, expectedResults, name)
 
 		expFile := expectedResults[name]
@@ -864,9 +761,7 @@ func runSingleTest(t *testing.T, baseFiles greenplum.BackupAOFiles,
 		assert.Equal(t, expFile.IsSkipped, fileDesc.IsSkipped)
 
 		assert.Equal(t, expFile.IsIncremented, fileDesc.IsIncremented)
-
 	}
-
 }
 
 func newAoStorageUploader(
@@ -876,29 +771,22 @@ func newAoStorageUploader(
 	deduplicationAgeLimit time.Duration,
 
 ) *greenplum.AoStorageUploader {
-
 	storage := memory.NewKVS()
 
 	mockUploader := testtools.NewStoringMockUploader(storage)
 
 	crypter := openpgp.CrypterFromKeyPath(PrivateKeyFilePath, func() (string, bool) {
-
 		return "", false
-
 	})
 
 	return greenplum.NewAoStorageUploader(mockUploader, baseFiles, crypter, bundleFiles, isIncremental, deduplicationAgeLimit, NewAoSegFilesID)
-
 }
 
 func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.T) (string, map[string]TestFileInfo) {
-
 	cwd, err := filepath.Abs("./")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Create temp directory.
@@ -906,9 +794,7 @@ func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.
 	dir, err := os.MkdirTemp(cwd, dirName)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	fmt.Println(dir)
@@ -918,9 +804,7 @@ func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.
 	// Generates 100 byte files
 
 	for name, tfi := range testFiles {
-
 		lr := &io.LimitedReader{
-
 			R: sb,
 
 			N: int64(100),
@@ -929,9 +813,7 @@ func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.
 		f, err := os.Create(filepath.Join(dir, name))
 
 		if err != nil {
-
 			t.Log(err)
-
 		}
 
 		io.Copy(f, lr)
@@ -939,17 +821,13 @@ func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.
 		fInfo, err := f.Stat()
 
 		if err != nil {
-
 			t.Log(err)
-
 		}
 
 		header, err := tar.FileInfoHeader(fInfo, f.Name())
 
 		if err != nil {
-
 			t.Log(err)
-
 		}
 
 		header.Name = name
@@ -961,9 +839,7 @@ func generateData(dirName string, testFiles map[string]TestFileInfo, t *testing.
 		testFiles[name] = tfi
 
 		defer utility.LoggedClose(f, "")
-
 	}
 
 	return dir, testFiles
-
 }

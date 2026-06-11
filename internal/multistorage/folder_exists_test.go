@@ -14,9 +14,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestExists(t *testing.T) {
-
 	t.Run("check folder implementation and provide default name if it is not multistorage", func(t *testing.T) {
-
 		singleStorageFolder := memory.NewFolder("/test", memory.NewKVS())
 
 		_ = singleStorageFolder.PutObject("a/b/c", &bytes.Buffer{})
@@ -36,11 +34,9 @@ func TestExists(t *testing.T) {
 		assert.Equal(t, "default", storage)
 
 		assert.False(t, exists)
-
 	})
 
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.Exists = policies.ExistsPolicyFirst
@@ -48,11 +44,9 @@ func TestExists(t *testing.T) {
 		_, _, err := Exists(folder, "kek")
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	t.Run("exists in first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Exists = policies.ExistsPolicyFirst
@@ -78,11 +72,9 @@ func TestExists(t *testing.T) {
 		assert.Equal(t, "s1", storage)
 
 		assert.False(t, exists)
-
 	})
 
 	t.Run("exists in any storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.Exists = policies.ExistsPolicyAny
@@ -118,11 +110,9 @@ func TestExists(t *testing.T) {
 		assert.Equal(t, "s2", storage)
 
 		assert.True(t, exists)
-
 	})
 
 	t.Run("exists in all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.Exists = policies.ExistsPolicyAll
@@ -162,7 +152,5 @@ func TestExists(t *testing.T) {
 		assert.Equal(t, "all", storage)
 
 		assert.True(t, exists)
-
 	})
-
 }

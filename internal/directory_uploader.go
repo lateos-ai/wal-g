@@ -38,9 +38,7 @@ func NewCommonDirectoryUploader(
 	excludedFiles map[string]utility.Empty, backupName string,
 
 	uploader Uploader) *CommonDirectoryUploader {
-
 	return &CommonDirectoryUploader{
-
 		crypter: crypter,
 
 		tarBallFilePacker: packer,
@@ -55,11 +53,9 @@ func NewCommonDirectoryUploader(
 
 		uploader: uploader,
 	}
-
 }
 
 func (u *CommonDirectoryUploader) Upload(path string) TarFileSets {
-
 	bundle := NewBundle(path, u.crypter, u.tarSizeThreshold, u.excludedFiles)
 
 	// Start a new tar bundle, walk the pgDataDirectory and upload everything there.
@@ -109,11 +105,8 @@ func (u *CommonDirectoryUploader) Upload(path string) TarFileSets {
 	u.uploader.Finish()
 
 	if u.uploader.Failed() {
-
 		tracelog.ErrorLogger.Fatalf("Uploading failed during '%s' backup.\n", path)
-
 	}
 
 	return tarFileSets
-
 }

@@ -3,34 +3,46 @@ package mongo
 import (
 	"strings"
 
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/cmd/common"
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 )
 
 var dbShortDescription = "MongoDB backup tool"
 
 // These variables are here only to show current version. They are set in makefile during build process
+
 var walgVersion = "devel"
+
 var gitRevision = "devel"
+
 var buildDate = "devel"
 
 var cmd = &cobra.Command{
-	Use:     "wal-g",
-	Short:   dbShortDescription, // TODO : improve description
+	Use: "wal-g",
+
+	Short: dbShortDescription, // TODO : improve description
+
 	Version: strings.Join([]string{walgVersion, gitRevision, buildDate, "MongoDB"}, "\t"),
+
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		err := internal.AssertRequiredSettingsSet()
+
 		tracelog.ErrorLogger.FatalOnError(err)
+
 		err = conf.ConfigureAndRunDefaultWebServer()
+
 		tracelog.ErrorLogger.FatalOnError(err)
 	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
+
 // This is called by main.main().
+
 func Execute() {
 	common.ExecuteContext(cmd)
 }
@@ -41,6 +53,8 @@ func GetCmd() *cobra.Command {
 
 func init() {
 	common.Init(cmd, conf.MONGO)
+
 	conf.AddTurboFlag(cmd)
+
 	conf.RequiredSettings[conf.MongoDBUriSetting] = true
 }

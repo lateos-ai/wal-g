@@ -42,9 +42,7 @@ type TimelineInfo struct {
 }
 
 func NewTimelineInfo(walSegments *WalSegmentsSequence, historyRecords []*TimelineHistoryRecord) (*TimelineInfo, error) {
-
 	timelineInfo := &TimelineInfo{
-
 		ID: walSegments.TimelineID,
 
 		StartSegment: walSegments.MinSegmentNo.GetFilename(walSegments.TimelineID),
@@ -61,39 +59,30 @@ func NewTimelineInfo(walSegments *WalSegmentsSequence, historyRecords []*Timelin
 	missingSegments, err := walSegments.FindMissingSegments()
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	timelineInfo.MissingSegments = make([]string, 0, len(missingSegments))
 
 	for _, segment := range missingSegments {
-
 		timelineInfo.MissingSegments = append(timelineInfo.MissingSegments, segment.GetFileName())
-
 	}
 
 	if len(timelineInfo.MissingSegments) > 0 {
-
 		timelineInfo.Status = TimelineLostSegmentStatus
-
 	}
 
 	// set parent timeline id and timeline switch LSN if have .history record available
 
 	if len(historyRecords) > 0 {
-
 		switchHistoryRecord := historyRecords[len(historyRecords)-1]
 
 		timelineInfo.ParentID = switchHistoryRecord.timeline
 
 		timelineInfo.SwitchPointLsn = switchHistoryRecord.lsn
-
 	}
 
 	return timelineInfo, nil
-
 }
 
 // WalSegmentsSequence represents some collection of wal segments with the same timeline
@@ -109,13 +98,11 @@ type WalSegmentsSequence struct {
 }
 
 func NewSegmentsSequence(id uint32, segmentNo WalSegmentNo) *WalSegmentsSequence {
-
 	walSegmentNumbers := make(map[WalSegmentNo]bool)
 
 	walSegmentNumbers[segmentNo] = true
 
 	return &WalSegmentsSequence{
-
 		TimelineID: id,
 
 		WalSegmentNumbers: walSegmentNumbers,
@@ -124,35 +111,29 @@ func NewSegmentsSequence(id uint32, segmentNo WalSegmentNo) *WalSegmentsSequence
 
 		MaxSegmentNo: segmentNo,
 	}
-
 }
 
 // AddWalSegmentNo adds the provided segment number to collection
 
 func (seq *WalSegmentsSequence) AddWalSegmentNo(number WalSegmentNo) {
-
 	seq.WalSegmentNumbers[number] = true
 
 	seq.MinSegmentNo = min(seq.MinSegmentNo, number)
 
 	seq.MaxSegmentNo = max(seq.MaxSegmentNo, number)
-
 }
 
 // FindMissingSegments finds missing segments in range [minSegmentNo, maxSegmentNo]
 
 func (seq *WalSegmentsSequence) FindMissingSegments() ([]WalSegmentDescription, error) {
-
 	startWalSegment := WalSegmentDescription{Number: seq.MaxSegmentNo, Timeline: seq.TimelineID}
 
 	walSegments := make(map[WalSegmentDescription]bool, len(seq.WalSegmentNumbers))
 
 	for number := range seq.WalSegmentNumbers {
-
 		segment := WalSegmentDescription{Number: number, Timeline: seq.TimelineID}
 
 		walSegments[segment] = true
-
 	}
 
 	// create WAL segment runner to run on single timeline
@@ -162,20 +143,16 @@ func (seq *WalSegmentsSequence) FindMissingSegments() ([]WalSegmentDescription, 
 	walSegmentScanner := NewWalSegmentScanner(walSegmentRunner)
 
 	err := walSegmentScanner.Scan(SegmentScanConfig{
-
 		UnlimitedScan: true,
 
 		MissingSegmentStatus: Lost,
 	})
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return walSegmentScanner.GetMissingSegmentsDescriptions(), nil
-
 }
 
 // HandleWalShow gets the list of files inside WAL folder, detects the available WAL segments,
@@ -183,7 +160,6 @@ func (seq *WalSegmentsSequence) FindMissingSegments() ([]WalSegmentDescription, 
 // groups WAL segments by the timeline and shows detailed info about each timeline stored in storage
 
 func HandleWalShow(rootFolder storage.Folder, showBackups bool, outputWriter WalShowOutputWriter) {
-
 	walFolder := rootFolder.GetSubFolder(utility.WalPath)
 
 	filenames, err := getFolderFilenames(walFolder)
@@ -197,17 +173,12 @@ func HandleWalShow(rootFolder storage.Folder, showBackups bool, outputWriter Wal
 	timelineInfos := make([]*TimelineInfo, 0, len(segmentsByTimelines))
 
 	for _, segmentsSequence := range segmentsByTimelines {
-
 		historyRecords, err := GetTimeLineHistoryRecords(segmentsSequence.TimelineID, walFolder)
 
 		if err != nil {
-
 			if _, ok := err.(HistoryFileNotFoundError); !ok {
-
 				tracelog.ErrorLogger.Fatalf("Error while loading .history file %v\n", err)
-
 			}
-
 		}
 
 		info, err := NewTimelineInfo(segmentsSequence, historyRecords)
@@ -215,95 +186,71 @@ func HandleWalShow(rootFolder storage.Folder, showBackups bool, outputWriter Wal
 		tracelog.ErrorLogger.FatalfOnError("Error while creating TimeLineInfo %v\n", err)
 
 		timelineInfos = append(timelineInfos, info)
-
 	}
 
 	if showBackups {
-
 		timelineInfos, err = addBackupsInfo(timelineInfos, rootFolder)
 
 		tracelog.ErrorLogger.FatalfOnError("Failed to add backups info: %v\n", err)
-
 	}
 
 	// order timelines by ID
 
 	slices.SortFunc(timelineInfos, func(a, b *TimelineInfo) int {
-
 		return cmp.Compare(a.ID, b.ID)
-
 	})
 
 	err = outputWriter.Write(timelineInfos)
 
 	tracelog.ErrorLogger.FatalfOnError("Error writing output: %v\n", err)
-
 }
 
 func groupSegmentsByTimelines(segments map[WalSegmentDescription]bool) map[uint32]*WalSegmentsSequence {
-
 	segmentsByTimelines := make(map[uint32]*WalSegmentsSequence)
 
 	for segment := range segments {
-
 		if timelineInfo, ok := segmentsByTimelines[segment.Timeline]; ok {
-
 			timelineInfo.AddWalSegmentNo(segment.Number)
 
 			continue
-
 		}
 
 		segmentsByTimelines[segment.Timeline] = NewSegmentsSequence(segment.Timeline, segment.Number)
-
 	}
 
 	return segmentsByTimelines
-
 }
 
 // addBackupsInfo adds info about available backups for each timeline
 
 func addBackupsInfo(timelineInfos []*TimelineInfo, rootFolder storage.Folder) ([]*TimelineInfo, error) {
-
 	backups, err := internal.GetBackups(rootFolder.GetSubFolder(utility.BaseBackupPath))
 
 	if err != nil {
-
 		if _, ok := err.(internal.NoBackupsFoundError); ok {
-
 			tracelog.InfoLogger.Println("No backups found in storage.")
 
 			return timelineInfos, nil
-
 		}
 
 		return nil, err
-
 	}
 
 	backupDetails, err := GetBackupsDetails(rootFolder.GetSubFolder(utility.BaseBackupPath), backups)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	for _, info := range timelineInfos {
-
 		info.Backups, err = getBackupsInRange(info.StartSegment, info.EndSegment, info.ID, backupDetails)
 
 		if err != nil {
-
 			return nil, err
-
 		}
-
 	}
 
 	return timelineInfos, nil
-
 }
 
 // getBackupsInRange returns backups taken in range [startSegmentName, endSegmentName]
@@ -311,19 +258,15 @@ func addBackupsInfo(timelineInfos []*TimelineInfo, rootFolder storage.Folder) ([
 func getBackupsInRange(startSegmentName, endSegmentName string, timeline uint32,
 
 	backups []BackupDetail) ([]*BackupDetail, error) {
-
 	filteredBackups := make([]*BackupDetail, 0)
 
 	for idx := range backups {
-
 		backup := &backups[idx]
 
 		backupTimeline, _, err := ParseWALFilename(backup.WalFileName)
 
 		if err != nil {
-
 			return nil, err
-
 		}
 
 		startSegment := NewWalSegmentNo(backup.StartLsn).GetFilename(backupTimeline)
@@ -333,13 +276,9 @@ func getBackupsInRange(startSegmentName, endSegmentName string, timeline uint32,
 		// there we compare segments lexicographically, maybe it is wrong...
 
 		if timeline == backupTimeline && startSegment >= startSegmentName && endSegment <= endSegmentName {
-
 			filteredBackups = append(filteredBackups, backup)
-
 		}
-
 	}
 
 	return filteredBackups, nil
-
 }

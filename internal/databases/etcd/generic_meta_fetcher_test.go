@@ -13,17 +13,14 @@ import (
 )
 
 func init() {
-
 	internal.ConfigureSettings("")
 
 	config.InitConfig()
 
 	config.Configure()
-
 }
 
 func TestFetch(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backupName := "test"
@@ -33,7 +30,6 @@ func TestFetch(t *testing.T) {
 	date := time.Date(2002, 3, 21, 0, 0, 0, 0, time.UTC)
 
 	testObject := etcd.StreamSentinelDto{
-
 		StartLocalTime: date,
 
 		IsPermanent: false,
@@ -42,7 +38,6 @@ func TestFetch(t *testing.T) {
 	}
 
 	var expectedResult = internal.GenericMetadata{
-
 		BackupName: backupName,
 
 		StartTime: date,
@@ -69,5 +64,4 @@ func TestFetch(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedResult, actualResult)
-
 }

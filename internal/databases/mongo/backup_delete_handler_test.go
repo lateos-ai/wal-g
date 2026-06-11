@@ -12,7 +12,6 @@ import (
 )
 
 func TestHandleBackupDelete(t *testing.T) {
-
 	type args struct {
 		backupName string
 
@@ -30,35 +29,28 @@ func TestHandleBackupDelete(t *testing.T) {
 
 		wantErr error
 	}{
-
 		{
-
 			name: "delete_first",
 
 			args: args{
-
 				backupName: "first",
 
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("BackupMeta", mock.MatchedBy(func(backupName string) bool { return backupName == "first" })).
 						Return(&models.Backup{BackupName: "first"}, nil).Once()
 
 					return dl
-
 				}(),
 
 				purger: func() *mocks.Purger {
-
 					pr := &mocks.Purger{}
 
 					pr.On("DeleteBackups", mock.MatchedBy(func(backups []*models.Backup) bool { return len(backups) == 1 && backups[0].BackupName == "first" })).
 						Return(nil).Once()
 
 					return pr
-
 				}(),
 
 				dryRun: false,
@@ -68,22 +60,18 @@ func TestHandleBackupDelete(t *testing.T) {
 		},
 
 		{
-
 			name: "delete_first_dryrun",
 
 			args: args{
-
 				backupName: "first",
 
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("BackupMeta", mock.MatchedBy(func(backupName string) bool { return backupName == "first" })).
 						Return(&models.Backup{BackupName: "first"}, nil).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -95,22 +83,18 @@ func TestHandleBackupDelete(t *testing.T) {
 		},
 
 		{
-
 			name: "delete_nonexistent",
 
 			args: args{
-
 				backupName: "nonexistent",
 
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("BackupMeta", mock.MatchedBy(func(backupName string) bool { return backupName == "nonexistent" })).
 						Return(nil, fmt.Errorf("can not fetch stream sentinel: test")).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -123,17 +107,13 @@ func TestHandleBackupDelete(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			err := HandleBackupDelete(tt.args.backupName, tt.args.downloader, tt.args.purger, tt.args.dryRun)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -141,9 +121,6 @@ func TestHandleBackupDelete(t *testing.T) {
 			tt.args.downloader.AssertExpectations(t)
 
 			tt.args.purger.AssertExpectations(t)
-
 		})
-
 	}
-
 }

@@ -12,7 +12,6 @@ import (
 )
 
 func TestGetCopyingInfos_WhenFolderIsEmpty(t *testing.T) {
-
 	var from = testtools.MakeDefaultInMemoryStorageFolder()
 
 	var to = testtools.MakeDefaultInMemoryStorageFolder()
@@ -22,11 +21,9 @@ func TestGetCopyingInfos_WhenFolderIsEmpty(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Empty(t, infos)
-
 }
 
 func TestGetHistoryCopyingInfo_WhenFolderIsNotEmpty(t *testing.T) {
-
 	postgres.SetWalSize(64)
 
 	var from = testtools.CreateMockStorageFolderWithPermanentGPBackups(t)
@@ -38,11 +35,8 @@ func TestGetHistoryCopyingInfo_WhenFolderIsNotEmpty(t *testing.T) {
 	assert.NoError(t, err)
 
 	for _, foo := range infos {
-
 		tracelog.InfoLogger.Printf("%s", foo.SrcObj.GetName())
-
 	}
 
 	assert.Equal(t, 26, len(infos))
-
 }

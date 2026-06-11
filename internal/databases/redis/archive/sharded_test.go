@@ -19,7 +19,6 @@ type Addrs struct {
 }
 
 func TestGetSlotsMap(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -35,13 +34,10 @@ func TestGetSlotsMap(t *testing.T) {
 
 		expectedErr error
 	}{
-
 		{
-
 			name: "[success] simple parsing",
 
 			ipAddrs: map[string]Addrs{
-
 				"ip1": {[]string{"hostname1"}, true},
 
 				"ip2": {[]string{"hostname2"}, true},
@@ -60,7 +56,6 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379 master,nofailover - 0 17
 `,
 
 			expected: map[string][][]string{
-
 				"id1": {{"2731", "5460"}, {"10923", "13653"}},
 
 				"id2": {{"5461", "10922"}},
@@ -68,11 +63,9 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379 master,nofailover - 0 17
 		},
 
 		{
-
 			name: "[err] migrating slots",
 
 			ipAddrs: map[string]Addrs{
-
 				"ip1": {[]string{"hostname1"}, true},
 
 				"ip2": {[]string{"hostname2"}, false},
@@ -94,11 +87,9 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379 master,nofailover - 0 17
 		},
 
 		{
-
 			name: "[success] failed line is filtered out",
 
 			ipAddrs: map[string]Addrs{
-
 				// "ip1": {[]string{"hostname1"}, true},
 
 				"ip2": {[]string{"hostname2"}, true},
@@ -119,7 +110,6 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379,,tls-port=0,shard-id=3e0
 `,
 
 			expected: map[string][][]string{
-
 				"id1": {},
 
 				"id2": {{"2731", "5460"}, {"10923", "13653"}},
@@ -128,9 +118,7 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379,,tls-port=0,shard-id=3e0
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			mockCtrl := gomock.NewController(t)
 
 			mockNet := mocks.NewMockNetI(mockCtrl)
@@ -140,13 +128,9 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379,,tls-port=0,shard-id=3e0
 			// Mock LookupAddr
 
 			for ip, hostnames := range tt.ipAddrs {
-
 				if hostnames.lookedup {
-
 					mockNet.EXPECT().LookupAddr(ip).Return(hostnames.addrs, nil)
-
 				}
-
 			}
 
 			// Mock viper configuration
@@ -164,43 +148,29 @@ d36dacb40728f82b6453a611941cded23915d24a ip2:6379@16379,,tls-port=0,shard-id=3e0
 			slotsMap, err := GetSlotsMap(mockNet)
 
 			if tt.expectedErr == nil {
-
 				require.NoError(t, err)
-
 			} else {
-
 				require.Error(t, err)
 
 				require.ErrorAs(t, err, &tt.expectedErr)
 
 				require.Equal(t, tt.expectedErr.Error(), err.Error())
-
 			}
 
 			if len(slotsMap) != len(tt.expected) {
-
 				t.Errorf("expected %d entries, got %d", len(tt.expected), len(slotsMap))
-
 			}
 
 			for id, slots := range tt.expected {
-
 				if len(slotsMap[id]) != len(slots) {
-
 					t.Errorf("expected %d slots for ID %s, got %d", len(slots), id, len(slotsMap[id]))
-
 				}
-
 			}
-
 		})
-
 	}
-
 }
 
 func TestValidateFqdns(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -210,20 +180,16 @@ func TestValidateFqdns(t *testing.T) {
 
 		expectedError string
 	}{
-
 		{
-
 			name: "[success] simple",
 
 			fqdnToIDMap: map[string]string{
-
 				"host1": "id1",
 
 				"host2": "id2",
 			},
 
 			idToSlots: map[string][][]string{
-
 				"id1": {{"0", "10000"}},
 
 				"id2": {{"10001", "16384"}},
@@ -233,13 +199,11 @@ func TestValidateFqdns(t *testing.T) {
 		},
 
 		{
-
 			name: "[success] complex",
 
 			fqdnToIDMap: map[string]string{"host1": "id4", "host2": "id2", "host3": "id3", "host4": "id1", "host5": "id3", "host6": "id2", "host7": "id4", "host8": "id1", "host9": "id1", "host10": "id4", "host11": "id2", "host12": "id3"},
 
 			idToSlots: map[string][][]string{
-
 				"id1": {{"0", "5460"}},
 
 				"id2": {{"5461", "10922"}},
@@ -253,18 +217,15 @@ func TestValidateFqdns(t *testing.T) {
 		},
 
 		{
-
 			name: "[fail] missing ID case",
 
 			fqdnToIDMap: map[string]string{
-
 				"host1": "id1",
 
 				"host2": "id2",
 			},
 
 			idToSlots: map[string][][]string{
-
 				"id1": {{"0", "10000"}},
 			},
 
@@ -273,69 +234,46 @@ func TestValidateFqdns(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			_, err := validateFqdns(tt.fqdnToIDMap, tt.idToSlots)
 
 			if tt.expectedError == "" {
-
 				if err != nil {
-
 					t.Errorf("expected no error, but got: %v", err)
-
 				}
-
 			} else {
-
 				if err == nil {
-
 					t.Errorf("expected an error, but got nil")
-
 				} else if err.Error() != tt.expectedError {
-
 					t.Errorf("error message mismatch. Expected: %s, Got: %s", tt.expectedError, err.Error())
-
 				}
-
 			}
-
 		})
-
 	}
-
 }
 
 func TestValidateFqdns_MissingID(t *testing.T) {
-
 	fqdnToIDMap := map[string]string{
-
 		"host1": "id1",
 
 		"host2": "id2",
 	}
 
 	idToSlots := map[string][][]string{
-
 		"id1": {{"0", "10000"}},
 	}
 
 	_, err := validateFqdns(fqdnToIDMap, idToSlots)
 
 	if err == nil {
-
 		t.Errorf("expected an error for missing ID 'id2'")
 
 		return
-
 	}
 
 	expectedErrorMessage := "failed to find all IDs from map[host1:id1 host2:id2]\nfound only map[id1:[[0 10000]]]"
 
 	if err.Error() != expectedErrorMessage {
-
 		t.Errorf("error message mismatch. Expected: %s, Got: %s", expectedErrorMessage, err.Error())
-
 	}
-
 }

@@ -13,7 +13,6 @@ import (
 
 var (
 	inputSimpleFiles = []string{
-
 		"000000010000000100000056",
 
 		"000000010000000100000057",
@@ -28,7 +27,6 @@ var (
 	inputSimpleFile = "000000010000000100000058"
 
 	wantSimpleDeleted = []string{
-
 		"/A/.wal-g/prefetch/000000010000000100000056",
 
 		"/A/.wal-g/prefetch/000000010000000100000057",
@@ -47,7 +45,6 @@ var (
 	inputWALFileWithIncorrectLogSegNoLo = "0000000100000001Z0000056"
 
 	inputFilesWithDiffInTimeline = []string{
-
 		"000000010000000100000088",
 
 		"000000020000000100000088",
@@ -62,7 +59,6 @@ var (
 	inputFileWithDiffInTimeline = "000000030000000100000088"
 
 	wantDeletedWithDiffInTimeline = []string{
-
 		"/A/.wal-g/prefetch/000000010000000100000088",
 
 		"/A/.wal-g/prefetch/000000020000000100000088",
@@ -76,7 +72,6 @@ var (
 )
 
 func TestCleanupSimpleFiles(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -86,9 +81,7 @@ func TestCleanupSimpleFiles(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -103,11 +96,9 @@ func TestCleanupSimpleFiles(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupByNotWALFile(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -117,11 +108,9 @@ func TestCleanupByNotWALFile(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputNotWALFile, "/A", cleaner)
-
 }
 
 func TestCleanupButInFilesNotWALFile(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -131,9 +120,7 @@ func TestCleanupButInFilesNotWALFile(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -148,11 +135,9 @@ func TestCleanupButInFilesNotWALFile(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupByWALWithIncorrectTimeline(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -162,11 +147,9 @@ func TestCleanupByWALWithIncorrectTimeline(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputWALFileWithIncorrectTimeline, "/A", cleaner)
-
 }
 
 func TestCleanupButInFilesWALWithIncorrectTimeline(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -178,9 +161,7 @@ func TestCleanupButInFilesWALWithIncorrectTimeline(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -195,11 +176,9 @@ func TestCleanupButInFilesWALWithIncorrectTimeline(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupByWALWithIncorrectLogSegNoHi(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -209,11 +188,9 @@ func TestCleanupByWALWithIncorrectLogSegNoHi(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputWALFileWithIncorrectLogSegNoHi, "/A", cleaner)
-
 }
 
 func TestCleanupButInFilesWALWithIncorrectLogSegNoHi(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -226,9 +203,7 @@ func TestCleanupButInFilesWALWithIncorrectLogSegNoHi(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -243,11 +218,9 @@ func TestCleanupButInFilesWALWithIncorrectLogSegNoHi(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupByWALWithIncorrectLogSegNoLo(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -257,11 +230,9 @@ func TestCleanupByWALWithIncorrectLogSegNoLo(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputWALFileWithIncorrectLogSegNoLo, "/A", cleaner)
-
 }
 
 func TestCleanupButInFilesWALWithIncorrectLogSegNoLo(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -273,9 +244,7 @@ func TestCleanupButInFilesWALWithIncorrectLogSegNoLo(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -290,11 +259,9 @@ func TestCleanupButInFilesWALWithIncorrectLogSegNoLo(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupWithErrorOnGetFiles(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -306,11 +273,9 @@ func TestCleanupWithErrorOnGetFiles(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
-
 }
 
 func TestCleanupFilesWithDiffInTimeline(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -322,9 +287,7 @@ func TestCleanupFilesWithDiffInTimeline(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantDeletedWithDiffInTimeline))
 
 	postgres.CleanupPrefetchDirectories(inputFileWithDiffInTimeline, "/A", cleaner)
@@ -339,11 +302,9 @@ func TestCleanupFilesWithDiffInTimeline(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }
 
 func TestCleanupByWALWithTooMuchLogSegNoLo(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -355,11 +316,9 @@ func TestCleanupByWALWithTooMuchLogSegNoLo(t *testing.T) {
 	cleaner.EXPECT().Remove(gomock.Any()).Times(0)
 
 	postgres.CleanupPrefetchDirectories(inputWALFileWithTooMuchLogSegNoLo, "/A", cleaner)
-
 }
 
 func TestCleanupButInFilesWALWithTooMuchLogSegNoLo(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	cleaner := mocks.NewMockCleaner(ctrl)
@@ -371,9 +330,7 @@ func TestCleanupButInFilesWALWithTooMuchLogSegNoLo(t *testing.T) {
 	var actualDeleted []string
 
 	cleaner.EXPECT().Remove(gomock.Any()).Do(func(toDelete string) {
-
 		actualDeleted = append(actualDeleted, toDelete)
-
 	}).Times(len(wantSimpleDeleted))
 
 	postgres.CleanupPrefetchDirectories(inputSimpleFile, "/A", cleaner)
@@ -388,5 +345,4 @@ func TestCleanupButInFilesWALWithTooMuchLogSegNoLo(t *testing.T) {
 
 		"deleted wrong files",
 	)
-
 }

@@ -53,25 +53,19 @@ func NewHandler(
 	cfg *HandlerConfig,
 
 ) (*Handler, error) {
-
 	source, err := exec.ConfigureStorage(sourceStorage)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("configure source storage folder: %w", err)
-
 	}
 
 	target, err := exec.ConfigureStorage(targetStorage)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("configure target storage folder: %w", err)
-
 	}
 
 	return &Handler{
-
 		source: source.RootFolder(),
 
 		target: target.RootFolder(),
@@ -84,23 +78,18 @@ func NewHandler(
 
 		jobRequirements: map[jobKey][]jobRequirement{},
 	}, nil
-
 }
 
 func (h *Handler) Handle() error {
-
 	files, filesNum, err := h.fileLister.ListFilesToMove(h.source, h.target)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	workersNum := utility.Min(h.cfg.Concurrency, len(files))
 
 	return h.transferConcurrently(workersNum, files, filesNum)
-
 }
 
 type transferJob struct {
@@ -148,9 +137,7 @@ const (
 )
 
 func (ts transferStatus) String() string {
-
 	switch ts {
-
 	case transferStatusNew:
 
 		return "new"
@@ -174,37 +161,28 @@ func (ts transferStatus) String() string {
 	default:
 
 		return "unknown"
-
 	}
-
 }
 
 func (h *Handler) transferConcurrently(workers int, files []FilesGroup, filesNum int) (finErr error) {
-
 	jobsQueue := make(chan transferJob, filesNum)
 
 	h.filesLeft.Add(int32(filesNum))
 
 	for _, group := range files {
-
 		for _, file := range group {
-
 			h.saveRequirements(file)
 
 			h.fileStatuses.Store(file.path, transferStatusNew)
 
 			jobsQueue <- transferJob{
-
 				key: jobKey{
-
 					jobType: jobTypeCopy,
 
 					filePath: file.path,
 				},
 			}
-
 		}
-
 	}
 
 	errs := make(chan error, len(files))
@@ -218,9 +196,7 @@ func (h *Handler) transferConcurrently(workers int, files []FilesGroup, filesNum
 	workersWG.Add(workers)
 
 	for i := 0; i < workers; i++ {
-
 		go h.transferFilesWorker(workersCtx, jobsQueue, errs, workersWG)
-
 	}
 
 	errsWG := new(sync.WaitGroup)
@@ -228,21 +204,17 @@ func (h *Handler) transferConcurrently(workers int, files []FilesGroup, filesNum
 	errsWG.Add(1)
 
 	go func() {
-
 		defer errsWG.Done()
 
 		errsNum := 0
 
 		for e := range errs {
-
 			if h.cfg.FailOnFirstErr {
-
 				cancelWorkers()
 
 				finErr = e
 
 				break
-
 			}
 
 			tracelog.ErrorLogger.PrintError(e)
@@ -250,9 +222,7 @@ func (h *Handler) transferConcurrently(workers int, files []FilesGroup, filesNum
 			errsNum++
 
 			finErr = fmt.Errorf("finished with %d errors", errsNum)
-
 		}
-
 	}()
 
 	workersWG.Wait()
@@ -262,67 +232,52 @@ func (h *Handler) transferConcurrently(workers int, files []FilesGroup, filesNum
 	errsWG.Wait()
 
 	return finErr
-
 }
 
 func (h *Handler) saveRequirements(file FileToMove) {
-
 	for _, requiredFile := range file.copyAfter {
-
 		job := jobKey{
-
 			filePath: file.path,
 
 			jobType: jobTypeCopy,
 		}
 
 		req := jobRequirement{
-
 			filePath: requiredFile,
 
 			minStatus: transferStatusAppeared,
 		}
 
 		h.jobRequirements[job] = append(h.jobRequirements[job], req)
-
 	}
 
 	for _, requiredFile := range file.deleteAfter {
-
 		job := jobKey{
-
 			filePath: file.path,
 
 			jobType: jobTypeDelete,
 		}
 
 		req := jobRequirement{
-
 			filePath: requiredFile,
 
 			minStatus: transferStatusDeleted,
 		}
 
 		h.jobRequirements[job] = append(h.jobRequirements[job], req)
-
 	}
-
 }
 
 func cancelOnSignal(cancel context.CancelFunc) {
-
 	sigs := make(chan os.Signal, 1)
 
 	signal.Notify(sigs, os.Interrupt)
 
 	go func() {
-
 		<-sigs
 
 		cancel()
-
 	}()
-
 }
 
 func (h *Handler) transferFilesWorker(
@@ -336,15 +291,12 @@ func (h *Handler) transferFilesWorker(
 	wg *sync.WaitGroup,
 
 ) {
-
 	defer wg.Done()
 
 	for {
-
 		var job transferJob
 
 		select {
-
 		case job = <-jobsQueue:
 
 			// Go on
@@ -354,11 +306,9 @@ func (h *Handler) transferFilesWorker(
 			// No more files to process, exit
 
 			return
-
 		}
 
 		select {
-
 		case <-ctx.Done():
 
 			// Processing has been canceled, exit
@@ -368,7 +318,6 @@ func (h *Handler) transferFilesWorker(
 		default:
 
 			// Go on
-
 		}
 
 		var newJob *transferJob
@@ -376,9 +325,7 @@ func (h *Handler) transferFilesWorker(
 		ok, err := h.checkRequirements(job)
 
 		if ok {
-
 			switch job.key.jobType {
-
 			case jobTypeCopy:
 
 				newJob, err = h.copyFile(job)
@@ -390,61 +337,46 @@ func (h *Handler) transferFilesWorker(
 			case jobTypeDelete:
 
 				err = h.deleteFile(job)
-
 			}
-
 		} else {
-
 			// Repeat the same job if its requirements haven't yet satisfied
 
 			newJob = &job
-
 		}
 
 		if err != nil {
-
 			h.filesLeft.Add(-1)
 
 			errs <- fmt.Errorf("error with file %q: %s failed: %w", job.key.filePath, job.key.jobType, err)
 
 			continue
-
 		}
 
 		if newJob != nil {
-
 			// Enqueue file again to process it later
 
 			jobsQueue <- *newJob
 
 			continue
-
 		}
 
 		h.filesLeft.Add(-1)
 
 		tracelog.InfoLogger.Printf("File is transferred (%d left): %q", h.filesLeft.Load(), job.key.filePath)
-
 	}
-
 }
 
 func (h *Handler) checkRequirements(job transferJob) (ok bool, err error) {
-
 	for _, required := range h.jobRequirements[job.key] {
-
 		s, ok := h.fileStatuses.Load(required.filePath)
 
 		if !ok {
-
 			return false, fmt.Errorf("job has a nonexistent requirement")
-
 		}
 
 		actualStatus := s.(transferStatus)
 
 		if actualStatus == transferStatusFailed {
-
 			return false, fmt.Errorf(
 
 				"%s operation requires other file %q to be %s, but it's failed",
@@ -455,29 +387,21 @@ func (h *Handler) checkRequirements(job transferJob) (ok bool, err error) {
 
 				required.minStatus,
 			)
-
 		}
 
 		if actualStatus < required.minStatus {
-
 			return false, nil
-
 		}
-
 	}
 
 	return true, nil
-
 }
 
 func (h *Handler) copyFile(job transferJob) (newJob *transferJob, err error) {
-
 	content, err := h.source.ReadObject(job.key.filePath)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("read file from the source storage: %w", err)
-
 	}
 
 	defer utility.LoggedClose(content, "close object content read from the source storage")
@@ -485,9 +409,7 @@ func (h *Handler) copyFile(job transferJob) (newJob *transferJob, err error) {
 	err = h.target.PutObject(job.key.filePath, content)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("write file to the target storage: %w", err)
-
 	}
 
 	h.fileStatuses.Store(job.key.filePath, transferStatusCopied)
@@ -497,39 +419,28 @@ func (h *Handler) copyFile(job transferJob) (newJob *transferJob, err error) {
 	newJob = &job
 
 	return newJob, nil
-
 }
 
 func (h *Handler) waitFile(job transferJob) (newJob *transferJob, err error) {
-
 	var appeared bool
 
 	skipCheck := h.cfg.AppearanceChecks == 0
 
 	if skipCheck {
-
 		appeared = true
-
 	} else {
-
 		appeared, err = h.checkForAppearance(job.prevCheck, job.key.filePath)
 
 		if err != nil {
-
 			return nil, err
-
 		}
-
 	}
 
 	if appeared {
-
 		h.fileStatuses.Store(job.key.filePath, transferStatusAppeared)
 
 		if h.cfg.PreserveInSource {
-
 			return nil, nil
-
 		}
 
 		job.key.jobType = jobTypeDelete
@@ -537,20 +448,17 @@ func (h *Handler) waitFile(job transferJob) (newJob *transferJob, err error) {
 		newJob = &job
 
 		return newJob, nil
-
 	}
 
 	performedChecks := 1 + job.performedChecks
 
 	if performedChecks >= h.cfg.AppearanceChecks {
-
 		return nil, fmt.Errorf(
 
 			"couldn't wait for the file to appear in the target storage (%d checks performed)",
 
 			h.cfg.AppearanceChecks,
 		)
-
 	}
 
 	tracelog.WarningLogger.Printf(
@@ -569,45 +477,34 @@ func (h *Handler) waitFile(job transferJob) (newJob *transferJob, err error) {
 	newJob = &job
 
 	return newJob, nil
-
 }
 
 func (h *Handler) checkForAppearance(prevCheck time.Time, filePath string) (appeared bool, err error) {
-
 	nextCheck := prevCheck.Add(h.cfg.AppearanceChecksInterval)
 
 	waitTime := time.Until(nextCheck)
 
 	if waitTime > 0 {
-
 		time.Sleep(waitTime)
-
 	}
 
 	appeared, err = h.target.Exists(filePath)
 
 	if err != nil {
-
 		return false, fmt.Errorf("check if file exists in the target storage: %w", err)
-
 	}
 
 	return appeared, nil
-
 }
 
 func (h *Handler) deleteFile(job transferJob) error {
-
 	err := h.source.DeleteObjects([]storage.Object{storage.NewLocalObject(job.key.filePath, time.Time{}, 0)})
 
 	if err != nil {
-
 		return fmt.Errorf("delete file from the source storage: %w", err)
-
 	}
 
 	h.fileStatuses.Store(job.key.filePath, transferStatusDeleted)
 
 	return nil
-
 }

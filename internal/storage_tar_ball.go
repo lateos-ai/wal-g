@@ -37,9 +37,7 @@ type StorageTarBall struct {
 }
 
 func (tarBall *StorageTarBall) Name() string {
-
 	return tarBall.name
-
 }
 
 // SetUp creates a new tar writer and starts upload to storage.
@@ -51,19 +49,13 @@ func (tarBall *StorageTarBall) Name() string {
 // the form `part_....tar.[Compressor file extension]`.
 
 func (tarBall *StorageTarBall) SetUp(crypter crypto.Crypter, names ...string) {
-
 	if tarBall.tarWriter == nil {
-
 		if len(names) > 0 {
-
 			tarBall.name = names[0]
-
 		} else {
-
 			tarBall.name = utility.AddFileExtension(
 
 				fmt.Sprintf("part_%0.3d.tar", tarBall.partNumber), tarBall.uploader.Compression().FileExtension())
-
 		}
 
 		writeCloser := tarBall.startUpload(tarBall.name, crypter)
@@ -71,9 +63,7 @@ func (tarBall *StorageTarBall) SetUp(crypter crypto.Crypter, names ...string) {
 		tarBall.writeCloser = writeCloser
 
 		tarBall.tarWriter = tar.NewWriter(writeCloser)
-
 	}
-
 }
 
 // CloseTar closes the tar writer, flushing any unwritten data
@@ -81,45 +71,33 @@ func (tarBall *StorageTarBall) SetUp(crypter crypto.Crypter, names ...string) {
 // to the underlying writer before also closing the underlying writer.
 
 func (tarBall *StorageTarBall) CloseTar() error {
-
 	err := tarBall.tarWriter.Close()
 
 	if err != nil {
-
 		return errors.Wrap(err, "CloseTar: failed to close tar writer")
-
 	}
 
 	err = tarBall.writeCloser.Close()
 
 	if err != nil {
-
 		return errors.Wrap(err, "CloseTar: failed to close underlying writer")
-
 	}
 
 	tracelog.InfoLogger.Printf("Finished writing part %d of backup %s.\n", tarBall.partNumber, tarBall.backupName)
 
 	return nil
-
 }
 
 func (tarBall *StorageTarBall) AwaitUploads() {
-
 	tarBall.uploader.Finish()
 
 	if tarBall.uploader.Failed() {
-
 		tracelog.ErrorLogger.Fatal("Unable to complete uploads")
-
 	}
-
 }
 
 func GetBackupTarPath(backupName, fileName string) string {
-
 	return backupName + TarPartitionFolderName + fileName
-
 }
 
 // TODO : unit tests
@@ -129,7 +107,6 @@ func GetBackupTarPath(backupName, fileName string) string {
 // a compressed tar member is finished writing.
 
 func (tarBall *StorageTarBall) startUpload(name string, crypter crypto.Crypter) io.WriteCloser {
-
 	pipeReader, pipeWriter := io.Pipe()
 
 	uploader := tarBall.uploader
@@ -139,17 +116,13 @@ func (tarBall *StorageTarBall) startUpload(name string, crypter crypto.Crypter) 
 	tracelog.InfoLogger.Printf("Starting part %d of backup %s ...\n", tarBall.partNumber, tarBall.backupName)
 
 	go func() {
-
 		err := uploader.Upload(context.Background(), path, pipeReader)
 
 		if compressingError, ok := err.(CompressAndEncryptError); ok {
-
 			tracelog.ErrorLogger.Printf("could not upload '%s' due to compression error\n%+v\n", path, compressingError)
-
 		}
 
 		if err != nil {
-
 			tracelog.ErrorLogger.Printf("upload: could not upload '%s'\n", path)
 
 			tracelog.ErrorLogger.Printf("%v\n", err)
@@ -163,31 +136,24 @@ func (tarBall *StorageTarBall) startUpload(name string, crypter crypto.Crypter) 
 				"Unable to continue the backup process because of the loss of a part %d.\n",
 
 				tarBall.partNumber)
-
 		}
-
 	}()
 
 	var writerToCompress io.WriteCloser = pipeWriter
 
 	if crypter != nil {
-
 		encryptedWriter, err := crypter.Encrypt(pipeWriter)
 
 		if err != nil {
-
 			tracelog.ErrorLogger.Fatal("upload: encryption error ", err)
-
 		}
 
 		writerToCompress = &utility.CascadeWriteCloser{WriteCloser: encryptedWriter, Underlying: pipeWriter}
-
 	}
 
 	return &utility.CascadeWriteCloser{WriteCloser: uploader.Compression().NewWriter(writerToCompress),
 
 		Underlying: writerToCompress}
-
 }
 
 // Size accumulated in this tarball

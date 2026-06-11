@@ -16,37 +16,25 @@ const (
 type RestoreDescMaker struct{}
 
 func (m RestoreDescMaker) Make(restoreParameters []string, names postgres.DatabasesByNames) (postgres.RestoreDesc, error) {
-
 	restoredDatabases, err := postgres.RegexpRestoreDescMaker{}.Make(restoreParameters, names)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	for _, dbInfo := range names {
-
 		for table, tableInfo := range dbInfo.Tables {
-
 			if m.FromAoSegNamespace(table) {
-
 				restoredDatabases.Add(dbInfo.Oid, tableInfo.Relfilenode, tableInfo.Oid)
-
 			}
-
 		}
-
 	}
 
 	return restoredDatabases, nil
-
 }
 
 func (m RestoreDescMaker) FromAoSegNamespace(tableName string) bool {
-
 	return strings.HasPrefix(tableName, aoSegNamespace)
-
 }
 
 type ExtractProviderDBSpec struct {
@@ -56,9 +44,7 @@ type ExtractProviderDBSpec struct {
 }
 
 func NewExtractProviderDBSpec(restoreParameters []string) *ExtractProviderDBSpec {
-
 	return &ExtractProviderDBSpec{restoreParameters, RestoreDescMaker{}}
-
 }
 
 func (p ExtractProviderDBSpec) Get(
@@ -74,7 +60,6 @@ func (p ExtractProviderDBSpec) Get(
 	createNewIncrementalFiles bool,
 
 ) (postgres.IncrementalTarInterpreter, []internal.ReaderMaker, []internal.ReaderMaker, error) {
-
 	_, filesMeta, err := backup.GetSentinelAndFilesMetadata()
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -86,5 +71,4 @@ func (p ExtractProviderDBSpec) Get(
 	desc.FilterFilesToUnwrap(filesToUnwrap)
 
 	return ExtractProviderImpl{}.Get(backup, filesToUnwrap, skipRedundantTars, dbDataDir, createNewIncrementalFiles)
-
 }

@@ -10,11 +10,9 @@ import (
 )
 
 func TestGetBaseFilesToUnwrap_SimpleFile(t *testing.T) {
-
 	fileStates := testtools.NewBackupFileListBuilder().WithSimple().Build()
 
 	currentToUnwrap := map[string]bool{
-
 		testtools.SimplePath: true,
 	}
 
@@ -23,15 +21,12 @@ func TestGetBaseFilesToUnwrap_SimpleFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, baseToUnwrap)
-
 }
 
 func TestGetBaseFilesToUnwrap_IncrementedFile(t *testing.T) {
-
 	fileStates := testtools.NewBackupFileListBuilder().WithIncremented().Build()
 
 	currentToUnwrap := map[string]bool{
-
 		testtools.IncrementedPath: true,
 	}
 
@@ -40,15 +35,12 @@ func TestGetBaseFilesToUnwrap_IncrementedFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, currentToUnwrap, baseToUnwrap)
-
 }
 
 func TestGetBaseFilesToUnwrap_SkippedFile(t *testing.T) {
-
 	fileStates := testtools.NewBackupFileListBuilder().WithSkipped().Build()
 
 	currentToUnwrap := map[string]bool{
-
 		testtools.SkippedPath: true,
 	}
 
@@ -57,5 +49,4 @@ func TestGetBaseFilesToUnwrap_SkippedFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, currentToUnwrap, baseToUnwrap)
-
 }

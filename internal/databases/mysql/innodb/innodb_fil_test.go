@@ -9,7 +9,6 @@ import (
 )
 
 func TestFILHeader(t *testing.T) {
-
 	// 0 page of file-per-table file:
 
 	var hexFile = `
@@ -45,7 +44,6 @@ func TestFILHeader(t *testing.T) {
 	//	 space_id=11>
 
 	expected := FILHeader{
-
 		Checksum: 2093208373,
 
 		PageNumber: PageNumber(0),
@@ -64,11 +62,9 @@ func TestFILHeader(t *testing.T) {
 	}
 
 	assert.Equal(t, expected, header)
-
 }
 
 func TestFILHeader_Compressed(t *testing.T) {
-
 	// 0 page of file-per-table file:
 
 	var hexFile = `
@@ -104,7 +100,6 @@ func TestFILHeader_Compressed(t *testing.T) {
 	//  space_id=11>
 
 	expected := FILHeader{
-
 		Checksum: 1836118679,
 
 		PageNumber: PageNumber(1),
@@ -129,7 +124,6 @@ func TestFILHeader_Compressed(t *testing.T) {
 	// 0x020100053fda0035
 
 	assert.Equal(t, CompressedMeta{
-
 		Version: 0x02,
 
 		CompressionAlgo: 0x01,
@@ -142,5 +136,4 @@ func TestFILHeader_Compressed(t *testing.T) {
 	},
 
 		meta)
-
 }

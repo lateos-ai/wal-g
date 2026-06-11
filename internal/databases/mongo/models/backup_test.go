@@ -10,7 +10,6 @@ import (
 )
 
 func TestTimestampInInterval(t *testing.T) {
-
 	type args struct {
 		ts Timestamp
 
@@ -26,13 +25,10 @@ func TestTimestampInInterval(t *testing.T) {
 
 		want bool
 	}{
-
 		{
-
 			name: "ts_to_the_left",
 
 			args: args{
-
 				ts: Timestamp{TS: 100, Inc: 0},
 
 				begin: Timestamp{TS: 150, Inc: 0},
@@ -44,11 +40,9 @@ func TestTimestampInInterval(t *testing.T) {
 		},
 
 		{
-
 			name: "ts_to_the_right",
 
 			args: args{
-
 				ts: Timestamp{TS: 250, Inc: 0},
 
 				begin: Timestamp{TS: 150, Inc: 0},
@@ -60,11 +54,9 @@ func TestTimestampInInterval(t *testing.T) {
 		},
 
 		{
-
 			name: "ts_middle",
 
 			args: args{
-
 				ts: Timestamp{TS: 170, Inc: 0},
 
 				begin: Timestamp{TS: 150, Inc: 0},
@@ -76,11 +68,9 @@ func TestTimestampInInterval(t *testing.T) {
 		},
 
 		{
-
 			name: "ts_at_begin",
 
 			args: args{
-
 				ts: Timestamp{TS: 150, Inc: 0},
 
 				begin: Timestamp{TS: 150, Inc: 0},
@@ -92,11 +82,9 @@ func TestTimestampInInterval(t *testing.T) {
 		},
 
 		{
-
 			name: "ts_at_end",
 
 			args: args{
-
 				ts: Timestamp{TS: 200, Inc: 10},
 
 				begin: Timestamp{TS: 150, Inc: 0},
@@ -109,21 +97,15 @@ func TestTimestampInInterval(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got := TimestampInInterval(tt.args.ts, tt.args.begin, tt.args.end)
 
 			assert.Equal(t, got, tt.want)
-
 		})
-
 	}
-
 }
 
 func TestArchInBackup(t *testing.T) {
-
 	type args struct {
 		arch Archive
 
@@ -137,19 +119,14 @@ func TestArchInBackup(t *testing.T) {
 
 		want bool
 	}{
-
 		{
-
 			name: "to_the_left",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 100}, End: Timestamp{TS: 200}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -161,17 +138,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "to_the_right",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 500}, End: Timestamp{TS: 600}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -183,17 +156,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "all_in_backup",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 350}, End: Timestamp{TS: 370}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -205,17 +174,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "overlaps_backup_to_the_left",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 250}, End: Timestamp{TS: 310}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -227,17 +192,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "overlaps_backup_to_the_right",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 390}, End: Timestamp{TS: 450}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -249,17 +210,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "overlaps_all_backup",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 150}, End: Timestamp{TS: 500}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -271,17 +228,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "same_as_backup",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 300}, End: Timestamp{TS: 400}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -293,17 +246,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "same_start_ts,_end_arch_ts_bigger",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 300}, End: Timestamp{TS: 500}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -315,17 +264,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "same_start_ts,_end_arch_ts_smaller",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 300}, End: Timestamp{TS: 350}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -337,17 +282,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "same_end_ts,_start_arch_ts_bigger",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 350}, End: Timestamp{TS: 400}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -359,17 +300,13 @@ func TestArchInBackup(t *testing.T) {
 		},
 
 		{
-
 			name: "same_end_ts,_start_arch_ts_smaller",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 250}, End: Timestamp{TS: 400}},
 
 				backup: Backup{
-
 					MongoMeta: MongoMeta{
-
 						Before: NodeMeta{LastMajTS: Timestamp{TS: 300}},
 
 						After: NodeMeta{LastMajTS: Timestamp{TS: 400}},
@@ -382,22 +319,16 @@ func TestArchInBackup(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got := ArchInBackup(tt.args.arch, &tt.args.backup, nil)
 
 			assert.Equal(t, got, tt.want)
-
 		})
-
 	}
-
 }
 
 var (
 	Backups = []*Backup{
-
 		{MongoMeta: MongoMeta{Before: NodeMeta{LastMajTS: Timestamp{TS: 800}}, After: NodeMeta{LastMajTS: Timestamp{TS: 900}}}},
 
 		{MongoMeta: MongoMeta{Before: NodeMeta{LastMajTS: Timestamp{TS: 600}}, After: NodeMeta{LastMajTS: Timestamp{TS: 700}}}},
@@ -409,7 +340,6 @@ var (
 )
 
 func TestFirstOverlappingBackupForArch(t *testing.T) {
-
 	type args struct {
 		arch Archive
 
@@ -423,13 +353,10 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 
 		want *Backup
 	}{
-
 		{
-
 			name: "to_the_left",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 100}, End: Timestamp{TS: 200}},
 
 				backups: Backups,
@@ -439,11 +366,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "to_the_right",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 950}, End: Timestamp{TS: 1000}},
 
 				backups: Backups,
@@ -453,11 +378,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "between_backups",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 550}, End: Timestamp{TS: 590}},
 
 				backups: Backups,
@@ -467,11 +390,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "in_newest_backup",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 800}, End: Timestamp{TS: 850}},
 
 				backups: Backups,
@@ -481,11 +402,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "in_oldest_backup",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 350}, End: Timestamp{TS: 350}},
 
 				backups: Backups,
@@ -495,11 +414,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "overlaps_all_backups",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 500}, End: Timestamp{TS: 600}},
 
 				backups: Backups,
@@ -509,11 +426,9 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 		},
 
 		{
-
 			name: "overlaps_two_backups",
 
 			args: args{
-
 				arch: Archive{Start: Timestamp{TS: 50}, End: Timestamp{TS: 1000}},
 
 				backups: Backups,
@@ -524,23 +439,16 @@ func TestFirstOverlappingBackupForArch(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			got := FirstOverlappingBackupForArch(tt.args.arch, tt.args.backups, nil)
 
 			assert.Equal(t, got, tt.want)
-
 		})
-
 	}
-
 }
 
 func TestBackup_PrintableFields(t *testing.T) {
-
 	b := Backup{
-
 		BackupName: "my first backup",
 
 		BackupType: "type1",
@@ -552,7 +460,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		Hostname: "my-favourite-host",
 
 		MongoMeta: MongoMeta{
-
 			Version: "123",
 
 			Before: NodeMeta{LastMajTS: Timestamp{TS: 800}},
@@ -572,9 +479,7 @@ func TestBackup_PrintableFields(t *testing.T) {
 	got := b.PrintableFields()
 
 	want := []printlist.TableField{
-
 		{
-
 			Name: "name",
 
 			PrettyName: "Name",
@@ -585,7 +490,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "type",
 
 			PrettyName: "Type",
@@ -596,7 +500,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "version",
 
 			PrettyName: "Version",
@@ -607,7 +510,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -616,7 +518,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "finish_time",
 
 			PrettyName: "Finish time",
@@ -625,7 +526,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "hostname",
 
 			PrettyName: "Hostname",
@@ -636,7 +536,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_ts",
 
 			PrettyName: "Start Ts",
@@ -647,7 +546,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "end_ts",
 
 			PrettyName: "End Ts",
@@ -658,7 +556,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "uncompressed_size",
 
 			PrettyName: "Uncompressed size",
@@ -669,7 +566,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "compressed_size",
 
 			PrettyName: "Compressed size",
@@ -680,7 +576,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "permanent",
 
 			PrettyName: "Permanent",
@@ -691,7 +586,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "user_data",
 
 			PrettyName: "User data",
@@ -703,5 +597,4 @@ func TestBackup_PrintableFields(t *testing.T) {
 	}
 
 	assert.Equal(t, want, got)
-
 }

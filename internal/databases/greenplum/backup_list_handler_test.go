@@ -19,7 +19,6 @@ import (
 )
 
 func TestBackupListFlagsFindsBackups(t *testing.T) {
-
 	folder := CreateMockStorageFolder(t)
 
 	backups, err := greenplum.ListStorageBackups(folder)
@@ -27,11 +26,9 @@ func TestBackupListFlagsFindsBackups(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.True(t, len(backups) > 0)
-
 }
 
 func TestBackupListCorrectDetailedJsonOutput(t *testing.T) {
-
 	folder := CreateMockStorageFolder(t)
 
 	backups, err := greenplum.ListStorageBackups(folder)
@@ -47,9 +44,7 @@ func TestBackupListCorrectDetailedJsonOutput(t *testing.T) {
 	printableEntities := make([]printlist.Entity, len(details))
 
 	for i := range details {
-
 		printableEntities[i] = &details[i]
-
 	}
 
 	err = printlist.List(printableEntities, buf, false, true)
@@ -61,23 +56,18 @@ func TestBackupListCorrectDetailedJsonOutput(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, details, actual)
-
 }
 
 func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
-
 	const expectedString = `[
 
     {
-
         "Name": "backup_20221212T151258Z",
 
         "restore_point": "backup_20221212T151258Z",
 
         "user_data": {
-
             "backup_id": "some_id1"
-
         },
 
         "start_time": "2022-12-12T12:12:58.287495Z",
@@ -99,19 +89,15 @@ func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
         "compressed_size": 91217782,
 
         "data_catalog_size": 20161814071
-
     },
 
     {
-
         "Name": "backup_20221213T011727Z_D_20221212T151258Z",
 
         "restore_point": "backup_20221213T011727Z_D_20221212T151258Z",
 
         "user_data": {
-
             "backup_id": "some_id2"
-
         },
 
         "start_time": "2022-12-12T22:17:27.196163Z",
@@ -139,7 +125,6 @@ func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
         "increment_full_name": "backup_20221212T151258Z",
 
         "increment_count": 1
-
     }
 
 ]
@@ -159,9 +144,7 @@ func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
 	printableEntities := make([]printlist.Entity, len(details))
 
 	for i := range backups {
-
 		printableEntities[i] = &details[i]
-
 	}
 
 	err = printlist.List(printableEntities, buf, true, true)
@@ -177,11 +160,9 @@ func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, details, unmarshaledDetails)
-
 }
 
 func TestHandleDetailedBackupListTableOutput_NonJSON(t *testing.T) {
-
 	const (
 		nonPrettyOutput = `
 
@@ -213,9 +194,7 @@ backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T15
 	rescueStdout := os.Stdout
 
 	t.Cleanup(func() {
-
 		os.Stdout = rescueStdout
-
 	})
 
 	testCases := []struct {
@@ -225,9 +204,7 @@ backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T15
 
 		expectedOutput string
 	}{
-
 		{
-
 			name: "non-pretty",
 
 			pretty: false,
@@ -236,7 +213,6 @@ backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T15
 		},
 
 		{
-
 			name: "pretty",
 
 			pretty: true,
@@ -246,9 +222,7 @@ backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T15
 	}
 
 	for _, tc := range testCases {
-
 		t.Run(tc.name, func(t *testing.T) {
-
 			folder := CreateMockStorageFolder(t)
 
 			r, w, err := os.Pipe()
@@ -268,15 +242,11 @@ backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T15
 			stringOutput := string(out)
 
 			assert.Equal(t, strings.TrimSpace(tc.expectedOutput), strings.TrimSpace(stringOutput))
-
 		})
-
 	}
-
 }
 
 func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
-
 	// NOTE: non-pretty json output is just a non-indented pretty json
 
 	const prettyJSONOutput = `
@@ -284,15 +254,12 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 [
 
     {
-
         "Name": "backup_20221212T151258Z",
 
         "restore_point": "backup_20221212T151258Z",
 
         "user_data": {
-
             "backup_id": "some_id1"
-
         },
 
         "start_time": "2022-12-12T12:12:58.287495Z",
@@ -314,19 +281,15 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
         "compressed_size": 91217782,
 
         "data_catalog_size": 20161814071
-
     },
 
     {
-
         "Name": "backup_20221213T011727Z_D_20221212T151258Z",
 
         "restore_point": "backup_20221213T011727Z_D_20221212T151258Z",
 
         "user_data": {
-
             "backup_id": "some_id2"
-
         },
 
         "start_time": "2022-12-12T22:17:27.196163Z",
@@ -354,7 +317,6 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
         "increment_full_name": "backup_20221212T151258Z",
 
         "increment_count": 1
-
     }
 
 ]
@@ -364,9 +326,7 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 	rescueStdout := os.Stdout
 
 	t.Cleanup(func() {
-
 		os.Stdout = rescueStdout
-
 	})
 
 	testCases := []struct {
@@ -374,16 +334,13 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 
 		pretty bool
 	}{
-
 		{
-
 			name: "non-pretty",
 
 			pretty: false,
 		},
 
 		{
-
 			name: "pretty",
 
 			pretty: true,
@@ -391,9 +348,7 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		t.Run(tc.name, func(t *testing.T) {
-
 			folder := CreateMockStorageFolder(t)
 
 			r, w, err := os.Pipe()
@@ -423,32 +378,24 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 			require.NoError(t, err)
 
 			assert.Equal(t, details, unmarshaledDetails)
-
 		})
-
 	}
-
 }
 
 func CreateMockStorageFolder(t *testing.T) storage.Folder {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	baseBackupFolder := folder.GetSubFolder(utility.BaseBackupPath)
 
 	backupNames := map[string]interface{}{
-
 		"backup_20221212T151258Z": map[string]interface{}{
-
 			"restore_point": "backup_20221212T151258Z",
 
 			"user_data": map[string]interface{}{
-
 				"backup_id": "some_id1",
 			},
 
 			"segments": []map[string]interface{}{
-
 				{"db_id": 1, "content_id": -1, "role": "p", "port": 5432, "hostname": "host.name", "data_dir": "/var/lib/greenplum/data1/master/gpseg-1", "backup_id": "53230431-14e0-4d51-9d66-245a48acad7d", "backup_name": "base_000000020000000600000011", "restore_point_lsn": "6/48024E00"},
 
 				{"db_id": 4, "content_id": 0, "role": "p", "port": 6000, "hostname": "host.name", "data_dir": "/var/lib/greenplum/data1/primary/gpseg0", "backup_id": "baca3358-09c2-4d4b-8ed2-2286c8dbbfbc", "backup_name": "base_00000002000000080000002D", "restore_point_lsn": "8/B816EBA0"},
@@ -478,16 +425,13 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 		},
 
 		"backup_20221213T011727Z_D_20221212T151258Z": map[string]interface{}{
-
 			"restore_point": "backup_20221213T011727Z_D_20221212T151258Z",
 
 			"user_data": map[string]interface{}{
-
 				"backup_id": "some_id2",
 			},
 
 			"segments": []map[string]interface{}{
-
 				{"db_id": 1, "content_id": -1, "role": "p", "port": 5432, "hostname": "host.name", "data_dir": "/var/lib/greenplum/data1/master/gpseg-1", "backup_id": "seg_backup_id1", "backup_name": "base_000000020000000600000011", "restore_point_lsn": "6/48024E00"},
 
 				{"db_id": 4, "content_id": 0, "role": "p", "port": 6000, "hostname": "host.name", "data_dir": "/var/lib/greenplum/data1/primary/gpseg0", "backup_id": "seg_backup_id2", "backup_name": "base_00000002000000080000002D", "restore_point_lsn": "8/B816EBA0"},
@@ -524,9 +468,7 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 	}
 
 	restorePoints := map[string]interface{}{
-
 		"point1_restore_point.json": map[string]interface{}{
-
 			"name": "point1",
 
 			"start_time": "2022-12-13T09:00:01.596568Z",
@@ -540,7 +482,6 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 			"gp_flavor": "greenplum",
 
 			"lsn_by_segment": map[string]interface{}{
-
 				"0": "A/B00C8318",
 
 				"1": "A/B00C3300",
@@ -551,7 +492,6 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 	}
 
 	for backupName := range backupNames {
-
 		bytesMetadata, err := json.Marshal(backupNames[backupName])
 
 		assert.NoError(t, err)
@@ -561,11 +501,9 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 		err = baseBackupFolder.PutObject(backupName+utility.SentinelSuffix, strings.NewReader(metadataString))
 
 		assert.NoError(t, err)
-
 	}
 
 	for pointName := range restorePoints {
-
 		bytesMetadata, err := json.Marshal(restorePoints[pointName])
 
 		assert.NoError(t, err)
@@ -575,9 +513,7 @@ func CreateMockStorageFolder(t *testing.T) storage.Folder {
 		err = baseBackupFolder.PutObject(pointName+greenplum.RestorePointSuffix, strings.NewReader(metadataString))
 
 		assert.NoError(t, err)
-
 	}
 
 	return folder
-
 }

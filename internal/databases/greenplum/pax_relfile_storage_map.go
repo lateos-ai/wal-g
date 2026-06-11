@@ -24,7 +24,6 @@ import (
 // the function short-circuits to an empty map without contacting the catalog.
 
 func NewPaxRelFileStorageMap(queryRunner *GpQueryRunner) (pax.RelFileStorageMap, error) {
-
 	// No request ctx plumbed through this entry point yet; revisit when callers thread ctx.
 
 	ctx := context.Background()
@@ -32,63 +31,49 @@ func NewPaxRelFileStorageMap(queryRunner *GpQueryRunner) (pax.RelFileStorageMap,
 	versionStr, err := queryRunner.GetGreenplumVersion(ctx)
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "failed to query greenplum version")
-
 	}
 
 	version, err := parseGreenplumVersion(versionStr)
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "failed to parse greenplum version")
-
 	}
 
 	if version.Flavor != Cloudberry {
-
 		tracelog.DebugLogger.Printf("Skipping PAX storage map: flavor=%s does not support PAX", version.Flavor)
 
 		return pax.RelFileStorageMap{}, nil
-
 	}
 
 	databases, err := queryRunner.GetDatabaseInfos(ctx)
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "failed to get database names")
-
 	}
 
 	result := make(pax.RelFileStorageMap)
 
 	for _, db := range databases {
-
 		dbName := db.Name
 
 		databaseOption := func(c *pgx.ConnConfig) error {
-
 			c.Database = dbName
 
 			return nil
-
 		}
 
 		dbConn, err := postgres.Connect(ctx, databaseOption)
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("Failed to connect to database %s: %v", dbName, err)
 
 			continue
-
 		}
 
 		entries, err := pax.FetchStorageMetadata(ctx, dbConn, db)
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("Failed to fetch PAX storage metadata for %s: %v", dbName, err)
 
 			closeErr := dbConn.Close(ctx)
@@ -96,23 +81,18 @@ func NewPaxRelFileStorageMap(queryRunner *GpQueryRunner) (pax.RelFileStorageMap,
 			tracelog.WarningLogger.PrintOnError(closeErr)
 
 			continue
-
 		}
 
 		tracelog.InfoLogger.Printf("Loaded PAX metadata for %d files in database %s", len(entries), dbName)
 
 		for k, v := range entries {
-
 			result[k] = v
-
 		}
 
 		closeErr := dbConn.Close(ctx)
 
 		tracelog.WarningLogger.PrintOnError(closeErr)
-
 	}
 
 	return result, nil
-
 }

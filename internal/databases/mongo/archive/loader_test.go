@@ -23,7 +23,6 @@ import (
 // s3 library enables caches when stream content can be cast to io.ReaderAt and io.ReadSeeker interfaces
 
 func TestStorageUploader_UploadOplogArchive_ProperInterfaces(t *testing.T) {
-
 	mockCtl := gomock.NewController(t)
 
 	defer mockCtl.Finish()
@@ -31,21 +30,15 @@ func TestStorageUploader_UploadOplogArchive_ProperInterfaces(t *testing.T) {
 	storageProv := mocks.NewMockFolder(mockCtl)
 
 	storageProv.EXPECT().PutObjectWithContext(gomock.Any(), gomock.Any(), gomock.Any()).Times(1).DoAndReturn(func(_ context.Context, _ string, content io.Reader) error {
-
 		if _, ok := content.(io.ReaderAt); !ok {
-
 			t.Errorf("can not cast PutObject content to io.ReaderAt")
-
 		}
 
 		if _, ok := content.(io.ReadSeeker); !ok {
-
 			t.Errorf("can not cast PutObject content to io.ReadSeeker")
-
 		}
 
 		return nil
-
 	})
 
 	uploaderProv := internal.NewRegularUploader(compression.Compressors[lz4.AlgorithmName], storageProv)
@@ -55,7 +48,6 @@ func TestStorageUploader_UploadOplogArchive_ProperInterfaces(t *testing.T) {
 	r, w := io.Pipe()
 
 	go func() {
-
 		n, err := w.Write([]byte("test_data_stream"))
 
 		assert.Equal(t, 16, n)
@@ -63,7 +55,6 @@ func TestStorageUploader_UploadOplogArchive_ProperInterfaces(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.NoError(t, w.Close())
-
 	}()
 
 	firstTS := models.Timestamp{TS: 100, Inc: 1}
@@ -71,15 +62,11 @@ func TestStorageUploader_UploadOplogArchive_ProperInterfaces(t *testing.T) {
 	lastTS := models.Timestamp{TS: 120, Inc: 1}
 
 	if err := su.UploadOplogArchive(t.Context(), r, firstTS, lastTS); err != nil {
-
 		t.Errorf("UploadOplogArchive() error = %v", err)
-
 	}
-
 }
 
 func TestStorageDownloaderListOplogArchivesSegmentFallsBackToListFolder(t *testing.T) {
-
 	mockCtl := gomock.NewController(t)
 
 	defer mockCtl.Finish()
@@ -108,19 +95,15 @@ func TestStorageDownloaderListOplogArchivesSegmentFallsBackToListFolder(t *testi
 	)
 
 	assert.NotPanics(t, func() {
-
 		got, err = downloader.ListOplogArchivesSegment(nil, nil)
-
 	})
 
 	require.NoError(t, err)
 
 	assert.Equal(t, []models.Archive{arch}, got)
-
 }
 
 func TestStorageDownloaderLastKnownArchiveTSUsesSegmentResults(t *testing.T) {
-
 	mockCtl := gomock.NewController(t)
 
 	defer mockCtl.Finish()
@@ -134,11 +117,9 @@ func TestStorageDownloaderLastKnownArchiveTSUsesSegmentResults(t *testing.T) {
 	folder.EXPECT().ListFolderSegment(gomock.Any(), gomock.Any()).Times(1).DoAndReturn(
 
 		func(_, _ *string) ([]storage.Object, []storage.Folder, error) {
-
 			segmentCalls++
 
 			return []storage.Object{storage.NewLocalObject(arch.Filename(), time.Time{}, 0)}, nil, nil
-
 		},
 	)
 
@@ -155,11 +136,9 @@ func TestStorageDownloaderLastKnownArchiveTSUsesSegmentResults(t *testing.T) {
 	assert.Equal(t, arch.End, got)
 
 	assert.Equal(t, 1, segmentCalls)
-
 }
 
 func mustArchive(t *testing.T, start, end models.Timestamp) models.Archive {
-
 	t.Helper()
 
 	arch, err := models.NewArchive(start, end, "lz4", models.ArchiveTypeOplog)
@@ -167,5 +146,4 @@ func mustArchive(t *testing.T, start, end models.Timestamp) models.Archive {
 	require.NoError(t, err)
 
 	return arch
-
 }

@@ -20,7 +20,6 @@ type SentinelDto struct {
 }
 
 func HandleWalFetch(folder storage.Folder, backupName string, dstDir string, baseReader internal.StorageFolderReader) {
-
 	reader := baseReader.SubFolder(utility.WalPath)
 
 	backup, err := internal.GetBackupByName(internal.LatestString, utility.BaseBackupPath, folder)
@@ -40,15 +39,11 @@ func HandleWalFetch(folder storage.Folder, backupName string, dstDir string, bas
 	fmt.Println(walFiles)
 
 	slices.SortFunc(walFiles, func(a, b storage.Object) int {
-
 		return a.GetLastModified().Compare(b.GetLastModified())
-
 	})
 
 	for _, walFile := range walFiles {
-
 		if lastBackupSentinel.StartLocalTime.Before(walFile.GetLastModified()) {
-
 			walName := strings.TrimSuffix(walFile.GetName(), filepath.Ext(walFile.GetName()))
 
 			walPath := path.Join(dstDir, walName)
@@ -58,9 +53,6 @@ func HandleWalFetch(folder storage.Folder, backupName string, dstDir string, bas
 			err = internal.DownloadFileTo(reader, walName, walPath)
 
 			tracelog.ErrorLogger.FatalfOnError("Failed to download wal file: %v", err)
-
 		}
-
 	}
-
 }

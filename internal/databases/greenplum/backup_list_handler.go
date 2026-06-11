@@ -15,9 +15,7 @@ import (
 )
 
 func NewBackupDetail(backup Backup) BackupDetail {
-
 	return BackupDetail{
-
 		Name: backup.Name,
 
 		RestorePoint: backup.SentinelDto.RestorePoint,
@@ -52,7 +50,6 @@ func NewBackupDetail(backup Backup) BackupDetail {
 
 		IncrementCount: backup.SentinelDto.IncrementCount,
 	}
-
 }
 
 type BackupDetail struct {
@@ -92,13 +89,10 @@ type BackupDetail struct {
 }
 
 func (bd *BackupDetail) PrintableFields() []printlist.TableField {
-
 	restorePoint := "-"
 
 	if bd.RestorePoint != nil {
-
 		restorePoint = *bd.RestorePoint
-
 	}
 
 	prettyStartTime := internal.PrettyFormatTime(bd.StartTime)
@@ -106,9 +100,7 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 	prettyFinishTime := internal.PrettyFormatTime(bd.FinishTime)
 
 	return []printlist.TableField{
-
 		{
-
 			Name: "name",
 
 			PrettyName: "Name",
@@ -117,7 +109,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "restore_point",
 
 			PrettyName: "Restore point",
@@ -126,7 +117,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -137,7 +127,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "finish_time",
 
 			PrettyName: "Finish time",
@@ -148,7 +137,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "hostname",
 
 			PrettyName: "Hostname",
@@ -157,7 +145,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "gp_version",
 
 			PrettyName: "GP version",
@@ -166,7 +153,6 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 		},
 
 		{
-
 			Name: "is_permanent",
 
 			PrettyName: "Permanent",
@@ -174,71 +160,53 @@ func (bd *BackupDetail) PrintableFields() []printlist.TableField {
 			Value: fmt.Sprintf("%v", bd.IsPermanent),
 		},
 	}
-
 }
 
 // ListStorageBackups returns the list of storage backups sorted by finish time (in ascending order)
 
 func ListStorageBackups(folder storage.Folder) ([]Backup, error) {
-
 	backupObjects, err := internal.GetBackups(folder.GetSubFolder(utility.BaseBackupPath))
 
 	if err != nil {
-
 		return nil, fmt.Errorf("failed to fetch list of backups in storage: %w", err)
-
 	}
 
 	backups := make([]Backup, 0, len(backupObjects))
 
 	for _, b := range backupObjects {
-
 		backup, err := NewBackupInStorage(folder, b.BackupName, b.StorageName)
 
 		if err != nil {
-
 			return nil, err
-
 		}
 
 		_, err = backup.GetSentinel()
 
 		if err != nil {
-
 			return nil, fmt.Errorf("failed to load sentinel for backup %s: %w", b.BackupName, err)
-
 		}
 
 		backups = append(backups, backup)
-
 	}
 
 	slices.SortFunc(backups, func(a, b Backup) int {
-
 		return a.SentinelDto.FinishTime.Compare(b.SentinelDto.FinishTime)
-
 	})
 
 	return backups, nil
-
 }
 
 func MakeBackupDetails(backups []Backup) []BackupDetail {
-
 	details := make([]BackupDetail, 0)
 
 	for i := range backups {
-
 		details = append(details, NewBackupDetail(backups[i]))
-
 	}
 
 	return details
-
 }
 
 func HandleDetailedBackupList(folder storage.Folder, pretty, json bool) {
-
 	backups, err := ListStorageBackups(folder)
 
 	err = internal.FilterOutNoBackupFoundError(err, json)
@@ -250,13 +218,10 @@ func HandleDetailedBackupList(folder storage.Folder, pretty, json bool) {
 	printableEntities := make([]printlist.Entity, len(backupDetails))
 
 	for i := range backups {
-
 		printableEntities[i] = &backupDetails[i]
-
 	}
 
 	err = printlist.List(printableEntities, os.Stdout, pretty, json)
 
 	tracelog.ErrorLogger.FatalfOnError("Print backups: %v", err)
-
 }

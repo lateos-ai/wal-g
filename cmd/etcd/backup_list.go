@@ -1,22 +1,29 @@
 package etcd
 
 import (
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const backupListShortDescription = "Prints available backups"
 
 // backupListCmd represents the backupList command
+
 var backupListCmd = &cobra.Command{
-	Use:   "backup-list",
+	Use: "backup-list",
+
 	Short: backupListShortDescription,
-	Args:  cobra.NoArgs,
+
+	Args: cobra.NoArgs,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		storage, err := internal.ConfigureStorage()
+
 		tracelog.ErrorLogger.FatalOnError(err)
+
 		internal.HandleDefaultBackupList(storage.RootFolder().GetSubFolder(utility.BaseBackupPath), false, false)
 	},
 }

@@ -30,17 +30,13 @@ const (
 var waleGpgKey string
 
 func init() {
-
 	waleGpgKeyBytes, err := os.ReadFile(waleGpgKeyFilePath)
 
 	if err != nil {
-
 		panic(err)
-
 	}
 
 	waleGpgKey = string(waleGpgKeyBytes)
-
 }
 
 // This test extracts WAL-E-encrypted WAL, decrypts it by external
@@ -52,7 +48,6 @@ func init() {
 // "walg-server-test" installed.
 
 func TestDecryptWALElzo(t *testing.T) {
-
 	crypter := openpgp.CrypterFromKey(waleGpgKey, noPassphrase)
 
 	f, err := os.Open(waleWALfilename)
@@ -100,15 +95,11 @@ func TestDecryptWALElzo(t *testing.T) {
 	_, err = command.Output()
 
 	if err != nil {
-
 		t.Fatal(err)
-
 	}*/
-
 }
 
 func installTestKeyToExternalGPG(t *testing.T) *exec.Cmd {
-
 	command := exec.Command(crypto.GpgBin, "--import")
 
 	command.Stdin = strings.NewReader(waleGpgKey)
@@ -118,7 +109,6 @@ func installTestKeyToExternalGPG(t *testing.T) *exec.Cmd {
 	assert.NoError(t, err)
 
 	return command
-
 }
 
 // This test encrypts test data by GPG installed into current
@@ -138,7 +128,6 @@ func installTestKeyToExternalGPG(t *testing.T) *exec.Cmd {
 // Test will leave gpg key "walg-server-test" installed.
 
 func TestOpenGPGandExternalGPGCompatibility(t *testing.T) {
-
 	installTestKeyToExternalGPG(t)
 
 	ec := &ExternalGPGCrypter{}
@@ -148,7 +137,6 @@ func TestOpenGPGandExternalGPGCompatibility(t *testing.T) {
 	assert.NotNilf(t, c, "OpenGPG crypter is unable to initialize")
 
 	for i := uint(0); i < 16; i++ {
-
 		tokenSize := 512 << i
 
 		token := make([]byte, tokenSize)
@@ -168,30 +156,24 @@ func TestOpenGPGandExternalGPGCompatibility(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, token, decrypted, "OpenGPG could not decrypt GPG produced result for chumk of size ", tokenSize)
-
 	}
-
 }
 
 type ExternalGPGCrypter struct {
 }
 
 func (c *ExternalGPGCrypter) Encrypt(reader io.Reader) ([]byte, error) {
-
 	cmd := exec.Command("gpg", "-e", "-z", "0", "-r", gpgKeyID, "--trust-model", "always")
 
 	cmd.Stdin = reader
 
 	return cmd.Output()
-
 }
 
 func (c *ExternalGPGCrypter) Decrypt(reader io.Reader) ([]byte, error) {
-
 	cmd := exec.Command("gpg", "-d", "-q", "--batch")
 
 	cmd.Stdin = reader
 
 	return cmd.Output()
-
 }

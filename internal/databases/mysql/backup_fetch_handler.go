@@ -22,7 +22,6 @@ func HandleBackupFetch(folder storage.Folder,
 	inplace bool,
 
 ) {
-
 	backup, err := targetBackupSelector.Select(folder)
 
 	tracelog.ErrorLogger.FatalfOnError("Failed to get backup: %v", err)
@@ -36,21 +35,14 @@ func HandleBackupFetch(folder storage.Folder,
 	// we should ba able to read & restore any backup we ever created:
 
 	if sentinel.Tool == WalgXtrabackupTool {
-
 		internal.HandleBackupFetch(folder, targetBackupSelector, GetXtrabackupFetcher(restoreCmd, prepareCmd, useXbtoolExtract, inplace))
-
 	} else {
-
 		internal.HandleBackupFetch(folder, targetBackupSelector, internal.GetBackupToCommandFetcher(restoreCmd))
 
 		if prepareCmd != nil {
-
 			err = prepareCmd.Run()
 
 			tracelog.ErrorLogger.FatalfOnError("failed to prepare fetched backup: %v", err)
-
 		}
-
 	}
-
 }

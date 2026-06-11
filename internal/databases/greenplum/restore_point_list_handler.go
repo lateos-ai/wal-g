@@ -14,13 +14,10 @@ import (
 // TODO: unit tests
 
 func HandleRestorePointList(folder storage.Folder, pretty, json bool) {
-
 	restorePoints, err := GetRestorePoints(folder)
 
 	if _, ok := err.(NoRestorePointsFoundError); ok {
-
 		err = nil
-
 	}
 
 	tracelog.ErrorLogger.FatalfOnError("Get restore points from folder: %v", err)
@@ -30,9 +27,7 @@ func HandleRestorePointList(folder storage.Folder, pretty, json bool) {
 	backupTimes := make([]internal.BackupTime, 0)
 
 	for _, rpt := range restorePoints {
-
 		backupTimes = append(backupTimes, internal.BackupTime{
-
 			BackupName: rpt.Name,
 
 			Time: rpt.Time,
@@ -41,7 +36,6 @@ func HandleRestorePointList(folder storage.Folder, pretty, json bool) {
 
 			StorageName: rpt.StorageName,
 		})
-
 	}
 
 	internal.SortBackupTimeSlices(backupTimes)
@@ -49,13 +43,10 @@ func HandleRestorePointList(folder storage.Folder, pretty, json bool) {
 	printableEntities := make([]printlist.Entity, len(backupTimes))
 
 	for i := range backupTimes {
-
 		printableEntities[i] = backupTimes[i]
-
 	}
 
 	err = printlist.List(printableEntities, os.Stdout, pretty, json)
 
 	tracelog.ErrorLogger.FatalfOnError("Print restore points: %v", err)
-
 }

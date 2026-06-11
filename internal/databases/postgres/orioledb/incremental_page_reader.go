@@ -50,15 +50,11 @@ type incrementalPageReader struct {
 }
 
 func SetDatabasePageSize(pageSize uint64) {
-
 	DatabasePageSize = int64(pageSize)
-
 }
 
 func (pageReader *incrementalPageReader) Read(p []byte) (n int, err error) {
-
 	for {
-
 		copied := copy(p, pageReader.Next)
 
 		p = p[copied:]
@@ -68,57 +64,40 @@ func (pageReader *incrementalPageReader) Read(p []byte) (n int, err error) {
 		n += copied
 
 		if len(p) == 0 {
-
 			return n, nil
-
 		}
 
 		moreData, err := pageReader.DrainMoreData()
 
 		if err != nil {
-
 			return n, err
-
 		}
 
 		if !moreData {
-
 			return n, io.EOF
-
 		}
-
 	}
-
 }
 
 func (pageReader *incrementalPageReader) DrainMoreData() (succeed bool, err error) {
-
 	if len(pageReader.Blocks) == 0 {
-
 		return false, nil
-
 	}
 
 	err = pageReader.AdvanceFileReader()
 
 	if err != nil {
-
 		return false, err
-
 	}
 
 	return true, nil
-
 }
 
 func (pageReader *incrementalPageReader) AdvanceFileReader() error {
-
 	pageSize := DatabasePageSize
 
 	if pageReader.Compressed {
-
 		pageSize = CompressedPageSize
-
 	}
 
 	pageBytes := make([]byte, pageSize)
@@ -134,29 +113,22 @@ func (pageReader *incrementalPageReader) AdvanceFileReader() error {
 	_, err := pageReader.PagedFile.Seek(offset, io.SeekStart)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	_, err = io.ReadFull(pageReader.PagedFile, pageBytes)
 
 	if err == nil {
-
 		pageReader.Next = pageBytes
-
 	}
 
 	return err
-
 }
 
 // Close incrementalPageReader
 
 func (pageReader *incrementalPageReader) Close() error {
-
 	return pageReader.PagedFile.Close()
-
 }
 
 // TODO : unit tests
@@ -164,7 +136,6 @@ func (pageReader *incrementalPageReader) Close() error {
 // TODO : "initialize" is rather meaningless name, maybe this func should be decomposed
 
 func (pageReader *incrementalPageReader) initialize(deltaBitmap *roaring.Bitmap) (size int64, err error) {
-
 	var headerBuffer bytes.Buffer
 
 	headerBuffer.Write(IncrementFileHeader)
@@ -178,9 +149,7 @@ func (pageReader *incrementalPageReader) initialize(deltaBitmap *roaring.Bitmap)
 	pageSize := DatabasePageSize
 
 	if pageReader.Compressed {
-
 		pageSize = CompressedPageSize
-
 	}
 
 	headerBuffer.Write(utility.ToBytes(uint16(pageSize)))
@@ -188,19 +157,13 @@ func (pageReader *incrementalPageReader) initialize(deltaBitmap *roaring.Bitmap)
 	pageReader.Blocks = make([]uint32, 0, fileSize/pageSize)
 
 	if deltaBitmap == nil {
-
 		err := pageReader.FullScanInitialize()
 
 		if err != nil {
-
 			return 0, err
-
 		}
-
 	} else {
-
 		pageReader.DeltaBitmapInitialize(deltaBitmap)
-
 	}
 
 	pageReader.WriteDiffMapToHeader(&headerBuffer)
@@ -212,19 +175,15 @@ func (pageReader *incrementalPageReader) initialize(deltaBitmap *roaring.Bitmap)
 	size = int64(headerBuffer.Len()) + pageDataSize
 
 	return
-
 }
 
 func (pageReader *incrementalPageReader) DeltaBitmapInitialize(deltaBitmap *roaring.Bitmap) {
-
 	it := deltaBitmap.Iterator()
 
 	pageSize := DatabasePageSize
 
 	if pageReader.Compressed {
-
 		pageSize = CompressedPageSize
-
 	}
 
 	for it.HasNext() { // TODO : do something with file truncation during reading
@@ -234,39 +193,28 @@ func (pageReader *incrementalPageReader) DeltaBitmapInitialize(deltaBitmap *roar
 		if pageReader.FileSize >= int64(blockNo+1)*pageSize { // whole block fits into file
 
 			pageReader.Blocks = append(pageReader.Blocks, blockNo)
-
 		} else {
-
 			break
-
 		}
-
 	}
-
 }
 
 func (pageReader *incrementalPageReader) FullScanCompressedInitialize() error {
-
 	readBytes := uint32(0)
 
 	const sizeOfHeader = 8
 
 	for {
-
 		header := make([]byte, sizeOfHeader)
 
 		_, err := io.ReadFull(pageReader.PagedFile, header)
 
 		if err != nil {
-
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
-
 				return nil
-
 			}
 
 			return err
-
 		}
 
 		pageSize := binary.LittleEndian.Uint16(header)
@@ -284,97 +232,67 @@ func (pageReader *incrementalPageReader) FullScanCompressedInitialize() error {
 		_, err = io.ReadFull(pageReader.PagedFile, pageBytes)
 
 		if err != nil {
-
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
-
 				return nil
-
 			}
 
 			return err
-
 		}
 
 		if chkpNum >= pageReader.ChkpNum {
-
 			currentBlockNumber := readBytes / CompressedPageSize
 
 			for blockNumber := uint32(0); blockNumber < uint32(blocksTotal); blockNumber++ {
-
 				pageReader.Blocks = append(pageReader.Blocks, currentBlockNumber+blockNumber)
-
 			}
-
 		} else {
-
 			return errors.NewInvalidBlockError(readBytes / CompressedPageSize)
-
 		}
 
 		readBytes = readBytes + sizeOfHeader + uint32(fullSize)
-
 	}
-
 }
 
 func (pageReader *incrementalPageReader) FullScanSimpleInitialize() error {
-
 	pageBytes := make([]byte, DatabasePageSize)
 
 	for currentBlockNumber := uint32(0); ; currentBlockNumber++ {
-
 		_, err := io.ReadFull(pageReader.PagedFile, pageBytes)
 
 		if err != nil {
-
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
-
 				return nil
-
 			}
 
 			return err
-
 		}
 
 		valid := pageReader.SelectNewValidPage(pageBytes, currentBlockNumber) // TODO : torn page possibility
 
 		if !valid {
-
 			return errors.NewInvalidBlockError(currentBlockNumber)
-
 		}
-
 	}
-
 }
 
 func (pageReader *incrementalPageReader) FullScanInitialize() error {
-
 	if !pageReader.Compressed {
-
 		return pageReader.FullScanSimpleInitialize()
-
 	}
 
 	return pageReader.FullScanCompressedInitialize()
-
 }
 
 // WriteDiffMapToHeader is currently used only with buffers, so we don't handle any writing errors
 
 func (pageReader *incrementalPageReader) WriteDiffMapToHeader(headerWriter io.Writer) {
-
 	diffBlockCount := len(pageReader.Blocks)
 
 	_, _ = headerWriter.Write(utility.ToBytes(uint32(diffBlockCount)))
 
 	for _, blockNo := range pageReader.Blocks {
-
 		_ = binary.Write(headerWriter, binary.LittleEndian, blockNo)
-
 	}
-
 }
 
 type pageHeader struct {
@@ -408,21 +326,17 @@ type pageHeader struct {
 }
 
 func (header *pageHeader) isValid() bool {
-
 	// TODO: Add page validation
 
 	return true
-
 }
 
 // parsePageHeader reads information from PostgreSQL page header. Exported for test reasons.
 
 func parsePageHeader(reader io.Reader) (*pageHeader, error) {
-
 	pageHeader := pageHeader{}
 
 	fields := []parsingutil.FieldToParse{
-
 		{Field: &pageHeader.state, Name: "state"},
 
 		{Field: &pageHeader.usageCount, Name: "usageCount"},
@@ -455,39 +369,30 @@ func parsePageHeader(reader io.Reader) (*pageHeader, error) {
 	err := parsingutil.ParseMultipleFieldsFromReader(fields, reader)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return &pageHeader, nil
-
 }
 
 // SelectNewValidPage checks whether page is valid and if it so, then blockNo is appended to Blocks list
 
 func (pageReader *incrementalPageReader) SelectNewValidPage(pageBytes []byte, blockNo uint32) (valid bool) {
-
 	pageHeader, _ := parsePageHeader(bytes.NewReader(pageBytes))
 
 	valid = pageHeader.isValid()
 
 	if !valid {
-
 		tracelog.DebugLogger.Println("Invalid page ", blockNo, " page header ", pageHeader)
 
 		return false
-
 	}
 
 	if pageHeader.checkpointNum >= pageReader.ChkpNum {
-
 		pageReader.Blocks = append(pageReader.Blocks, blockNo)
-
 	}
 
 	return
-
 }
 
 func ReadIncrementalFile(filePath string,
@@ -497,17 +402,13 @@ func ReadIncrementalFile(filePath string,
 	chkpNum uint32,
 
 	deltaBitmap *roaring.Bitmap) (fileReader io.ReadCloser, size int64, err error) {
-
 	file, err := os.Open(filePath)
 
 	if err != nil {
-
 		return nil, 0, err
-
 	}
 
 	fileReadSeekCloser := &ioextensions.ReadSeekCloserImpl{
-
 		Reader: limiters.NewDiskLimitReader(file),
 
 		Seeker: file,
@@ -520,13 +421,10 @@ func ReadIncrementalFile(filePath string,
 	incrementSize, err := pageReader.initialize(deltaBitmap)
 
 	if err != nil {
-
 		utility.LoggedClose(file, "")
 
 		return nil, 0, err
-
 	}
 
 	return pageReader, incrementSize, nil
-
 }

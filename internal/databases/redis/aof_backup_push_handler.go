@@ -23,7 +23,6 @@ type AOFBackupPushArgs struct {
 // permanent bool, uploader internal.Uploader, metaConstructor internal.MetaConstructor
 
 func HandleAOFBackupPush(ctx context.Context, args AOFBackupPushArgs) error {
-
 	backupName := aof.GenerateNewBackupName()
 
 	dataFolder, _ := conf.GetSetting(conf.RedisDataPath)
@@ -37,7 +36,6 @@ func HandleAOFBackupPush(ctx context.Context, args AOFBackupPushArgs) error {
 	concurrentUploader, err := internal.CreateConcurrentUploader(
 
 		internal.CreateConcurrentUploaderArgs{
-
 			Uploader: args.Uploader,
 
 			BackupName: backupName,
@@ -46,9 +44,7 @@ func HandleAOFBackupPush(ctx context.Context, args AOFBackupPushArgs) error {
 		})
 
 	if err != nil {
-
 		return err
-
 	}
 
 	dataPath, _ := conf.GetSetting(conf.RedisDataPath)
@@ -56,9 +52,7 @@ func HandleAOFBackupPush(ctx context.Context, args AOFBackupPushArgs) error {
 	diskWatcher, err := diskwatcher.NewDiskWatcher(viper.GetInt(conf.RedisDataThreshold), dataPath, viper.GetInt(conf.RedisDataTimeout))
 
 	if err != nil {
-
 		return err
-
 	}
 
 	manifestName, _ := conf.GetSetting(conf.RedisAppendonlyManifest)
@@ -83,18 +77,14 @@ func HandleAOFBackupPush(ctx context.Context, args AOFBackupPushArgs) error {
 	)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	doBackupArgs := aof.DoBackupArgs{
-
 		BackupName: backupName,
 
 		Sharded: args.Sharded,
 	}
 
 	return backupService.DoBackup(doBackupArgs)
-
 }

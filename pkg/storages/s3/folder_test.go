@@ -10,9 +10,7 @@ import (
 )
 
 func TestS3FolderValidate_S3ReturnsErr(t *testing.T) {
-
 	config := &s3.Config{
-
 		Bucket: "test",
 
 		AccessKey: "AKIAIOSFODNN7EXAMPLE",
@@ -31,13 +29,10 @@ func TestS3FolderValidate_S3ReturnsErr(t *testing.T) {
 	err := folder.Validate()
 
 	assert.Contains(t, err.Error(), "bad credentials")
-
 }
 
 func TestS3FolderValidate_S3DoesNotReturnErr(t *testing.T) {
-
 	config := &s3.Config{
-
 		Bucket: "test",
 
 		AccessKey: "AKIAIOSFODNN7EXAMPLE",
@@ -56,5 +51,4 @@ func TestS3FolderValidate_S3DoesNotReturnErr(t *testing.T) {
 	err := folder.Validate()
 
 	assert.NoError(t, err)
-
 }

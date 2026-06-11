@@ -14,7 +14,6 @@ import (
 )
 
 func genDatabasesByNames() postgres.DatabasesByNames {
-
 	databasesByNames := make(postgres.DatabasesByNames)
 
 	databasesByNames["my_database"] = *postgres.NewDatabaseObjectsInfo(20000)
@@ -42,11 +41,9 @@ func genDatabasesByNames() postgres.DatabasesByNames {
 	databasesByNames["db2"].Tables["nomy.tab4"] = postgres.TableInfo{Oid: 40103, Relfilenode: 40103}
 
 	return databasesByNames
-
 }
 
 func TestDatabasesByNames_ResolveOrdinaryCase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_database/my_table")
@@ -56,11 +53,9 @@ func TestDatabasesByNames_ResolveOrdinaryCase(t *testing.T) {
 	assert.Equal(t, uint32(30000), tableID)
 
 	assert.NoError(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveNamespace(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_database/namespace.other_table")
@@ -70,11 +65,9 @@ func TestDatabasesByNames_ResolveNamespace(t *testing.T) {
 	assert.Equal(t, uint32(31000), tableID)
 
 	assert.NoError(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveNoNamespaceSpecified(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_database/other_table")
@@ -84,11 +77,9 @@ func TestDatabasesByNames_ResolveNoNamespaceSpecified(t *testing.T) {
 	assert.Equal(t, uint32(0), tableID)
 
 	assert.Error(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveOnlyDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_database")
@@ -98,11 +89,9 @@ func TestDatabasesByNames_ResolveOnlyDatabase(t *testing.T) {
 	assert.Equal(t, uint32(0), tableID)
 
 	assert.NoError(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveNoSuchDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("no_exist_database/my_table")
@@ -112,11 +101,9 @@ func TestDatabasesByNames_ResolveNoSuchDatabase(t *testing.T) {
 	assert.Equal(t, uint32(0), tableID)
 
 	assert.Error(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveTooManySlashes(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_folder/my_database/my_table")
@@ -126,11 +113,9 @@ func TestDatabasesByNames_ResolveTooManySlashes(t *testing.T) {
 	assert.Equal(t, uint32(0), tableID)
 
 	assert.Error(t, err)
-
 }
 
 func TestDatabasesByNames_ResolveDots(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dbID, tableID, err := meta.Resolve("my_database/public.my_table.my_column")
@@ -140,11 +125,9 @@ func TestDatabasesByNames_ResolveDots(t *testing.T) {
 	assert.Equal(t, uint32(0), tableID)
 
 	assert.Error(t, err)
-
 }
 
 func TestResolveRegexp_RestoreAllForDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db1")
@@ -172,11 +155,9 @@ func TestResolveRegexp_RestoreAllForDatabase(t *testing.T) {
 	assert.Equal(t, uint32(40002), db1[2])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreSomeDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db*")
@@ -216,11 +197,9 @@ func TestResolveRegexp_RestoreSomeDatabase(t *testing.T) {
 	assert.Equal(t, uint32(40103), db2[3])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreAllForDatabaseRegexp(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db1/*")
@@ -248,11 +227,9 @@ func TestResolveRegexp_RestoreAllForDatabaseRegexp(t *testing.T) {
 	assert.Equal(t, uint32(40002), db1[2])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreSomeTablesInDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db1/table*")
@@ -278,11 +255,9 @@ func TestResolveRegexp_RestoreSomeTablesInDatabase(t *testing.T) {
 	assert.Equal(t, uint32(40001), db1[1])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreTableInDatabase(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db1/table1")
@@ -304,11 +279,9 @@ func TestResolveRegexp_RestoreTableInDatabase(t *testing.T) {
 	assert.Equal(t, uint32(40000), db1[0])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreSomeNamespaces(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db2/my*/*")
@@ -334,11 +307,9 @@ func TestResolveRegexp_RestoreSomeNamespaces(t *testing.T) {
 	assert.Equal(t, uint32(40101), db2[1])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreAllInNamespace(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db2/nomy/*")
@@ -364,11 +335,9 @@ func TestResolveRegexp_RestoreAllInNamespace(t *testing.T) {
 	assert.Equal(t, uint32(40103), db2[1])
 
 	assert.NoError(t, err)
-
 }
 
 func TestResolveRegexp_RestoreTableInNamespace(t *testing.T) {
-
 	meta := genDatabasesByNames()
 
 	dict, err := meta.ResolveRegexp("db2/nomy/tab3")
@@ -390,11 +359,9 @@ func TestResolveRegexp_RestoreTableInNamespace(t *testing.T) {
 	assert.Equal(t, uint32(40102), db2[0])
 
 	assert.NoError(t, err)
-
 }
 
 func TestFetchDtoWithFilesMetadata(t *testing.T) {
-
 	var folder = memory.NewFolder("in_memory/", memory.NewKVS())
 
 	// Depricated struct
@@ -448,5 +415,4 @@ func TestFetchDtoWithFilesMetadata(t *testing.T) {
 	assert.Equal(t, uint32(3), ansV2.Tables["t2"].Oid)
 
 	assert.Equal(t, uint32(4), ansV2.Tables["t2"].Relfilenode)
-
 }

@@ -24,17 +24,13 @@ const (
 var TestLocation = *walparser.NewBlockLocation(1, 2, 3, 4)
 
 func TestGetDeltaFileNameFor(t *testing.T) {
-
 	deltaFilename, err := postgres.GetDeltaFilenameFor(WalFilename)
 
 	assert.NoError(t, err)
 
 	assert.Equal(t, DeltaFilename, deltaFilename)
-
 }
 
 func TestGetPositionInDelta(t *testing.T) {
-
 	assert.Equal(t, 12, postgres.GetPositionInDelta(WalFilename))
-
 }

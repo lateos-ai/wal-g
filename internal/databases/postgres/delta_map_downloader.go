@@ -14,7 +14,6 @@ func getDeltaMap(reader internal.StorageFolderReader,
 	firstUsedLSN,
 
 	firstNotUsedLSN LSN) (PagedFileDeltaMap, error) {
-
 	tracelog.InfoLogger.Printf("Timeline: %d, FirstUsedLsn: %s, FirstNotUsedLsn: %s\n",
 
 		timeline, firstUsedLSN, firstNotUsedLSN)
@@ -36,9 +35,7 @@ func getDeltaMap(reader internal.StorageFolderReader,
 	err := deltaMap.getLocationsFromDeltas(reader, timeline, firstUsedDeltaNo, firstNotUsedDeltaNo.previous())
 
 	if err != nil {
-
 		return deltaMap, errors.Wrapf(err, "Error during fetch locations from delta files.\n")
-
 	}
 
 	// Handle last delta file separately for fetch locations and walParser from it
@@ -46,9 +43,7 @@ func getDeltaMap(reader internal.StorageFolderReader,
 	lastDeltaFile, err := getDeltaFile(reader, firstNotUsedDeltaNo.previous().getFilename(timeline))
 
 	if err != nil {
-
 		return deltaMap, errors.Wrapf(err, "Error during downloading last delta file.\n")
-
 	}
 
 	deltaMap.AddLocationsToDelta(lastDeltaFile.Locations)
@@ -62,27 +57,21 @@ func getDeltaMap(reader internal.StorageFolderReader,
 		firstNotUsedWalSegmentNo, lastDeltaFile.WalParser)
 
 	if err != nil {
-
 		return deltaMap, errors.Wrapf(err, "Error during fetch locations from wal segments.\n")
-
 	}
 
 	return deltaMap, nil
-
 }
 
 func getDeltaRange(firstUsedLsn, firstNotUsedLsn LSN) (DeltaNo, DeltaNo) {
-
 	firstUsedDeltaNo := newDeltaNoFromLsn(firstUsedLsn)
 
 	firstNotUsedDeltaNo := newDeltaNoFromLsn(firstNotUsedLsn)
 
 	return firstUsedDeltaNo, firstNotUsedDeltaNo
-
 }
 
 func getWalSegmentRange(firstNotUsedDeltaNo DeltaNo, firstNotUsedLsn LSN) (WalSegmentNo, WalSegmentNo) {
-
 	firstUsedWalSegmentNo := firstNotUsedDeltaNo.firstWalSegmentNo()
 
 	lastUsedLsn := firstNotUsedLsn - 1
@@ -90,5 +79,4 @@ func getWalSegmentRange(firstNotUsedDeltaNo DeltaNo, firstNotUsedLsn LSN) (WalSe
 	lastUsedWalSegmentNo := NewWalSegmentNo(lastUsedLsn)
 
 	return firstUsedWalSegmentNo, lastUsedWalSegmentNo.Next()
-
 }

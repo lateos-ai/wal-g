@@ -45,9 +45,7 @@ type Reader struct {
 // NewReader creates Reader from ordinary reader and key
 
 func NewReader(reader io.Reader, key []byte) io.Reader {
-
 	return &Reader{
-
 		Reader: reader,
 
 		in: make([]byte, chunkSize+C.crypto_secretstream_xchacha20poly1305_ABYTES),
@@ -56,19 +54,15 @@ func NewReader(reader io.Reader, key []byte) io.Reader {
 
 		key: key,
 	}
-
 }
 
 func (reader *Reader) readHeader() {
-
 	header := make([]byte, C.crypto_secretstream_xchacha20poly1305_HEADERBYTES)
 
 	if _, err := io.ReadFull(reader.Reader, header); err != nil {
-
 		reader.headerErr = errors.Wrap(err, "failed to read libsodium header")
 
 		return
-
 	}
 
 	var state C.crypto_secretstream_xchacha20poly1305_state
@@ -83,37 +77,27 @@ func (reader *Reader) readHeader() {
 	)
 
 	if returnCode != 0 {
-
 		reader.headerErr = errors.New("corrupted libsodium header")
 
 		return
-
 	}
 
 	reader.state = state
-
 }
 
 // Read implements io.Reader
 
 func (reader *Reader) Read(p []byte) (n int, err error) {
-
 	reader.onceHeader.Do(reader.readHeader)
 
 	if reader.headerErr != nil {
-
 		return 0, reader.headerErr
-
 	}
 
 	if reader.outIdx >= reader.outLen {
-
 		if err = reader.readNextChunk(); err != nil {
-
 			return
-
 		}
-
 	}
 
 	n = copy(p, reader.out[reader.outIdx:reader.outLen])
@@ -121,17 +105,13 @@ func (reader *Reader) Read(p []byte) (n int, err error) {
 	reader.outIdx += n
 
 	return
-
 }
 
 func (reader *Reader) readNextChunk() error {
-
 	n, err := io.ReadFull(reader.Reader, reader.in)
 
 	if err != nil && err != io.ErrUnexpectedEOF {
-
 		return err
-
 	}
 
 	var outLen C.ulonglong
@@ -158,21 +138,15 @@ func (reader *Reader) readNextChunk() error {
 	)
 
 	if returnCode != 0 {
-
 		err = errors.New("corrupted chunk")
-
 	}
 
 	if tag == C.crypto_secretstream_xchacha20poly1305_TAG_FINAL && err != io.ErrUnexpectedEOF {
-
 		err = errors.New("premature end")
-
 	}
 
 	if err == io.ErrUnexpectedEOF {
-
 		err = nil
-
 	}
 
 	reader.outIdx = 0
@@ -180,5 +154,4 @@ func (reader *Reader) readNextChunk() error {
 	reader.outLen = int(outLen)
 
 	return err
-
 }

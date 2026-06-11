@@ -23,9 +23,7 @@ const (
 )
 
 func TestDeltaBitmapInitialize(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		FileSize: postgres.DatabasePageSize * 5,
 
 		Blocks: make([]uint32, 0),
@@ -36,13 +34,10 @@ func TestDeltaBitmapInitialize(t *testing.T) {
 	pageReader.DeltaBitmapInitialize(deltaBitmap)
 
 	assert.Equal(t, pageReader.Blocks, []uint32{0, 2, 3})
-
 }
 
 func TestSelectNewValidPage_ZeroPage(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		Blocks: make([]uint32, 0),
 	}
 
@@ -55,22 +50,17 @@ func TestSelectNewValidPage_ZeroPage(t *testing.T) {
 	assert.True(t, valid)
 
 	assert.Equal(t, []uint32{blockNo}, pageReader.Blocks)
-
 }
 
 func TestSelectNewValidPage_InvalidPage(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		Blocks: make([]uint32, 0),
 	}
 
 	pageData := make([]byte, postgres.DatabasePageSize)
 
 	for i := byte(0); i < 24; i++ {
-
 		pageData[i] = i
-
 	}
 
 	pageData[2134] = 100
@@ -82,13 +72,10 @@ func TestSelectNewValidPage_InvalidPage(t *testing.T) {
 	assert.False(t, valid)
 
 	assert.Equal(t, []uint32{}, pageReader.Blocks)
-
 }
 
 func TestSelectNewValidPage_ValidPageLowLsn(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		Blocks: make([]uint32, 0),
 	}
 
@@ -113,13 +100,10 @@ func TestSelectNewValidPage_ValidPageLowLsn(t *testing.T) {
 	assert.True(t, valid)
 
 	assert.Equal(t, []uint32{blockNo}, pageReader.Blocks)
-
 }
 
 func TestSelectNewValidPage_ValidPageHighLsn(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		Blocks: make([]uint32, 0),
 
 		Lsn: postgres.LSN(1) << 62,
@@ -146,13 +130,10 @@ func TestSelectNewValidPage_ValidPageHighLsn(t *testing.T) {
 	assert.True(t, valid)
 
 	assert.Equal(t, []uint32{}, pageReader.Blocks)
-
 }
 
 func TestWriteDiffMapToHeader(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		Blocks: []uint32{1, 2, 33},
 	}
 
@@ -169,7 +150,6 @@ func TestWriteDiffMapToHeader(t *testing.T) {
 	actualBlocks := make([]uint32, 0)
 
 	for i := 0; i < int(diffBlockCount); i++ {
-
 		var blockNo uint32
 
 		err := binary.Read(&header, binary.LittleEndian, &blockNo)
@@ -177,17 +157,14 @@ func TestWriteDiffMapToHeader(t *testing.T) {
 		assert.NoError(t, err)
 
 		actualBlocks = append(actualBlocks, blockNo)
-
 	}
 
 	testtools.AssertReaderIsEmpty(t, &header)
 
 	assert.Equal(t, pageReader.Blocks, actualBlocks)
-
 }
 
 func TestFullScanInitialize(t *testing.T) {
-
 	pageFile, err := os.Open(pagedFileName)
 
 	defer utility.LoggedClose(pageFile, "")
@@ -195,7 +172,6 @@ func TestFullScanInitialize(t *testing.T) {
 	assert.NoError(t, err)
 
 	pageReader := postgres.IncrementalPageReader{
-
 		PagedFile: pageFile,
 
 		Blocks: make([]uint32, 0),
@@ -208,33 +184,25 @@ func TestFullScanInitialize(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, []uint32{3, 4, 5, 6, 7}, pageReader.Blocks)
-
 }
 
 func makePageDataReader() ioextensions.ReadSeekCloser {
-
 	pageCount := int64(8)
 
 	pageData := make([]byte, pageCount*postgres.DatabasePageSize)
 
 	for i := int64(0); i < pageCount; i++ {
-
 		for j := i * postgres.DatabasePageSize; j < (i+1)*postgres.DatabasePageSize; j++ {
-
 			pageData[j] = byte(i)
-
 		}
-
 	}
 
 	pageDataReader := bytes.NewReader(pageData)
 
 	return &ioextensions.ReadSeekCloserImpl{Reader: pageDataReader, Seeker: pageDataReader, Closer: &testtools.NopCloser{}}
-
 }
 
 func TestRead(t *testing.T) {
-
 	blocks := []uint32{1, 2, 4}
 
 	header := []byte{12, 13, 14}
@@ -244,17 +212,12 @@ func TestRead(t *testing.T) {
 	copy(expectedRead, header)
 
 	for id, i := range blocks {
-
 		for j := 3 + int64(id)*postgres.DatabasePageSize; j < 3+(int64(id)+1)*postgres.DatabasePageSize; j++ {
-
 			expectedRead[j] = byte(i)
-
 		}
-
 	}
 
 	pageReader := postgres.IncrementalPageReader{
-
 		PagedFile: makePageDataReader(),
 
 		Blocks: blocks,
@@ -271,13 +234,10 @@ func TestRead(t *testing.T) {
 	assert.Equal(t, expectedRead, actualRead)
 
 	testtools.AssertReaderIsEmpty(t, &pageReader)
-
 }
 
 func TestAdvanceFileReader(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		PagedFile: makePageDataReader(),
 
 		Blocks: []uint32{5, 9},
@@ -292,17 +252,13 @@ func TestAdvanceFileReader(t *testing.T) {
 	expectedNext := make([]byte, postgres.DatabasePageSize)
 
 	for i := int64(0); i < postgres.DatabasePageSize; i++ {
-
 		expectedNext[i] = 5
-
 	}
 
 	assert.Equal(t, expectedNext, pageReader.Next)
-
 }
 
 func TestDrainMoreData_NoBlocks(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{}
 
 	succeed, err := pageReader.DrainMoreData()
@@ -310,13 +266,10 @@ func TestDrainMoreData_NoBlocks(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.False(t, succeed)
-
 }
 
 func TestDrainMoreData_HasBlocks(t *testing.T) {
-
 	pageReader := postgres.IncrementalPageReader{
-
 		PagedFile: makePageDataReader(),
 
 		Blocks: []uint32{3, 6},
@@ -333,11 +286,8 @@ func TestDrainMoreData_HasBlocks(t *testing.T) {
 	expectedNext := make([]byte, postgres.DatabasePageSize)
 
 	for i := int64(0); i < postgres.DatabasePageSize; i++ {
-
 		expectedNext[i] = 3
-
 	}
 
 	assert.Equal(t, expectedNext, pageReader.Next)
-
 }

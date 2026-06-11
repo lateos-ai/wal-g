@@ -30,15 +30,11 @@ type LatestBackupSelector struct {
 }
 
 func NewLatestBackupSelector() LatestBackupSelector {
-
 	return LatestBackupSelector{}
-
 }
 
 func (s LatestBackupSelector) Select(folder storage.Folder) (Backup, error) {
-
 	return GetLatestBackup(folder.GetSubFolder(utility.BaseBackupPath))
-
 }
 
 // UserDataBackupSelector selects a backup which has the provided user data
@@ -50,52 +46,38 @@ type UserDataBackupSelector struct {
 }
 
 func NewUserDataBackupSelector(userDataRaw string, metaFetcher GenericMetaFetcher) (UserDataBackupSelector, error) {
-
 	userData, err := UnmarshalSentinelUserData(userDataRaw)
 
 	if err != nil {
-
 		return UserDataBackupSelector{}, err
-
 	}
 
 	return UserDataBackupSelector{
-
 		userData: userData,
 
 		metaFetcher: metaFetcher,
 	}, nil
-
 }
 
 func (s UserDataBackupSelector) Select(folder storage.Folder) (Backup, error) {
-
 	return s.findBackupByUserData(s.userData, folder)
-
 }
 
 // Exists backup with UserData exactly matching the provided one
 
 func (s UserDataBackupSelector) findBackupByUserData(userData interface{}, folder storage.Folder) (Backup, error) {
-
 	matchUserData := func(d GenericMetadata) bool {
-
 		return reflect.DeepEqual(userData, d.UserData)
-
 	}
 
 	foundMetas, err := searchInMetadata(matchUserData, folder, s.metaFetcher)
 
 	if err != nil {
-
 		return Backup{}, errors.Wrapf(err, "UserData search failed")
-
 	}
 
 	if len(foundMetas) == 0 {
-
 		return Backup{}, NewNoBackupsFoundError()
-
 	}
 
 	var foundBackupName string
@@ -105,35 +87,28 @@ func (s UserDataBackupSelector) findBackupByUserData(userData interface{}, folde
 	uniqueNames := map[string]bool{}
 
 	for i := range foundMetas {
-
 		foundBackupName = foundMetas[i].BackupName
 
 		foundStorage = foundMetas[i].StorageName
 
 		uniqueNames[foundBackupName] = true
-
 	}
 
 	if len(uniqueNames) > 1 {
-
 		var backupNames []string
 
 		for st := range foundMetas {
-
 			backupNames = append(backupNames, foundMetas[st].BackupName)
-
 		}
 
 		return Backup{}, fmt.Errorf("too many backups (%d) found with specified user data: %s",
 
 			len(uniqueNames), strings.Join(backupNames, " "))
-
 	}
 
 	baseBackupFolder := folder.GetSubFolder(utility.BaseBackupPath)
 
 	return NewBackupInStorage(baseBackupFolder, foundBackupName, foundStorage)
-
 }
 
 type GenericMetadataInStorage struct {
@@ -153,13 +128,10 @@ func searchInMetadata(
 	metaFetcher GenericMetaFetcher,
 
 ) ([]GenericMetadataInStorage, error) {
-
 	sentinels, err := GetBackupSentinelObjects(folder)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	backupTimes := GetBackupTimeSlices(sentinels)
@@ -167,46 +139,36 @@ func searchInMetadata(
 	foundMeta := make([]GenericMetadataInStorage, 0)
 
 	for _, backupTime := range backupTimes {
-
 		specificFolder, err := multistorage.UseSpecificStorage(backupTime.StorageName, folder)
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("Failed to select source storage for backup %s to fetch its meta: %s\n",
 
 				backupTime.BackupName, err.Error())
 
 			continue
-
 		}
 
 		meta, err := metaFetcher.Fetch(backupTime.BackupName, specificFolder.GetSubFolder(utility.BaseBackupPath))
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("Failed to get metadata of backup %s, error: %s\n",
 
 				backupTime.BackupName, err.Error())
 
 			continue
-
 		}
 
 		if criteria(meta) {
-
 			foundMeta = append(foundMeta, GenericMetadataInStorage{
-
 				GenericMetadata: meta,
 
 				StorageName: backupTime.StorageName,
 			})
-
 		}
-
 	}
 
 	return foundMeta, nil
-
 }
 
 // Select backup by provided backup name
@@ -218,29 +180,21 @@ type BackupNameSelector struct {
 }
 
 func NewBackupNameSelector(backupName string, checkExistence bool) (BackupNameSelector, error) {
-
 	return BackupNameSelector{backupName: backupName, checkExistence: checkExistence}, nil
-
 }
 
 func (s BackupNameSelector) Select(folder storage.Folder) (Backup, error) {
-
 	if !s.checkExistence {
-
 		return NewBackupInStorage(folder, s.backupName, consts.DefaultStorage)
-
 	}
 
 	return GetBackupByName(s.backupName, utility.BaseBackupPath, folder)
-
 }
 
 func NewTargetBackupSelector(targetUserData, targetName string, metaFetcher GenericMetaFetcher) (BackupSelector, error) {
-
 	var err error
 
 	switch {
-
 	case targetName != "" && targetUserData != "":
 
 		err = errors.New("incorrect arguments. Specify target backup name OR target userdata, not both")
@@ -266,11 +220,9 @@ func NewTargetBackupSelector(targetUserData, targetName string, metaFetcher Gene
 	default:
 
 		err = errors.New("insufficient arguments")
-
 	}
 
 	return nil, err
-
 }
 
 // NewDeltaBaseSelector returns the BackupSelector for delta backup base according to the provided flags
@@ -278,9 +230,7 @@ func NewTargetBackupSelector(targetUserData, targetName string, metaFetcher Gene
 func NewDeltaBaseSelector(
 
 	targetBackupName, targetUserData string, metaFetcher GenericMetaFetcher) (BackupSelector, error) {
-
 	switch {
-
 	case targetUserData != "" && targetBackupName != "":
 
 		return nil, errors.New("only one delta target should be specified")
@@ -304,9 +254,7 @@ func NewDeltaBaseSelector(
 	default:
 
 		return NewLatestBackupSelector(), nil
-
 	}
-
 }
 
 // OldestNonPermanentSelector finds oldest non-permanent backup available in storage.
@@ -316,19 +264,13 @@ type OldestNonPermanentSelector struct {
 }
 
 func NewOldestNonPermanentSelector(metaFetcher GenericMetaFetcher) *OldestNonPermanentSelector {
-
 	return &OldestNonPermanentSelector{metaFetcher: metaFetcher}
-
 }
 
 func (s *OldestNonPermanentSelector) Select(folder storage.Folder) (Backup, error) {
-
 	searchFn := func(d GenericMetadata) bool {
-
 		if !d.IsPermanent {
-
 			return true
-
 		}
 
 		tracelog.InfoLogger.Printf(
@@ -338,35 +280,25 @@ func (s *OldestNonPermanentSelector) Select(folder storage.Folder) (Backup, erro
 				"as the oldest backup\n", d.BackupName)
 
 		return false
-
 	}
 
 	foundMetas, err := searchInMetadata(searchFn, folder, s.metaFetcher)
 
 	if err != nil {
-
 		return Backup{}, errors.Wrapf(err, "backups lookup failed")
-
 	}
 
 	if len(foundMetas) == 0 {
-
 		return Backup{}, NewNoBackupsFoundError()
-
 	}
 
 	oldestMeta := foundMetas[0]
 
 	for i := range foundMetas {
-
 		if foundMetas[i].StartTime.Before(oldestMeta.StartTime) {
-
 			oldestMeta = foundMetas[i]
-
 		}
-
 	}
 
 	return NewBackupInStorage(folder, oldestMeta.BackupName, oldestMeta.StorageName)
-
 }

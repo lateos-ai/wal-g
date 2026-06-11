@@ -11,7 +11,6 @@ import (
 // HandleCatchupFetch is invoked to perform wal-g catchup-fetch
 
 func HandleCatchupFetch(folder storage.Folder, dbDirectory, backupName string, useNewUnwrap bool) {
-
 	dbDirectory = utility.ResolveSymlink(dbDirectory)
 
 	backup, err := internal.GetBackupByName(backupName, utility.CatchupPath, folder)
@@ -31,15 +30,10 @@ func HandleCatchupFetch(folder storage.Folder, dbDirectory, backupName string, u
 	// testing the new unwrap implementation
 
 	if useNewUnwrap {
-
 		_, err = pgBackup.unwrapNew(dbDirectory, filesToUnwrap, true, false, ExtractProviderImpl{})
-
 	} else {
-
 		err = pgBackup.unwrapOld(dbDirectory, filesToUnwrap, true, ExtractProviderImpl{})
-
 	}
 
 	tracelog.ErrorLogger.FatalfOnError("Failed unwrap backup: %v", err)
-
 }

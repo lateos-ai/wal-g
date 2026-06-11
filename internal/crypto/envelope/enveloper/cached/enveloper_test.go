@@ -13,13 +13,11 @@ import (
 )
 
 func TestDecryptKey(t *testing.T) {
-
 	encryptedKey := envelope.NewEncryptedKey("example", []byte("encrypted key"))
 
 	expected := []byte("decrypted key")
 
 	t.Run("success", func(t *testing.T) {
-
 		mockEnveloper := mocks.NewEnveloper(t)
 
 		cached := EnveloperWithCache(mockEnveloper, time.Minute)
@@ -33,15 +31,11 @@ func TestDecryptKey(t *testing.T) {
 		assert.Len(t, key, len(expected))
 
 		for i := range expected {
-
 			assert.Equal(t, expected[i], key[i], "Decrypted key is not equal to the expected in position: %d", i)
-
 		}
-
 	})
 
 	t.Run("cached", func(t *testing.T) {
-
 		mockEnveloper := mocks.NewEnveloper(t)
 
 		cached := EnveloperWithCache(mockEnveloper, time.Minute)
@@ -59,15 +53,11 @@ func TestDecryptKey(t *testing.T) {
 		assert.Len(t, key, len(expected))
 
 		for i := range expected {
-
 			assert.Equal(t, expected[i], key[i], "Decrypted key is not equal to the expected in position: %d", i)
-
 		}
-
 	})
 
 	t.Run("staled cache", func(t *testing.T) {
-
 		mockEnveloper := mocks.NewEnveloper(t)
 
 		cached := EnveloperWithCache(mockEnveloper, time.Millisecond)
@@ -89,15 +79,11 @@ func TestDecryptKey(t *testing.T) {
 		assert.Len(t, key, len(expected))
 
 		for i := range expected {
-
 			assert.Equal(t, expected[i], key[i], "Decrypted key is not equal to the expected in position: %d", i)
-
 		}
-
 	})
 
 	t.Run("permanent cache", func(t *testing.T) {
-
 		mockEnveloper := mocks.NewEnveloper(t)
 
 		cached := EnveloperWithCache(mockEnveloper, 0)
@@ -117,11 +103,7 @@ func TestDecryptKey(t *testing.T) {
 		assert.Len(t, key, len(expected))
 
 		for i := range expected {
-
 			assert.Equal(t, expected[i], key[i], "Decrypted key is not equal to the expected in position: %d", i)
-
 		}
-
 	})
-
 }

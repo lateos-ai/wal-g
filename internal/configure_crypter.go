@@ -20,19 +20,13 @@ import (
 )
 
 func configureLibsodiumCrypter(config *viper.Viper) (crypto.Crypter, error) {
-
 	if config.IsSet(conf.LibsodiumKeySetting) {
-
 		return nil, errors.New("non-empty WALG_LIBSODIUM_KEY but wal-g was not compiled with libsodium")
-
 	}
 
 	if config.IsSet(conf.LibsodiumKeyPathSetting) {
-
 		return nil, errors.New("non-empty WALG_LIBSODIUM_KEY_PATH but wal-g was not compiled with libsodium")
-
 	}
 
 	return nil, errors.New("there is no any supported libsodium crypter configuration")
-
 }

@@ -46,7 +46,6 @@ const (
 
 var (
 	OplogAppModes = map[OplogAppMode]struct{}{
-
 		OplogAppModeInitSync: {},
 
 		OplogAppModeRecovering: {},
@@ -144,51 +143,39 @@ type MongoOplogCursor struct {
 // NewMongoOplogCursor builds MongoOplogCursor.
 
 func NewMongoOplogCursor(c *mongo.Cursor) *MongoOplogCursor {
-
 	return &MongoOplogCursor{c, nil}
-
 }
 
 // Data returns current cursor document
 
 func (m *MongoOplogCursor) Data() []byte {
-
 	return m.Current
-
 }
 
 // Push returns document back to cursor
 
 func (m *MongoOplogCursor) Push(data []byte) error {
-
 	if m.pushed != nil {
-
 		return fmt.Errorf("cursor already has one unread pushed document")
-
 	}
 
 	m.pushed = data
 
 	return nil
-
 }
 
 // Next fills Current by next document, returns true if there were no errors and the cursor has not been exhausted.
 
 func (m *MongoOplogCursor) Next(ctx context.Context) bool {
-
 	if m.pushed != nil {
-
 		m.Current = m.pushed
 
 		m.pushed = nil
 
 		return true
-
 	}
 
 	return m.Cursor.Next(ctx)
-
 }
 
 // ApplyOplog is used to replay oplog entry.
@@ -232,64 +219,46 @@ type Option func(*Options)
 // OplogApplicationMode sets applyOps argument oplogApplicationMode
 
 func OplogApplicationMode(mode OplogAppMode) Option {
-
 	return func(args *Options) {
-
 		args.OplogApplicationMode = &mode
-
 	}
-
 }
 
 // OplogAlwaysUpsert sets applyOps argument alwaysUpsert
 
 func OplogAlwaysUpsert(alwaysUpsert bool) Option {
-
 	return func(args *Options) {
-
 		args.OplogAlwaysUpsert = &alwaysUpsert
-
 	}
-
 }
 
 // NewMongoClient builds MongoClient
 
 func NewMongoClient(ctx context.Context, uri string, setters ...Option) (*MongoClient, error) {
-
 	// Default Options
 
 	args := &Options{}
 
 	for _, setter := range setters {
-
 		setter(args)
-
 	}
 
 	applyOpsCmd := bson.D{
-
 		{Key: "applyOps"},
 	}
 
 	if args.OplogApplicationMode != nil {
-
 		oplogApplicationMode := *args.OplogApplicationMode
 
 		if _, ok := OplogAppModes[oplogApplicationMode]; !ok {
-
 			return nil, fmt.Errorf("unsupported oplogApplicationMode: %s", oplogApplicationMode)
-
 		}
 
 		applyOpsCmd = append(applyOpsCmd, bson.E{Key: "oplogApplicationMode", Value: oplogApplicationMode})
-
 	}
 
 	if args.OplogAlwaysUpsert != nil {
-
 		applyOpsCmd = append(applyOpsCmd, bson.E{Key: "alwaysUpsert", Value: *args.OplogAlwaysUpsert})
-
 	}
 
 	client, err := mongo.Connect(ctx,
@@ -300,18 +269,14 @@ func NewMongoClient(ctx context.Context, uri string, setters ...Option) (*MongoC
 			SetRetryReads(false))
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return &MongoClient{
-
 		c: client,
 
 		applyOpsCmd: applyOpsCmd,
 	}, client.Ping(ctx, nil)
-
 }
 
 // IndexDocument holds information about a collection's index.
@@ -325,34 +290,26 @@ type IndexDocument struct {
 }
 
 func (mc *MongoClient) CreateIndexes(ctx context.Context, dbName, collName string, indexes []IndexDocument) error {
-
 	rawCommand := bson.D{
-
 		{Key: "createIndexes", Value: collName},
 
 		{Key: "indexes", Value: indexes},
 	}
 
 	if err := mc.c.Database(dbName).RunCommand(ctx, rawCommand).Err(); err != nil {
-
 		return fmt.Errorf("createIndexes command %q failed: %w", rawCommand, err)
-
 	}
 
 	return nil
-
 }
 
 func (mc *MongoClient) DropIndexes(ctx context.Context, dbName string, rawCommand bson.D) error {
-
 	if err := mc.c.Database(dbName).RunCommand(ctx, rawCommand).Err(); err != nil {
-
 		var mongoErr mongo.CommandError
 
 		isMongoErr := errors.As(err, &mongoErr)
 
 		if isMongoErr && mongoErr.Name == "BackgroundOperationInProgressForNamespace" {
-
 			// In Mongo versions Prior to 5.2, an attempt to drop an index during an in-progress build of another index
 
 			// on the same collection results in an error:
@@ -364,109 +321,82 @@ func (mc *MongoClient) DropIndexes(ctx context.Context, dbName string, rawComman
 			tracelog.WarningLogger.Printf("Unable to drop index, skipped. Error is: %+v\n", err)
 
 			return nil
-
 		}
 
 		return fmt.Errorf("dropIndexes command %q failed: %w", rawCommand, err)
-
 	}
 
 	return nil
-
 }
 
 func (mc *MongoClient) EnsureIsMaster(ctx context.Context) error {
-
 	im, err := mc.IsMaster(ctx)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if !im.IsMaster {
-
 		return fmt.Errorf("current node is not a primary")
-
 	}
 
 	return nil
-
 }
 
 func (mc *MongoClient) IsMaster(ctx context.Context) (models.IsMaster, error) {
-
 	im := IsMaster{}
 
 	err := mc.c.Database("test").RunCommand(ctx, bson.D{{Key: "isMaster", Value: 1}}).Decode(&im)
 
 	if err != nil {
-
 		return models.IsMaster{}, fmt.Errorf("isMaster command failed: %w", err)
-
 	}
 
 	return models.IsMaster{
-
 		IsMaster: im.IsMaster,
 
 		LastWrite: models.IsMasterLastWrite{
-
 			OpTime: models.OpTime{
-
 				TS: models.TimestampFromBson(im.LastWrite.OpTime.TS),
 			},
 
 			MajorityOpTime: models.OpTime{
-
 				TS: models.TimestampFromBson(im.LastWrite.MajorityOpTime.TS),
 			},
 		},
 	}, nil
-
 }
 
 // LastWriteTS fetches timestamps with last write
 
 func (mc *MongoClient) LastWriteTS(ctx context.Context) (lastTS, lastMajTS models.Timestamp, err error) {
-
 	im, err := mc.IsMaster(ctx)
 
 	if err != nil {
-
 		return models.Timestamp{}, models.Timestamp{}, fmt.Errorf("isMaster command failed: %+v", err)
-
 	}
 
 	return im.LastWrite.OpTime.TS, im.LastWrite.MajorityOpTime.TS, nil
-
 }
 
 // LastOplogTS returns timestamp of last oplog entry
 
 func (mc *MongoClient) LastOplogTS(ctx context.Context) (lastTS models.Timestamp, err error) {
-
 	var op db.Oplog
 
 	oplogCol, err := mc.getOplogCollection(ctx)
 
 	if err != nil {
-
 		return models.Timestamp{}, err
-
 	}
 
 	opts := options.FindOne().SetSort(bson.D{{Key: "$natural", Value: -1}})
 
 	if err = oplogCol.FindOne(ctx, bson.D{}, opts).Decode(&op); err != nil {
-
 		return models.Timestamp{}, err
-
 	}
 
 	return models.TimestampFromBson(op.Timestamp), nil
-
 }
 
 // Close disconnects from mongodb
@@ -476,43 +406,32 @@ func (mc *MongoClient) LastOplogTS(ctx context.Context) (lastTS models.Timestamp
 // If shutdown specified, gracefully shutdowns MongoDB before close
 
 func (mc *MongoClient) Close(ctx context.Context, shutdown bool) error {
-
 	if shutdown {
-
 		err := mc.Shutdown(ctx)
 
 		if err != nil {
-
 			return err
-
 		}
-
 	}
 
 	err := mc.c.Disconnect(ctx)
 
 	if err != nil && shutdown {
-
 		tracelog.ErrorLogger.Printf("Disconnect after shutdown ended with error: %v", err)
 
 		return nil
-
 	}
 
 	return err
-
 }
 
 // TailOplogFrom gives OplogCursor to tail oplog from
 
 func (mc *MongoClient) TailOplogFrom(ctx context.Context, from models.Timestamp) (OplogCursor, error) {
-
 	coll, err := mc.getOplogCollection(ctx)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	bsonTS := models.BsonTimestampFromOplogTS(from)
@@ -522,65 +441,48 @@ func (mc *MongoClient) TailOplogFrom(ctx context.Context, from models.Timestamp)
 	cur, err := coll.Find(ctx, filter, options.Find().SetCursorType(options.TailableAwait))
 
 	if err == nil && cur.ID() == 0 {
-
 		err = fmt.Errorf("dead cursor from oplog find")
-
 	}
 
 	if err != nil {
-
 		return nil, fmt.Errorf("oplog lookup failed: %w", err)
-
 	}
 
 	return NewMongoOplogCursor(cur), nil
-
 }
 
 func (mc *MongoClient) getOplogCollection(ctx context.Context) (*mongo.Collection, error) {
-
 	odb := mc.c.Database(oplogDatabaseName)
 
 	colls, err := odb.ListCollectionNames(ctx, bson.M{"name": oplogCollectionName})
 
 	if err != nil {
-
 		return nil, fmt.Errorf("can not list collections in 'local' database: %w", err)
-
 	}
 
 	if len(colls) != 1 {
-
 		return nil, fmt.Errorf("collection '%s' was not found in database '%s'",
 
 			oplogCollectionName, oplogDatabaseName)
-
 	}
 
 	return odb.Collection(oplogCollectionName), nil
-
 }
 
 func (mc *MongoClient) getApplyOpsCmd() bson.D {
-
 	return mc.applyOpsCmd
-
 }
 
 // ApplyOp calls applyOps and check response
 
 func (mc *MongoClient) ApplyOp(ctx context.Context, dbop *db.Oplog) error {
-
 	// mongod complains if 'ts' or 'history' are passed to applyOps
 
 	if dbop == nil {
-
 		return fmt.Errorf("MongoClient:ApplyOp: dbop is nil, it should not happen")
-
 	}
 
 	op := ApplyOplog{
-
 		Operation: dbop.Operation,
 
 		Namespace: dbop.Namespace,
@@ -607,27 +509,20 @@ func (mc *MongoClient) ApplyOp(ctx context.Context, dbop *db.Oplog) error {
 	apply := mc.c.Database("admin").RunCommand(ctx, cmd)
 
 	if err := apply.Err(); err != nil {
-
 		return err
-
 	}
 
 	resp := CmdResponse{}
 
 	if err := apply.Decode(&resp); err != nil {
-
 		return fmt.Errorf("can not unmarshall command execution response: %+v\ncommand was:%+v", err, cmd)
-
 	}
 
 	if resp.Ok != 1 {
-
 		return fmt.Errorf("command execution failed with: %s\ncommand was: %+v", resp.ErrMsg, cmd)
-
 	}
 
 	return nil
-
 }
 
 // BsonCursor implements OplogCursor with source io.reader
@@ -645,97 +540,74 @@ type BsonCursor struct {
 // NewBsonCursor builds BsonCursor.
 
 func NewBsonCursor(r io.Reader) *BsonCursor {
-
 	return &BsonCursor{r: r}
-
 }
 
 // Close closes this cursor.
 
 func (b *BsonCursor) Close(ctx context.Context) error {
-
 	b.raw = nil
 
 	return nil
-
 }
 
 // Data returns current cursor document.
 
 func (b *BsonCursor) Data() []byte {
-
 	return b.raw
-
 }
 
 // Err returns the last error.
 
 func (b *BsonCursor) Err() error {
-
 	return b.err
-
 }
 
 // Next gets the next document for this cursor, returns true if there were no errors.
 
 func (b *BsonCursor) Next(ctx context.Context) bool {
-
 	if b.err != nil {
-
 		return false
-
 	}
 
 	if b.pushed != nil {
-
 		b.raw = b.pushed
 
 		b.pushed = nil
 
 		return true
-
 	}
 
 	b.raw, b.err = bson.ReadDocument(b.r)
 
 	return b.err == nil
-
 }
 
 // Push returns document back to cursor
 
 func (b *BsonCursor) Push(data []byte) error {
-
 	if b.pushed != nil {
-
 		return fmt.Errorf("cursor already has one unread pushed document")
-
 	}
 
 	b.pushed = data
 
 	return nil
-
 }
 
 // WaitForBecomePrimary waits until mongo client connection node becomes primary
 
 func WaitForBecomePrimary(ctx context.Context, mc *MongoClient, checkTimeout time.Duration) error {
-
 	reconnect := time.NewTimer(checkTimeout)
 
 	for {
-
 		select {
-
 		case <-reconnect.C:
 
 			err := mc.EnsureIsMaster(ctx)
 
 			if err == nil {
-
 				return nil
-
 			}
 
 			tracelog.InfoLogger.Printf("Waiting: %v", err)
@@ -745,11 +617,8 @@ func WaitForBecomePrimary(ctx context.Context, mc *MongoClient, checkTimeout tim
 		case <-ctx.Done():
 
 			return ctx.Err()
-
 		}
-
 	}
-
 }
 
 // ChangeOplogLastTimestamp do some actions to change system lastOpTimeFetchedTimestamp
@@ -767,31 +636,22 @@ func WaitForBecomePrimary(ctx context.Context, mc *MongoClient, checkTimeout tim
 // 3) Change timestamp of "replset.oplogTruncateAfterPoint" collection's document
 
 func (mc *MongoClient) ChangeOplogLastTimestamp(ctx context.Context, opTime models.OpTime) error {
-
 	if err := mc.addNoopToOplog(ctx, opTime); err != nil {
-
 		return err
-
 	}
 
 	if err := mc.changeMinValueTimestamp(ctx, opTime); err != nil {
-
 		return err
-
 	}
 
 	if err := mc.changeOplogTruncateAfterPointTimestamp(ctx); err != nil {
-
 		return err
-
 	}
 
 	return mc.fsync(ctx)
-
 }
 
 func (mc *MongoClient) changeMinValueTimestamp(ctx context.Context, opTime models.OpTime) error {
-
 	minValidCol := mc.c.Database(oplogDatabaseName).Collection("replset.minvalid")
 
 	var minValue = struct {
@@ -803,15 +663,11 @@ func (mc *MongoClient) changeMinValueTimestamp(ctx context.Context, opTime model
 	}{}
 
 	if err := minValidCol.FindOne(ctx, bson.M{}).Decode(&minValue); err != nil {
-
 		return err
-
 	}
 
 	result, err := minValidCol.UpdateOne(ctx, bson.M{"_id": minValue.ID}, bson.M{
-
 		"$set": bson.M{
-
 			"ts": models.BsonTimestampFromOplogTS(opTime.TS),
 
 			"t": opTime.Term,
@@ -819,21 +675,15 @@ func (mc *MongoClient) changeMinValueTimestamp(ctx context.Context, opTime model
 	})
 
 	if result.ModifiedCount == 0 && result.MatchedCount > 0 {
-
 		return err
-
 	} else if result.ModifiedCount == 0 {
-
 		return fmt.Errorf("need to debug I guess")
-
 	}
 
 	return err
-
 }
 
 func (mc *MongoClient) changeOplogTruncateAfterPointTimestamp(ctx context.Context) error {
-
 	otapCol := mc.c.Database(oplogDatabaseName).Collection("replset.oplogTruncateAfterPoint")
 
 	var otap = struct {
@@ -843,41 +693,29 @@ func (mc *MongoClient) changeOplogTruncateAfterPointTimestamp(ctx context.Contex
 	}{}
 
 	if err := otapCol.FindOne(ctx, bson.M{}).Decode(&otap); err != nil {
-
 		return err
-
 	}
 
 	result, err := otapCol.UpdateOne(ctx, bson.M{"_id": otap.ID}, bson.M{
-
 		"$set": bson.M{
-
 			"oplogTruncateAfterPoint": primitive.Timestamp{},
 		},
 	})
 
 	if result.ModifiedCount == 0 && result.MatchedCount > 0 {
-
 		return err
-
 	} else if result.ModifiedCount == 0 {
-
 		return fmt.Errorf("need to debug I guess")
-
 	}
 
 	return err
-
 }
 
 func (mc *MongoClient) addNoopToOplog(ctx context.Context, opTime models.OpTime) error {
-
 	oplogCollection, err := mc.getOplogCollection(ctx)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	opts := options.FindOne().SetSort(bson.D{{Key: "$natural", Value: -1}})
@@ -887,13 +725,10 @@ func (mc *MongoClient) addNoopToOplog(ctx context.Context, opTime models.OpTime)
 	err = oplogCollection.FindOne(ctx, bson.D{}, opts).Decode(&lastEntry)
 
 	if err != nil {
-
 		return fmt.Errorf("failed to get last oplog entry: %w", err)
-
 	}
 
 	noopEntry := bson.D{
-
 		{Key: "ts", Value: models.BsonTimestampFromOplogTS(opTime.TS)},
 
 		{Key: "t", Value: opTime.Term},
@@ -907,7 +742,6 @@ func (mc *MongoClient) addNoopToOplog(ctx context.Context, opTime models.OpTime)
 		{Key: "wall", Value: primitive.NewDateTimeFromTime(time.Now())},
 
 		{Key: "o", Value: bson.D{
-
 			{Key: "msg", Value: "manually inserted oplog position"},
 		}},
 	}
@@ -915,32 +749,24 @@ func (mc *MongoClient) addNoopToOplog(ctx context.Context, opTime models.OpTime)
 	_, err = oplogCollection.InsertOne(ctx, noopEntry)
 
 	return err
-
 }
 
 func (mc *MongoClient) fsync(ctx context.Context) error {
-
 	res := mc.c.Database("admin").RunCommand(ctx, bson.D{
-
 		{Key: "fsync", Value: 1},
 
 		{Key: "lock", Value: false},
 	})
 
 	return res.Err()
-
 }
 
 func (mc *MongoClient) Shutdown(ctx context.Context) error {
-
 	res := mc.c.Database("admin").RunCommand(ctx, bson.D{{Key: "shutdown", Value: 1}})
 
 	if err := res.Err(); err != nil && !mongo.IsNetworkError(res.Err()) {
-
 		return err
-
 	}
 
 	return nil
-
 }

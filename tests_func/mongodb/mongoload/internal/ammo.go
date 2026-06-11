@@ -126,7 +126,6 @@ var processOp = map[string]func(config opConfig) (string, error){
 		id++
 		return fmt.Sprintf(`{"op":"c", "db":"%s", "id": %d, "dc":{"insert":"%s", "documents": %s}}`,
 			config.DBName, id, config.ColName, docsGen()), nil
-
 	},
 	"delete": func(config opConfig) (string, error) {
 		var adv advDelete

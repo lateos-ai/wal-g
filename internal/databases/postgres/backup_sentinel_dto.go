@@ -53,9 +53,7 @@ type BackupSentinelDto struct {
 }
 
 func NewBackupSentinelDto(bh *BackupHandler, tbsSpec *TablespaceSpec) BackupSentinelDto {
-
 	sentinel := BackupSentinelDto{
-
 		BackupStartLSN: &bh.CurBackupInfo.startLSN,
 
 		IncrementFromLSN: bh.prevBackupInfo.sentinelDto.BackupStartLSN,
@@ -70,21 +68,15 @@ func NewBackupSentinelDto(bh *BackupHandler, tbsSpec *TablespaceSpec) BackupSent
 	}
 
 	if bh.prevBackupInfo.sentinelDto.BackupStartLSN != nil {
-
 		sentinel.IncrementFrom = &bh.prevBackupInfo.name
 
 		if bh.prevBackupInfo.sentinelDto.IsIncremental() {
-
 			sentinel.IncrementFullName = bh.prevBackupInfo.sentinelDto.IncrementFullName
-
 		} else {
-
 			sentinel.IncrementFullName = &bh.prevBackupInfo.name
-
 		}
 
 		sentinel.IncrementCount = &bh.CurBackupInfo.incrementCount
-
 	}
 
 	sentinel.BackupFinishLSN = &bh.CurBackupInfo.endLSN
@@ -102,7 +94,6 @@ func NewBackupSentinelDto(bh *BackupHandler, tbsSpec *TablespaceSpec) BackupSent
 	sentinel.FilesMetadataDisabled = bh.Arguments.withoutFilesMetadata
 
 	return sentinel
-
 }
 
 // Extended metadata should describe backup in more details, but be small enough to be downloaded often
@@ -138,13 +129,10 @@ type ExtendedMetadataDto struct {
 func NewExtendedMetadataDto(isPermanent bool, dataDir string, startTime time.Time,
 
 	sentinelDto BackupSentinelDto) (meta ExtendedMetadataDto) {
-
 	hostname, err := os.Hostname()
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("Failed to fetch the hostname for metadata, leaving empty: %v", err)
-
 	}
 
 	meta.DatetimeFormat = MetadataDatetimeFormat
@@ -176,7 +164,6 @@ func NewExtendedMetadataDto(isPermanent bool, dataDir string, startTime time.Tim
 	meta.CompressedSize = sentinelDto.CompressedSize
 
 	return meta
-
 }
 
 // TODO : get rid of panic here
@@ -184,21 +171,15 @@ func NewExtendedMetadataDto(isPermanent bool, dataDir string, startTime time.Tim
 // IsIncremental checks that sentinel represents delta backup
 
 func (dto *BackupSentinelDto) IsIncremental() (isIncremental bool) {
-
 	// If we have increment base, we must have all the rest properties.
 
 	if dto.IncrementFrom != nil {
-
 		if dto.IncrementFromLSN == nil || dto.IncrementFullName == nil || dto.IncrementCount == nil {
-
 			panic("Inconsistent BackupSentinelDto")
-
 		}
-
 	}
 
 	return dto.IncrementFrom != nil
-
 }
 
 // UnmarshalJSON implements custom JSON unmarshaling for BackupSentinelDto.
@@ -208,7 +189,6 @@ func (dto *BackupSentinelDto) IsIncremental() (isIncremental bool) {
 // for the TablespaceSpec field to ensure compatibility with both tools.
 
 func (dto *BackupSentinelDto) UnmarshalJSON(data []byte) error {
-
 	// Use an alias type to avoid infinite recursion
 
 	type backupSentinelDtoAlias BackupSentinelDto
@@ -218,43 +198,32 @@ func (dto *BackupSentinelDto) UnmarshalJSON(data []byte) error {
 	alias := (*backupSentinelDtoAlias)(dto)
 
 	if err := json.Unmarshal(data, alias); err != nil {
-
 		return err
-
 	}
 
 	// If TablespaceSpec is still nil, try to find it under "spec" (lowercase, WAL-E format)
 
 	if dto.TablespaceSpec == nil {
-
 		var rawMap map[string]json.RawMessage
 
 		if err := json.Unmarshal(data, &rawMap); err != nil {
-
 			return err
-
 		}
 
 		// Check for lowercase "spec" key (WAL-E format)
 
 		if specData, ok := rawMap["spec"]; ok {
-
 			var spec TablespaceSpec
 
 			if err := json.Unmarshal(specData, &spec); err != nil {
-
 				return err
-
 			}
 
 			dto.TablespaceSpec = &spec
-
 		}
-
 	}
 
 	return nil
-
 }
 
 // FilesMetadataDto contains the information about the backup files.
@@ -270,17 +239,13 @@ type FilesMetadataDto struct {
 }
 
 func NewFilesMetadataDto(files internal.BackupFileList, tarFileSets internal.TarFileSets) FilesMetadataDto {
-
 	return FilesMetadataDto{TarFileSets: tarFileSets.Get(), Files: files}
-
 }
 
 func (dto *FilesMetadataDto) setFiles(p *sync.Map) {
-
 	dto.Files = make(internal.BackupFileList)
 
 	p.Range(func(k, v interface{}) bool {
-
 		key := k.(string)
 
 		description := v.(internal.BackupFileDescription)
@@ -288,9 +253,7 @@ func (dto *FilesMetadataDto) setFiles(p *sync.Map) {
 		dto.Files[key] = description
 
 		return true
-
 	})
-
 }
 
 // BackupSentinelDtoV2 is the future version of the backup sentinel.
@@ -320,9 +283,7 @@ type BackupSentinelDtoV2 struct {
 }
 
 func NewBackupSentinelDtoV2(sentinel BackupSentinelDto, meta ExtendedMetadataDto) BackupSentinelDtoV2 {
-
 	return BackupSentinelDtoV2{
-
 		BackupSentinelDto: sentinel,
 
 		Version: 2,
@@ -339,7 +300,6 @@ func NewBackupSentinelDtoV2(sentinel BackupSentinelDto, meta ExtendedMetadataDto
 
 		IsPermanent: meta.IsPermanent,
 	}
-
 }
 
 type DeprecatedSentinelFields struct {

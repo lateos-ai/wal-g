@@ -38,33 +38,25 @@ type aoRelPgClassInfo struct {
 // NewGpQueryRunner builds QueryRunner from available connection
 
 func NewGpQueryRunner(ctx context.Context, conn *pgx.Conn) (*GpQueryRunner, error) {
-
 	pgQueryRunner, err := postgres.NewPgQueryRunner(ctx, conn)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	r := &GpQueryRunner{PgQueryRunner: pgQueryRunner}
 
 	return r, nil
-
 }
 
 func ToGpQueryRunner(queryRunner *postgres.PgQueryRunner) *GpQueryRunner {
-
 	return &GpQueryRunner{PgQueryRunner: queryRunner}
-
 }
 
 // BuildCreateGreenplumRestorePoint formats a query to create a restore point
 
 func (queryRunner *GpQueryRunner) buildCreateGreenplumRestorePoint(restorePointName string) string {
-
 	return fmt.Sprintf("SELECT (gp_create_restore_point('%s'))::text", restorePointName)
-
 }
 
 // CreateGreenplumRestorePoint creates a restore point
@@ -72,15 +64,12 @@ func (queryRunner *GpQueryRunner) buildCreateGreenplumRestorePoint(restorePointN
 func (queryRunner *GpQueryRunner) CreateGreenplumRestorePoint(ctx context.Context,
 
 	restorePointName string) (restoreLSNs map[int]string, err error) {
-
 	conn := queryRunner.Connection
 
 	rows, err := conn.Query(ctx, queryRunner.buildCreateGreenplumRestorePoint(restorePointName))
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	defer rows.Close()
@@ -90,43 +79,32 @@ func (queryRunner *GpQueryRunner) CreateGreenplumRestorePoint(ctx context.Contex
 	restorePointPattern := regexp.MustCompile(`(-?\d+),([0-9A-F]+/[0-9A-F]+)`)
 
 	for rows.Next() {
-
 		var row string
 
 		if err := rows.Scan(&row); err != nil {
-
 			tracelog.WarningLogger.Printf("CreateGreenplumRestorePoint:  %v\n", err.Error())
-
 		}
 
 		match := restorePointPattern.FindStringSubmatch(row)
 
 		if match == nil {
-
 			return nil, fmt.Errorf("failed to parse CreateGreenplumRestorePoint output row: %s", row)
-
 		}
 
 		contentID, err := strconv.Atoi(match[1])
 
 		if err != nil {
-
 			return nil, errors.Wrapf(err, "failed to parse the contentID value (%s)", match[1])
-
 		}
 
 		restoreLSNs[contentID] = match[2]
-
 	}
 
 	if rows.Err() != nil {
-
 		return nil, rows.Err()
-
 	}
 
 	return restoreLSNs, nil
-
 }
 
 const getGreenplumSegmentsInfoQuery = `SELECT
@@ -152,15 +130,12 @@ ORDER BY content, role DESC;`
 // GetGreenplumSegmentsInfo returns the information about segments
 
 func (queryRunner *GpQueryRunner) GetGreenplumSegmentsInfo(ctx context.Context) (segments []cluster.SegConfig, err error) {
-
 	conn := queryRunner.Connection
 
 	rows, err := conn.Query(ctx, getGreenplumSegmentsInfoQuery)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	defer rows.Close()
@@ -168,7 +143,6 @@ func (queryRunner *GpQueryRunner) GetGreenplumSegmentsInfo(ctx context.Context) 
 	segments = make([]cluster.SegConfig, 0)
 
 	for rows.Next() {
-
 		var dbID int
 
 		var contentID int
@@ -182,13 +156,10 @@ func (queryRunner *GpQueryRunner) GetGreenplumSegmentsInfo(ctx context.Context) 
 		var dataDir string
 
 		if err := rows.Scan(&dbID, &contentID, &role, &port, &hostname, &dataDir); err != nil {
-
 			tracelog.WarningLogger.Printf("GetGreenplumSegmentsInfo:  %v\n", err.Error())
-
 		}
 
 		segment := cluster.SegConfig{
-
 			DbID: dbID,
 
 			ContentID: contentID,
@@ -203,41 +174,32 @@ func (queryRunner *GpQueryRunner) GetGreenplumSegmentsInfo(ctx context.Context) 
 		}
 
 		segments = append(segments, segment)
-
 	}
 
 	if rows.Err() != nil {
-
 		return nil, rows.Err()
-
 	}
 
 	return segments, nil
-
 }
 
 // GetGreenplumVersion returns version
 
 func (queryRunner *GpQueryRunner) GetGreenplumVersion(ctx context.Context) (version string, err error) {
-
 	conn := queryRunner.Connection
 
 	err = conn.QueryRow(ctx, "SELECT pg_catalog.version()").Scan(&version)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	return version, nil
-
 }
 
 // BuildIsInBackup formats a query to retrieve information about running backups
 
 func (queryRunner *GpQueryRunner) buildIsInBackup() string {
-
 	return `
 
 SELECT pg_catalog.pg_is_in_backup(), gp_segment_id FROM gp_dist_random('gp_id')
@@ -247,13 +209,11 @@ UNION ALL
 SELECT pg_catalog.pg_is_in_backup(), -1;
 
 `
-
 }
 
 // TryGetLock tries to take advisory lock
 
 func (queryRunner *GpQueryRunner) TryGetLock(ctx context.Context) (err error) {
-
 	conn := queryRunner.Connection
 
 	var lockFree bool
@@ -261,49 +221,37 @@ func (queryRunner *GpQueryRunner) TryGetLock(ctx context.Context) (err error) {
 	err = conn.QueryRow(ctx, "SELECT pg_catalog.pg_try_advisory_lock(pg_catalog.hashtext('gp_backup'))").Scan(&lockFree)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if !lockFree {
-
 		return fmt.Errorf("lock is already taken")
-
 	}
 
 	return nil
-
 }
 
 // buildAbortBackupSegments aborts the running backup on the segments
 
 func (queryRunner *GpQueryRunner) buildAbortBackupSegments() string {
-
 	return `SELECT pg_catalog.pg_stop_backup(), gp_segment_id FROM gp_dist_random('gp_id');`
-
 }
 
 // buildAbortBackupSegments aborts the running backup on the master instance
 
 func (queryRunner *GpQueryRunner) buildAbortBackupMaster() string {
-
 	return `SELECT pg_catalog.pg_stop_backup();`
-
 }
 
 // IsInBackup check if there is backup running
 
 func (queryRunner *GpQueryRunner) IsInBackup(ctx context.Context) (isInBackupByContentID map[int]bool, err error) {
-
 	conn := queryRunner.Connection
 
 	rows, err := conn.Query(ctx, queryRunner.buildIsInBackup())
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "QueryRunner IsInBackup: query failed")
-
 	}
 
 	defer rows.Close()
@@ -311,35 +259,27 @@ func (queryRunner *GpQueryRunner) IsInBackup(ctx context.Context) (isInBackupByC
 	results := make(map[int]bool)
 
 	for rows.Next() {
-
 		var contentID int
 
 		var isInBackup bool
 
 		if err := rows.Scan(&isInBackup, &contentID); err != nil {
-
 			tracelog.WarningLogger.Printf("QueryRunner IsInBackup:  %v\n", err.Error())
-
 		}
 
 		results[contentID] = isInBackup
-
 	}
 
 	if rows.Err() != nil {
-
 		return nil, rows.Err()
-
 	}
 
 	return results, nil
-
 }
 
 // AbortBackup stops the backup process on all segments
 
 func (queryRunner *GpQueryRunner) AbortBackup(ctx context.Context) (err error) {
-
 	tracelog.InfoLogger.Println("Calling pg_stop_backup() on all segments...")
 
 	conn := queryRunner.Connection
@@ -353,17 +293,13 @@ func (queryRunner *GpQueryRunner) AbortBackup(ctx context.Context) (err error) {
 	_, err = conn.Exec(cleanupCtx, "SET statement_timeout=0;")
 
 	if err != nil {
-
 		errs = append(errs, errors.Wrap(err, "QueryRunner AbortBackup: failed setting statement timeout in transaction"))
-
 	}
 
 	_, err = conn.Exec(cleanupCtx, queryRunner.buildAbortBackupSegments())
 
 	if err != nil {
-
 		errs = append(errs, errors.Wrap(err, "QueryRunner IsInBackup: segment backups stop error"))
-
 	}
 
 	tracelog.DebugLogger.Println("Stopped backups on segments")
@@ -371,9 +307,7 @@ func (queryRunner *GpQueryRunner) AbortBackup(ctx context.Context) (err error) {
 	_, err = conn.Exec(cleanupCtx, queryRunner.buildAbortBackupMaster())
 
 	if err != nil {
-
 		errs = append(errs, errors.Wrap(err, "QueryRunner IsInBackup: master backup stop error"))
-
 	}
 
 	tracelog.DebugLogger.Println("Stopped backups on master")
@@ -381,13 +315,10 @@ func (queryRunner *GpQueryRunner) AbortBackup(ctx context.Context) (err error) {
 	var finalErr error
 
 	for i := range errs {
-
 		finalErr = errors.Wrap(finalErr, errs[i].Error())
-
 	}
 
 	return finalErr
-
 }
 
 // FetchAOStorageMetadata queries the storage metadata for AO & AOCS tables (GreenplumDB)
@@ -395,7 +326,6 @@ func (queryRunner *GpQueryRunner) AbortBackup(ctx context.Context) (err error) {
 func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 
 	dbInfo postgres.PgDatabaseInfo) (AoRelFileStorageMap, error) {
-
 	queryRunner.Mu.Lock()
 
 	defer queryRunner.Mu.Unlock()
@@ -407,17 +337,13 @@ func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 	conn := queryRunner.Connection
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "failed to build the pg_class query")
-
 	}
 
 	rows, err := conn.Query(ctx, getStatQuery)
 
 	if err != nil {
-
 		return nil, errors.Wrap(err, "pg_class query failed")
-
 	}
 
 	defer rows.Close()
@@ -425,7 +351,6 @@ func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 	relPgClassInfo := make(map[string]aoRelPgClassInfo)
 
 	for rows.Next() {
-
 		var oid uint32
 
 		var relNameMd5 string
@@ -441,13 +366,10 @@ func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 		var relNAtts int16
 
 		if err := rows.Scan(&oid, &relNameMd5, &aoSegTableFqn, &relFileNodeID, &spcNode, &storage, &relNAtts); err != nil {
-
 			return nil, errors.Wrapf(err, "failed to parse query result")
-
 		}
 
 		row := aoRelPgClassInfo{
-
 			oid: oid,
 
 			relNameMd5: relNameMd5,
@@ -462,53 +384,40 @@ func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 		}
 
 		relPgClassInfo[aoSegTableFqn] = row
-
 	}
 
 	if rows.Err() != nil {
-
 		return nil, rows.Err()
-
 	}
 
 	relStorageMap := make(AoRelFileStorageMap)
 
 	for aoSegTableFqn, row := range relPgClassInfo {
-
 		var queryFunc func() (pgx.Rows, error)
 
 		switch row.storage {
-
 		case AppendOptimized:
 
 			queryFunc = func() (pgx.Rows, error) {
-
 				query, err := queryRunner.buildAOMetadataQuery(aoSegTableFqn)
 
 				if err != nil {
-
 					return nil, err
-
 				}
 
 				return conn.Query(ctx, query)
-
 			}
 
 		case ColumnOriented:
 
 			queryFunc = func() (pgx.Rows, error) {
-
 				query, err := queryRunner.buildAOCSMetadataQuery()
 
 				if err != nil {
-
 					return nil, err
-
 				}
 
 				return conn.Query(ctx, query, row.oid)
-
 			}
 
 		default:
@@ -518,39 +427,30 @@ func (queryRunner *GpQueryRunner) FetchAOStorageMetadata(ctx context.Context,
 				row.storage, row.relFileNodeID, dbInfo.Name)
 
 			continue
-
 		}
 
 		err = loadStorageMetadata(relStorageMap, dbInfo, queryFunc, aoSegTableFqn, relPgClassInfo)
 
 		if err != nil {
-
 			tracelog.WarningLogger.Printf("failed to fetch the AOCS storage metadata: %v\n", err)
-
 		}
-
 	}
 
 	return relStorageMap, nil
-
 }
 
 func loadStorageMetadata(relStorageMap AoRelFileStorageMap, dbInfo postgres.PgDatabaseInfo,
 
 	queryFn func() (pgx.Rows, error), aoSegTableFqn string, relPgClassInfo map[string]aoRelPgClassInfo) error {
-
 	rows, err := queryFn()
 
 	if err != nil {
-
 		return errors.Wrap(err, "storage metadata query failed")
-
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
-
 		var segNo int
 
 		var modCount int64
@@ -558,9 +458,7 @@ func loadStorageMetadata(relStorageMap AoRelFileStorageMap, dbInfo postgres.PgDa
 		var eof int64
 
 		if err := rows.Scan(&segNo, &modCount, &eof); err != nil {
-
 			tracelog.WarningLogger.Printf("failed to parse query result: %v\n", err.Error())
-
 		}
 
 		cInfo := relPgClassInfo[aoSegTableFqn]
@@ -570,13 +468,10 @@ func loadStorageMetadata(relStorageMap AoRelFileStorageMap, dbInfo postgres.PgDa
 		// if tablespace id is zero, use the default database tablespace id
 
 		if relFileLoc.RelationFileNode.SpcNode == walparser.Oid(0) {
-
 			relFileLoc.RelationFileNode.SpcNode = dbInfo.TblSpcOid
-
 		}
 
 		relStorageMap[*relFileLoc] = AoRelFileMetadata{
-
 			relNameMd5: cInfo.relNameMd5,
 
 			storageType: cInfo.storage,
@@ -585,17 +480,13 @@ func loadStorageMetadata(relStorageMap AoRelFileStorageMap, dbInfo postgres.PgDa
 
 			modCount: modCount,
 		}
-
 	}
 
 	if rows.Err() != nil {
-
 		return rows.Err()
-
 	}
 
 	return nil
-
 }
 
 const gpAoRelationPgClassQuery = `
@@ -707,31 +598,23 @@ JOIN (
 `
 
 func (queryRunner *GpQueryRunner) buildAORelPgClassQuery(ctx context.Context) (string, error) {
-
 	versionStr, err := queryRunner.GetGreenplumVersion(ctx)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	version, err := parseGreenplumVersion(versionStr)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	switch version.Flavor {
-
 	case Greenplum:
 
 		{
-
 			switch {
-
 			case queryRunner.Version >= 120000:
 
 				return cbAoRelationPgClassQuery, nil
@@ -747,9 +630,7 @@ func (queryRunner *GpQueryRunner) buildAORelPgClassQuery(ctx context.Context) (s
 			default:
 
 				return "", postgres.NewUnsupportedPostgresVersionError(queryRunner.Version)
-
 			}
-
 		}
 
 	case Cloudberry:
@@ -759,15 +640,11 @@ func (queryRunner *GpQueryRunner) buildAORelPgClassQuery(ctx context.Context) (s
 	default:
 
 		return "", fmt.Errorf("unsupported greenplum flavor: %s", version.Flavor.String())
-
 	}
-
 }
 
 func (queryRunner *GpQueryRunner) buildAOCSMetadataQuery() (string, error) {
-
 	switch {
-
 	case queryRunner.Version >= 90000:
 
 		return `SELECT aocs.physical_segno as segno, aocs.modcount, aocs.eof " +
@@ -781,15 +658,11 @@ func (queryRunner *GpQueryRunner) buildAOCSMetadataQuery() (string, error) {
 	default:
 
 		return "", postgres.NewUnsupportedPostgresVersionError(queryRunner.Version)
-
 	}
-
 }
 
 func (queryRunner *GpQueryRunner) buildAOMetadataQuery(aoSegTableFqn string) (string, error) {
-
 	switch {
-
 	case queryRunner.Version >= 90000:
 
 		return fmt.Sprintf(`SELECT segno, modcount, eof FROM %s;`, aoSegTableFqn), nil
@@ -801,7 +674,5 @@ func (queryRunner *GpQueryRunner) buildAOMetadataQuery(aoSegTableFqn string) (st
 	default:
 
 		return "", postgres.NewUnsupportedPostgresVersionError(queryRunner.Version)
-
 	}
-
 }

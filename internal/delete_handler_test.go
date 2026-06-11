@@ -13,7 +13,6 @@ import (
 )
 
 func CreateMockStorageFolder() storage.Folder {
-
 	var folder = memory.NewFolder("in_memory/", memory.NewKVS())
 
 	subFolder := folder.GetSubFolder("basebackups_005/")
@@ -39,29 +38,23 @@ func CreateMockStorageFolder() storage.Folder {
 	subFolder.PutObject("base_456/some_folder/3", &bytes.Buffer{})
 
 	return folder
-
 }
 
 func CreateMockDeleteHandler(backups []BackupObject, folder storage.Folder) *DeleteHandler {
-
 	lessFunction := func(object1, object2 storage.Object) bool { return object1.GetName() < object2.GetName() }
 
 	deleteHandler := NewDeleteHandler(folder, backups, lessFunction)
 
 	return deleteHandler
-
 }
 
 func TestDeleteOldObjects(t *testing.T) {
-
 	folder := CreateMockStorageFolder()
 
 	expectedOnlyOneSavedObjectName := "basebackups_005/base_123312"
 
 	filter := func(object storage.Object) bool {
-
 		return object.GetName() != expectedOnlyOneSavedObjectName
-
 	}
 
 	folderFilter := func(path string) bool { return true }
@@ -77,25 +70,19 @@ func TestDeleteOldObjects(t *testing.T) {
 	assert.Equal(t, 1, len(savedObjects))
 
 	assert.Equal(t, expectedOnlyOneSavedObjectName, savedObjects[0].GetName())
-
 }
 
 func TestDeleteOldObjectsWithFilter(t *testing.T) {
-
 	folder := CreateMockStorageFolder()
 
 	expectedOnlyOneSavedObjectName := "basebackups_005/base_456/some_folder/3"
 
 	filter := func(object storage.Object) bool {
-
 		return true
-
 	}
 
 	folderFilter := func(name string) bool {
-
 		return !strings.HasPrefix(name, "basebackups_005/base_456/some_folder")
-
 	}
 
 	err := DeleteObjectsWhere(folder, true, filter, folderFilter)
@@ -109,11 +96,9 @@ func TestDeleteOldObjectsWithFilter(t *testing.T) {
 	assert.Equal(t, 1, len(savedObjects))
 
 	assert.Equal(t, expectedOnlyOneSavedObjectName, savedObjects[0].GetName())
-
 }
 
 func TestFindTargetByName(t *testing.T) {
-
 	mockFolder := CreateMockStorageFolder()
 
 	objects, _, _ := mockFolder.GetSubFolder("basebackups_005/").ListFolder()
@@ -127,16 +112,13 @@ func TestFindTargetByName(t *testing.T) {
 
 		expected string
 	}{
-
 		{
-
 			"",
 
 			backupObjects[0].GetName(),
 		},
 
 		{
-
 			backupObjects[0].GetName(),
 
 			backupObjects[0].GetName(),
@@ -144,23 +126,17 @@ func TestFindTargetByName(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-
 		t.Run(fmt.Sprintf("Case %d", i), func(t *testing.T) {
-
 			actual, err := deleteHandler.FindTargetByName(tc.target)
 
 			assert.NoError(t, err)
 
 			assert.Equal(t, tc.expected, actual.GetName())
-
 		})
-
 	}
-
 }
 
 func TestFindTargetByNameNotContains(t *testing.T) {
-
 	mockFolder := CreateMockStorageFolder()
 
 	objects, _, _ := mockFolder.GetSubFolder("basebackups_005/").ListFolder()
@@ -176,11 +152,9 @@ func TestFindTargetByNameNotContains(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Equal(t, nil, actual)
-
 }
 
 func TestFindTargetByNameEmpty(t *testing.T) {
-
 	mockFolder := CreateMockStorageFolder()
 
 	deleteHandler := CreateMockDeleteHandler([]BackupObject{}, mockFolder)
@@ -190,5 +164,4 @@ func TestFindTargetByNameEmpty(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Equal(t, nil, actual)
-
 }

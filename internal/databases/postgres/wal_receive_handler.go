@@ -65,15 +65,12 @@ type genericWalReceiveError struct {
 }
 
 func (err genericWalReceiveError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 // HandleWALReceive is invoked to receive wal with a replication connection and push
 
 func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
-
 	// Connect to postgres.
 
 	var XLogPos pglogrepl.LSN
@@ -99,11 +96,8 @@ func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	if slot.Exists {
-
 		XLogPos = slot.RestartLSN
-
 	} else {
-
 		tracelog.InfoLogger.Println("Trying to create the replication slot")
 
 		_, err = pglogrepl.CreateReplicationSlot(context.Background(), conn, slot.Name, "",
@@ -113,7 +107,6 @@ func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		XLogPos = sysident.XLogPos
-
 	}
 
 	// Get timeline for XLogPos from historyfile with helper function
@@ -127,7 +120,6 @@ func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
 	startReplication(conn, segment, slot.Name)
 
 	for {
-
 		streamResult, err := segment.Stream(conn, StandbyMessageTimeout)
 
 		tracelog.ErrorLogger.FatalOnError(err)
@@ -135,7 +127,6 @@ func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
 		tracelog.DebugLogger.Printf("Successfully received wal segment %s: ", segment.Name())
 
 		switch streamResult {
-
 		case ProcessMessageOK:
 
 			// segment is a regular segemnt. Write, and create a new for this timeline.
@@ -191,11 +182,8 @@ func HandleWALReceive(ctx context.Context, uploader *WalUploader) {
 		default:
 
 			tracelog.ErrorLogger.FatalOnError(errors.Errorf("Unexpected result from WalSegment.Stream() %v", streamResult))
-
 		}
-
 	}
-
 }
 
 func getStartTimeline(ctx context.Context,
@@ -207,17 +195,13 @@ func getStartTimeline(ctx context.Context,
 	systemTimeline uint32,
 
 	xLogPos pglogrepl.LSN) (uint32, error) {
-
 	if systemTimeline < 2 {
-
 		return 1, nil
-
 	}
 
 	timelinehistfile, err := pglogrepl.TimelineHistory(context.Background(), conn, int32(systemTimeline))
 
 	if err == nil {
-
 		tlh, err := NewTimeLineHistFile(systemTimeline, timelinehistfile.FileName, timelinehistfile.Content)
 
 		tracelog.ErrorLogger.FatalOnError(err)
@@ -227,25 +211,18 @@ func getStartTimeline(ctx context.Context,
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		return tlh.LSNToTimeLine(xLogPos)
-
 	}
 
 	if pgErr, ok := err.(*pgconn.PgError); ok {
-
 		if pgErr.Code == "58P01" {
-
 			return systemTimeline, nil
-
 		}
-
 	}
 
 	return 0, nil
-
 }
 
 func startReplication(conn *pgconn.PgConn, segment *WalSegment, slotName string) {
-
 	tracelog.DebugLogger.Printf("Starting replication from %s: ", segment.StartLSN)
 
 	err := pglogrepl.StartReplication(context.Background(), conn, slotName, segment.StartLSN,
@@ -255,11 +232,9 @@ func startReplication(conn *pgconn.PgConn, segment *WalSegment, slotName string)
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	tracelog.DebugLogger.Println("Started replication")
-
 }
 
 func getCurrentWalInfo() (slot PhysicalSlot, walSegmentBytes uint64, err error) {
-
 	slotName := internal.GetPgSlotName()
 
 	// Creating a temporary connection to read slot info and wal_segment_size
@@ -271,9 +246,7 @@ func getCurrentWalInfo() (slot PhysicalSlot, walSegmentBytes uint64, err error) 
 	tmpConn, err := Connect(ctx)
 
 	if err != nil {
-
 		return
-
 	}
 
 	defer tmpConn.Close(ctx)
@@ -281,21 +254,16 @@ func getCurrentWalInfo() (slot PhysicalSlot, walSegmentBytes uint64, err error) 
 	queryRunner, err := NewPgQueryRunner(ctx, tmpConn)
 
 	if err != nil {
-
 		return
-
 	}
 
 	slot, err = queryRunner.GetPhysicalSlotInfo(ctx, slotName)
 
 	if err != nil {
-
 		return
-
 	}
 
 	walSegmentBytes, err = queryRunner.GetWalSegmentBytes(ctx)
 
 	return
-
 }

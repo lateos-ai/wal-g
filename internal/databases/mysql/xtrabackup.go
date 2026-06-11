@@ -47,17 +47,13 @@ type XtrabackupExtInfo struct {
 }
 
 func NewXtrabackupInfo(content string) XtrabackupInfo {
-
 	result := XtrabackupInfo{}
 
 	for _, line := range strings.Split(content, "\n") {
-
 		pair := strings.SplitN(line, "=", 2)
 
 		if len(pair) != 2 {
-
 			continue
-
 		}
 
 		key := strings.TrimSpace(pair[0])
@@ -65,7 +61,6 @@ func NewXtrabackupInfo(content string) XtrabackupInfo {
 		value := strings.TrimSpace(pair[1])
 
 		switch key {
-
 		case "from_lsn":
 
 			result.FromLSN = ParseLSN(value)
@@ -77,81 +72,59 @@ func NewXtrabackupInfo(content string) XtrabackupInfo {
 		case "last_lsn":
 
 			result.LastLSN = ParseLSN(value)
-
 		}
-
 	}
 
 	return result
-
 }
 
 func isXtrabackup(cmd *exec.Cmd) bool {
-
 	return slices.ContainsFunc(cmd.Args, func(arg string) bool {
-
 		return strings.Contains(arg, "xtrabackup") || strings.Contains(arg, "xbstream")
-
 	})
-
 }
 
 //nolint:unparam
 
 func prepareTemporaryDirectory(tmpDirRoot string) (string, error) {
-
 	tmpDirPattern := "wal-g"
 
 	tmpPath, err := os.MkdirTemp(tmpDirRoot, tmpDirPattern)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Failed to create temporary directory like %s/%s", tmpDirRoot, tmpDirPattern)
 
 		tracelog.ErrorLogger.Fatalf("Failed to create temporary directory: %v", err)
-
 	}
 
 	return tmpPath, nil
-
 }
 
 func removeTemporaryDirectory(tmpDir string) error {
-
 	err := os.RemoveAll(tmpDir)
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("Failed to remove temporary directory in %s", tmpDir)
 
 		return err
-
 	}
 
 	return nil
-
 }
 
 func readXtrabackupInfo(xtrabackupExtraDirectory string) (XtrabackupInfo, error) {
-
 	raw, err := os.ReadFile(filepath.Join(xtrabackupExtraDirectory, "xtrabackup_checkpoints"))
 
 	if err != nil {
-
 		return XtrabackupInfo{}, err
-
 	}
 
 	return NewXtrabackupInfo(string(raw)), nil
-
 }
 
 func enrichBackupArgs(backupCmd *exec.Cmd, xtrabackupExtraDirectory string, isFullBackup bool, prevBackupInfo *PrevBackupInfo) {
-
 	if prevBackupInfo == nil {
-
 		tracelog.ErrorLogger.Fatalf("PrevBackupInfo is null")
-
 	}
 
 	// -–extra-lsndir=DIRECTORY - save an extra copy of the xtrabackup_checkpoints and xtrabackup_info files in this directory.
@@ -159,25 +132,18 @@ func enrichBackupArgs(backupCmd *exec.Cmd, xtrabackupExtraDirectory string, isFu
 	injectCommandArgument(backupCmd, "--extra-lsndir="+xtrabackupExtraDirectory)
 
 	if !isFullBackup && (*prevBackupInfo != PrevBackupInfo{} && prevBackupInfo.sentinel.LSN != nil) {
-
 		// –-incremental-lsn=LSN
 
 		injectCommandArgument(backupCmd, "--incremental-lsn="+prevBackupInfo.sentinel.LSN.String())
-
 	}
-
 }
 
 func GetXtrabackupFetcher(restoreCmd, prepareCmd *exec.Cmd, useXbtoolExtract bool, inplace bool) internal.Fetcher {
-
 	return func(folder storage.Folder, backup internal.Backup) {
-
 		err := xtrabackupFetch(backup.Name, folder, restoreCmd, prepareCmd, useXbtoolExtract, inplace, true)
 
 		tracelog.ErrorLogger.FatalfOnError("Failed to fetch backup: %v", err)
-
 	}
-
 }
 
 func xtrabackupFetch(
@@ -195,7 +161,6 @@ func xtrabackupFetch(
 	inplace bool,
 
 	isLast bool) error {
-
 	backup, err := internal.GetBackupByName(backupName, utility.BaseBackupPath, folder)
 
 	tracelog.ErrorLogger.FatalfOnError("Failed to fetch backup: %v", err)
@@ -211,7 +176,6 @@ func xtrabackupFetch(
 	// recursively, find base backup and start from it:
 
 	if sentinel.IsIncremental {
-
 		// check required configs earlier:
 
 		_, err = internal.GetCommandSetting(conf.MysqlBackupPrepareCmd)
@@ -223,25 +187,18 @@ func xtrabackupFetch(
 		err = xtrabackupFetch(*sentinel.IncrementFrom, folder, restoreCmd, prepareCmd, useXbtoolExtract, inplace, false)
 
 		if err != nil {
-
 			return err
-
 		}
-
 	}
 
 	if useXbtoolExtract {
-
 		return xtrabackupFetchInhouse(backup, prepareCmd, inplace, isLast)
-
 	}
 
 	return xtrabackupFetchClassic(backup, restoreCmd, prepareCmd, isLast)
-
 }
 
 func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepareCmd *exec.Cmd, isLast bool) error {
-
 	// Manually we will do the following:
 
 	//
@@ -275,7 +232,6 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 	tracelog.ErrorLogger.FatalfOnError("Failed to prepare temp dir: %v", err)
 
 	if sentinel.IsIncremental {
-
 		restoreCmd = cloneCommand(restoreCmd)
 
 		restoreArgs := strings.Fields(restoreCmd.Args[len(restoreCmd.Args)-1])
@@ -285,15 +241,12 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 		prepareCmd = cloneCommand(prepareCmd)
 
 		injectCommandArgument(prepareCmd, XtrabackupIncrementalDir+"="+tempDeltaDir)
-
 	}
 
 	if !isLast {
-
 		prepareCmd = cloneCommand(prepareCmd)
 
 		injectCommandArgument(prepareCmd, XtrabackupApplyLogOnly)
-
 	}
 
 	stdin, err := restoreCmd.StdinPipe()
@@ -309,19 +262,15 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 	err = restoreCmd.Start()
 
 	if err != nil {
-
 		return err
-
 	}
 
 	fetcher, err := internal.GetBackupStreamFetcher(backup)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Failed to detect backup format: %v\n", err)
 
 		return err
-
 	}
 
 	err = fetcher(backup, stdin)
@@ -329,23 +278,18 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 	cmdErr := restoreCmd.Wait()
 
 	if cmdErr != nil {
-
 		tracelog.ErrorLogger.Printf("Restore command output:\n%s", stderr.String())
 
 		err = cmdErr
-
 	}
 
 	if err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf("Restored %s", backup.Name)
 
 	if prepareCmd != nil {
-
 		tracelog.InfoLogger.Printf("Preparing %s with cmd %v", backup.Name, prepareCmd.Args)
 
 		prepareCmd.Stdout = os.Stdout
@@ -355,27 +299,20 @@ func xtrabackupFetchClassic(backup internal.Backup, restoreCmd *exec.Cmd, prepar
 		err = prepareCmd.Run()
 
 		if err != nil {
-
 			tracelog.ErrorLogger.Printf("Failed to prepare fetched backup: %v", err)
 
 			return err
-
 		}
 
 		tracelog.InfoLogger.Printf("Prepared %s", backup.Name)
-
 	} else {
-
 		tracelog.InfoLogger.Printf("WALG_MYSQL_BACKUP_PREPARE_COMMAND not configured. Skipping prepare phase")
-
 	}
 
 	return os.RemoveAll(tempDeltaDir)
-
 }
 
 func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplace bool, isLast bool) error {
-
 	// This is equivalent to:
 
 	//
@@ -415,29 +352,23 @@ func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplac
 	tracelog.ErrorLogger.FatalfOnError("Failed to prepare temp dir: %v", err)
 
 	if sentinel.IsIncremental {
-
 		prepareCmd = cloneCommand(prepareCmd)
 
 		injectCommandArgument(prepareCmd, XtrabackupIncrementalDir+"="+tempDeltaDir)
-
 	}
 
 	if !isLast {
-
 		prepareCmd = cloneCommand(prepareCmd)
 
 		injectCommandArgument(prepareCmd, XtrabackupApplyLogOnly)
-
 	}
 
 	fetcher, err := internal.GetBackupStreamFetcher(backup)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Failed to detect backup format: %v\n", err)
 
 		return err
-
 	}
 
 	var wg sync.WaitGroup
@@ -449,35 +380,27 @@ func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplac
 	wg.Add(1)
 
 	if inplace && sentinel.IsIncremental {
-
 		// apply diff-files to dataDir inplace (and leave required leftovers incrementalDir)
 
 		// nolint : staticcheck
 
 		go xbstream.AsyncDiffBackupSink(&wg, streamReader, dataDir, tempDeltaDir)
-
 	} else {
-
 		destinationDir := tempDeltaDir
 
 		if !sentinel.IsIncremental {
-
 			destinationDir = dataDir
-
 		}
 
 		go xbstream.AsyncBackupSink(&wg, streamReader, destinationDir, true)
-
 	}
 
 	err = fetcher(backup, writer)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Restore failed: %v", err)
 
 		return err
-
 	}
 
 	wg.Wait()
@@ -485,7 +408,6 @@ func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplac
 	tracelog.InfoLogger.Printf("Restored %s", backup.Name)
 
 	if prepareCmd != nil {
-
 		tracelog.InfoLogger.Printf("Preparing %s with cmd %v", backup.Name, prepareCmd.Args)
 
 		prepareCmd.Stdout = os.Stdout
@@ -495,21 +417,15 @@ func xtrabackupFetchInhouse(backup internal.Backup, prepareCmd *exec.Cmd, inplac
 		err = prepareCmd.Run()
 
 		if err != nil {
-
 			tracelog.ErrorLogger.Printf("Failed to prepare fetched backup: %v", err)
 
 			return err
-
 		}
 
 		tracelog.InfoLogger.Printf("Prepared %s", backup.Name)
-
 	} else {
-
 		tracelog.InfoLogger.Printf("WALG_MYSQL_BACKUP_PREPARE_COMMAND not configured. Skipping prepare phase")
-
 	}
 
 	return os.RemoveAll(tempDeltaDir)
-
 }

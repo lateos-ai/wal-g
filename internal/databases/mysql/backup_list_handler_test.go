@@ -10,9 +10,7 @@ import (
 )
 
 func TestBackupDetail_PrintableFields(t *testing.T) {
-
 	bd := BackupDetail{
-
 		BackupName: "my first backup",
 
 		ModifyTime: time.Unix(1692800000, 0).UTC(),
@@ -43,9 +41,7 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 	prettyFinishTime := "Wednesday, 23-Aug-23 20:23:42 UTC"
 
 	want := []printlist.TableField{
-
 		{
-
 			Name: "name",
 
 			PrettyName: "Name",
@@ -56,7 +52,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "last_modified",
 
 			PrettyName: "Last modified",
@@ -67,7 +62,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -78,7 +72,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "stop_time",
 
 			PrettyName: "Stop time",
@@ -89,7 +82,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "hostname",
 
 			PrettyName: "Hostname",
@@ -100,7 +92,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "binlog_start",
 
 			PrettyName: "Binlog start",
@@ -111,7 +102,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "binlog_end",
 
 			PrettyName: "Binlog end",
@@ -122,7 +112,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "uncompressed_size",
 
 			PrettyName: "Uncompressed size",
@@ -133,7 +122,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "compressed_size",
 
 			PrettyName: "Compressed size",
@@ -144,7 +132,6 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "is_permanent",
 
 			PrettyName: "Permanent",
@@ -156,5 +143,4 @@ func TestBackupDetail_PrintableFields(t *testing.T) {
 	}
 
 	assert.Equal(t, want, got)
-
 }

@@ -12,36 +12,28 @@ import (
 )
 
 func buildFileBuffer(path string) *FileBuffer {
-
 	b, err := NewFileBuffer(path)
 
 	if err != nil {
-
 		panic(err)
-
 	}
 
 	return b
-
 }
 
 func TestBuffers_ReadWriteLen(t *testing.T) {
-
 	tests := []struct {
 		name string
 
 		b Buffer
 	}{
-
 		{
-
 			name: "memory_buffer",
 
 			b: NewMemoryBuffer(),
 		},
 
 		{
-
 			name: "file_buffer",
 
 			b: buildFileBuffer(internal.GetDefaultDataFolderPath()),
@@ -49,9 +41,7 @@ func TestBuffers_ReadWriteLen(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			buf := tt.b
 
 			assert.Equal(t, 0, buf.Len())
@@ -129,15 +119,11 @@ func TestBuffers_ReadWriteLen(t *testing.T) {
 			err = buf.Close()
 
 			assert.Nil(t, err)
-
 		})
-
 	}
-
 }
 
 func TestFileBuffer_NewClose(t *testing.T) {
-
 	tests := []struct {
 		name string
 
@@ -145,9 +131,7 @@ func TestFileBuffer_NewClose(t *testing.T) {
 
 		expectedErr bool
 	}{
-
 		{
-
 			name: "tmp_dir",
 
 			path: internal.GetDefaultDataFolderPath() + "/",
@@ -156,7 +140,6 @@ func TestFileBuffer_NewClose(t *testing.T) {
 		},
 
 		{
-
 			name: "non_existent_dir",
 
 			path: "/non_existent_dir",
@@ -166,17 +149,13 @@ func TestFileBuffer_NewClose(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-
 		t.Run(tc.name, func(t *testing.T) {
-
 			fb, err := NewFileBuffer(tc.path)
 
 			if tc.expectedErr {
-
 				assert.Error(t, err)
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -194,9 +173,6 @@ func TestFileBuffer_NewClose(t *testing.T) {
 			_, err = os.Stat(fname)
 
 			assert.Error(t, os.ErrExist, err)
-
 		})
-
 	}
-
 }

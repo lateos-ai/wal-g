@@ -26,15 +26,12 @@ type InfoProvider struct {
 }
 
 func Infos(chs []InfoProvider) error {
-
 	maxParallelJobsCount := 8
 
 	tickets := make(chan interface{}, maxParallelJobsCount)
 
 	for t := 0; t < maxParallelJobsCount; t++ {
-
 		tickets <- nil
-
 	}
 
 	errors := make(chan error, maxParallelJobsCount*2)
@@ -42,17 +39,12 @@ func Infos(chs []InfoProvider) error {
 	var wg sync.WaitGroup
 
 	for _, ch := range chs {
-
 		// do we have any errs yet?
 
 		for len(errors) > 0 {
-
 			if err := <-errors; err != nil {
-
 				return err
-
 			}
-
 		}
 
 		// block here
@@ -62,7 +54,6 @@ func Infos(chs []InfoProvider) error {
 		wg.Add(1)
 
 		go func(handler InfoProvider) {
-
 			defer wg.Done()
 
 			err := handler.copyObject()
@@ -72,53 +63,37 @@ func Infos(chs []InfoProvider) error {
 			tickets <- nil
 
 			errors <- err
-
 		}(ch)
-
 	}
 
 	wg.Wait()
 
 	for len(errors) > 0 {
-
 		if err := <-errors; err != nil {
-
 			return err
-
 		}
-
 	}
 
 	return nil
-
 }
 
 func (ch *InfoProvider) copyObject() error {
-
 	objReadCloser, err := ch.From.ReadObject(ch.SrcObj.GetName())
 
 	if err != nil {
-
 		return err
-
 	}
 
 	var r io.Reader
 
 	if ch.SourceTransformer != nil {
-
 		r, err = ch.SourceTransformer(objReadCloser)
 
 		if err != nil {
-
 			return err
-
 		}
-
 	} else {
-
 		r = objReadCloser
-
 	}
 
 	defer objReadCloser.Close()
@@ -128,15 +103,11 @@ func (ch *InfoProvider) copyObject() error {
 	uploader, err := internal.ConfigureUploaderToFolder(ch.To)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if err := uploader.Upload(context.Background(), ch.targetName, r); err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf(
@@ -146,25 +117,18 @@ func (ch *InfoProvider) copyObject() error {
 		ch.SrcObj.GetName(), ch.From.GetPath(), ch.targetName, ch.To.GetPath())
 
 	return nil
-
 }
 
 var NoopRenameFunc = func(o storage.Object) string {
-
 	if o == nil {
-
 		return ""
-
 	}
 
 	return o.GetName()
-
 }
 
 var NoopSourceTransformer = func(r io.Reader) (io.Reader, error) {
-
 	return r, nil
-
 }
 
 func BuildCopyingInfos(
@@ -180,15 +144,11 @@ func BuildCopyingInfos(
 	renameFunc func(object storage.Object) string,
 
 	sourceTransformer SourceTransformerFunc) (infos []InfoProvider) {
-
 	tracelog.DebugLogger.Println("processing copy infos filtering")
 
 	for _, object := range objects {
-
 		if filter(object) {
-
 			infos = append(infos, InfoProvider{
-
 				From: from,
 
 				To: to,
@@ -201,11 +161,8 @@ func BuildCopyingInfos(
 			})
 
 			tracelog.DebugLogger.Printf("add copy info %s-%s \n", object.GetName(), renameFunc(object))
-
 		}
-
 	}
 
 	return
-
 }

@@ -462,7 +462,6 @@ func TestLsnRegex(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			result := utility.RegexpLSN.FindAllString(tt.lsn, -1)
 
 			assert.Equalf(t, len(tt.expected), len(result), "Expected different array length")

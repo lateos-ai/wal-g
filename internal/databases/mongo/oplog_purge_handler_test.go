@@ -16,23 +16,19 @@ import (
 
 var (
 	Backups = []*models.Backup{
-
 		{
-
 			StartLocalTime: time.Unix(800, 0), FinishLocalTime: time.Unix(900, 0),
 
 			MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 800}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 900}}},
 		},
 
 		{
-
 			StartLocalTime: time.Unix(600, 0), FinishLocalTime: time.Unix(700, 0),
 
 			MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 600}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 700}}},
 		},
 
 		{
-
 			StartLocalTime: time.Unix(300, 0), FinishLocalTime: time.Unix(400, 0),
 
 			MongoMeta: models.MongoMeta{Before: models.NodeMeta{LastMajTS: models.Timestamp{TS: 300}}, After: models.NodeMeta{LastMajTS: models.Timestamp{TS: 400}}},
@@ -40,7 +36,6 @@ var (
 	}
 
 	Archives = []models.Archive{
-
 		{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 		{Start: models.Timestamp{TS: 200}, End: models.Timestamp{TS: 500}},
@@ -54,13 +49,10 @@ var (
 )
 
 func TimePtr(t time.Time) *time.Time {
-
 	return &t
-
 }
 
 func TestHandleOplogPurge(t *testing.T) {
-
 	type args struct {
 		downloader *mocks.Downloader
 
@@ -78,15 +70,11 @@ func TestHandleOplogPurge(t *testing.T) {
 
 		wantErr error
 	}{
-
 		{
-
 			name: "purge",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(Archives, nil).Once().
@@ -97,27 +85,21 @@ func TestHandleOplogPurge(t *testing.T) {
 						Return(Backups, nil).Once()
 
 					return dl
-
 				}(),
 
 				purger: func() *mocks.Purger {
-
 					pr := &mocks.Purger{}
 
 					pr.On("DeleteOplogArchives", mock.MatchedBy(func(archives []models.Archive) bool {
-
 						return reflect.DeepEqual(archives,
 
 							[]models.Archive{
-
 								{Start: models.Timestamp{TS: 100}, End: models.Timestamp{TS: 200}},
 
 								{Start: models.Timestamp{TS: 500}, End: models.Timestamp{TS: 550}}})
-
 					})).Return(nil).Once()
 
 					return pr
-
 				}(),
 
 				retainAfter: TimePtr(time.Unix(650, 0)),
@@ -129,13 +111,10 @@ func TestHandleOplogPurge(t *testing.T) {
 		},
 
 		{
-
 			name: "purge_dry_run",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(Archives, nil).Once().
@@ -146,7 +125,6 @@ func TestHandleOplogPurge(t *testing.T) {
 						Return(Backups, nil).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -160,19 +138,15 @@ func TestHandleOplogPurge(t *testing.T) {
 		},
 
 		{
-
 			name: "list_oplogs_error",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(nil, fmt.Errorf("listing error")).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -186,20 +160,16 @@ func TestHandleOplogPurge(t *testing.T) {
 		},
 
 		{
-
 			name: "list_backup_times_error",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(Archives, nil).Once().
 						On("ListBackups").Return(nil, []string{}, fmt.Errorf("listing backup times failed")).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -213,13 +183,10 @@ func TestHandleOplogPurge(t *testing.T) {
 		},
 
 		{
-
 			name: "load_backup_error",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(Archives, nil).Once().
@@ -230,7 +197,6 @@ func TestHandleOplogPurge(t *testing.T) {
 						Return(nil, fmt.Errorf("backup loading failed")).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -244,13 +210,10 @@ func TestHandleOplogPurge(t *testing.T) {
 		},
 
 		{
-
 			name: "no_backups_error",
 
 			args: args{
-
 				downloader: func() *mocks.Downloader {
-
 					dl := &mocks.Downloader{}
 
 					dl.On("ListOplogArchives").Return(Archives, nil).Once().
@@ -261,7 +224,6 @@ func TestHandleOplogPurge(t *testing.T) {
 						Return([]models.Backup{}, nil).Once()
 
 					return dl
-
 				}(),
 
 				purger: &mocks.Purger{},
@@ -276,17 +238,13 @@ func TestHandleOplogPurge(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			err := HandleOplogPurge(tt.args.downloader, tt.args.purger, tt.args.retainAfter, tt.args.dryRun)
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
 
 				return
-
 			}
 
 			assert.Nil(t, err)
@@ -294,9 +252,6 @@ func TestHandleOplogPurge(t *testing.T) {
 			tt.args.downloader.AssertExpectations(t)
 
 			tt.args.purger.AssertExpectations(t)
-
 		})
-
 	}
-
 }

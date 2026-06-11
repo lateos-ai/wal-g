@@ -28,7 +28,6 @@ type BackupStreamMetadata struct {
 }
 
 func GetBackupStreamFetcher(backup Backup) (StreamFetcher, error) {
-
 	var metadata BackupStreamMetadata
 
 	err := FetchDto(backup.Folder, &metadata, StreamMetadataNameFromBackup(backup.Name))
@@ -36,21 +35,16 @@ func GetBackupStreamFetcher(backup Backup) (StreamFetcher, error) {
 	var test storage.ObjectNotFoundError
 
 	if errors.As(err, &test) {
-
 		return DownloadAndDecompressStream, nil
-
 	}
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	maxDownloadRetry := viper.GetInt(conf.MysqlBackupDownloadMaxRetry)
 
 	switch metadata.Type {
-
 	case SplitMergeStreamBackup:
 
 		var blockSize = metadata.BlockSize
@@ -58,27 +52,21 @@ func GetBackupStreamFetcher(backup Backup) (StreamFetcher, error) {
 		var compression = metadata.Compression
 
 		return func(backup Backup, writer io.WriteCloser) error {
-
 			return DownloadAndDecompressSplittedStream(backup, int(blockSize), compression, writer, maxDownloadRetry)
-
 		}, nil
 
 	case SingleStreamStreamBackup, "":
 
 		return DownloadAndDecompressStream, nil
-
 	}
 
 	tracelog.ErrorLogger.Fatalf("Unknown backup type %s", metadata.Type)
 
 	return nil, nil // unreachable
-
 }
 
 func UploadBackupStreamMetadata(uploader Uploader, metadata interface{}, backupName string) error {
-
 	sentinelName := StreamMetadataNameFromBackup(backupName)
 
 	return UploadDto(uploader.Folder(), metadata, sentinelName)
-
 }

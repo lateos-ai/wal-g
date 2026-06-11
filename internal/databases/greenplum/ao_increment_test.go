@@ -18,25 +18,18 @@ const aoSegmentFileName = "../../../test/testdata/gp_ao_file.bin"
 const aoSegmentFileSizeBytes = 192
 
 func TestReadIncrement(t *testing.T) {
-
 	gpReadIncrement(10, 100, t)
-
 }
 
 func TestReadIncrementFull(t *testing.T) {
-
 	gpReadIncrement(0, aoSegmentFileSizeBytes, t)
-
 }
 
 func TestFailOnIncorrectOffset(t *testing.T) {
-
 	file, err := os.Open(aoSegmentFileName)
 
 	if err != nil {
-
 		fmt.Print(err.Error())
-
 	}
 
 	_, err = greenplum.NewIncrementalPageReader(file, aoSegmentFileSizeBytes, aoSegmentFileSizeBytes)
@@ -46,17 +39,13 @@ func TestFailOnIncorrectOffset(t *testing.T) {
 	_, err = greenplum.NewIncrementalPageReader(file, 0, aoSegmentFileSizeBytes)
 
 	assert.Error(t, err)
-
 }
 
 func gpReadIncrement(offset, eof int64, t *testing.T) {
-
 	file, err := os.Open(aoSegmentFileName)
 
 	if err != nil {
-
 		fmt.Print(err.Error())
-
 	}
 
 	reader, err := greenplum.NewIncrementalPageReader(file, eof, offset)
@@ -78,7 +67,6 @@ func gpReadIncrement(offset, eof int64, t *testing.T) {
 	var parsedOffset uint64
 
 	err = parsingutil.ParseMultipleFieldsFromReader([]parsingutil.FieldToParse{
-
 		{Field: &parsedEof, Name: "eof"},
 
 		{Field: &parsedOffset, Name: "offset"},
@@ -95,5 +83,4 @@ func gpReadIncrement(offset, eof int64, t *testing.T) {
 	_, _ = io.CopyN(fileFragment, file, eof-offset)
 
 	assert.True(t, bytes.Equal(fileFragment.Bytes(), incrementBuf.Bytes()))
-
 }

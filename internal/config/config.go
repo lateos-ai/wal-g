@@ -440,7 +440,6 @@ var (
 	DefaultConfigValues map[string]string
 
 	CommonDefaultConfigValues = map[string]string{
-
 		DownloadConcurrencySetting: "10",
 
 		UploadConcurrencySetting: "16",
@@ -499,7 +498,6 @@ var (
 	}
 
 	MongoDefaultSettings = map[string]string{
-
 		OplogPushStatsLoggingInterval: "30s",
 
 		OplogPushStatsUpdateInterval: "30s",
@@ -518,7 +516,6 @@ var (
 	}
 
 	RedisDefaultSettings = map[string]string{
-
 		RedisDataPath: "/var/lib/redis",
 
 		RedisAppendonlyFolder: "appendonlydir",
@@ -539,7 +536,6 @@ var (
 	}
 
 	MysqlDefaultSettings = map[string]string{
-
 		StreamSplitterBlockSize: "1048576",
 
 		MysqlBackupDownloadMaxRetry: "1",
@@ -548,12 +544,10 @@ var (
 	}
 
 	SQLServerDefaultSettings = map[string]string{
-
 		SQLServerDBConcurrency: "10",
 	}
 
 	PGDefaultSettings = map[string]string{
-
 		PgWalSize: "16",
 
 		PgWalPageSize: "8192",
@@ -574,7 +568,6 @@ var (
 	}
 
 	GPDefaultSettings = map[string]string{
-
 		GPLogsDirectory: "/var/log",
 
 		PgWalSize: "64",
@@ -613,7 +606,6 @@ var (
 	AllowedSettings map[string]bool
 
 	CommonAllowedSettings = map[string]bool{
-
 		// WAL-G core
 
 		DownloadConcurrencySetting: true,
@@ -890,7 +882,6 @@ var (
 	}
 
 	PGAllowedSettings = map[string]bool{
-
 		// Postgres
 
 		PgPortSetting: true,
@@ -965,7 +956,6 @@ var (
 	}
 
 	MongoAllowedSettings = map[string]bool{
-
 		// MongoDB
 
 		MongoDBUriSetting: true,
@@ -1002,7 +992,6 @@ var (
 	}
 
 	SQLServerAllowedSettings = map[string]bool{
-
 		// SQLServer
 
 		SQLServerBlobHostname: true,
@@ -1021,7 +1010,6 @@ var (
 	}
 
 	MysqlAllowedSettings = map[string]bool{
-
 		// MySQL
 
 		MysqlDatasourceNameSetting: true,
@@ -1064,7 +1052,6 @@ var (
 	}
 
 	RedisAllowedSettings = map[string]bool{
-
 		// Redis
 
 		RedisUsername: true,
@@ -1091,7 +1078,6 @@ var (
 	}
 
 	GPAllowedSettings = map[string]bool{
-
 		GPLogsDirectory: true,
 
 		GPSegContentID: true,
@@ -1148,7 +1134,6 @@ var (
 	RequiredSettings = make(map[string]bool)
 
 	HTTPSettingExposeFuncs = map[string]func(webserver.WebServer){
-
 		HTTPExposePprof: webserver.EnablePprofEndpoints,
 
 		HTTPExposeExpVar: webserver.EnableExpVarEndpoints,
@@ -1159,7 +1144,6 @@ var (
 	Turbo bool
 
 	secretSettings = map[string]bool{
-
 		"WALE_" + GpgKeyIDSetting: true,
 
 		"WALG_" + GpgKeyIDSetting: true,
@@ -1206,7 +1190,6 @@ var (
 	}
 
 	complexSettings = map[string]bool{
-
 		FailoverStorages: true,
 
 		StatsdExtraTagsSetting: true,
@@ -1222,19 +1205,14 @@ type InvalidConcurrencyValueError struct {
 }
 
 func newInvalidConcurrencyValueError(concurrencyType string, value int) InvalidConcurrencyValueError {
-
 	return InvalidConcurrencyValueError{
-
 		errors.Errorf("%v value is expected to be positive but is: %v",
 
 			concurrencyType, value)}
-
 }
 
 func (err InvalidConcurrencyValueError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type UnsetRequiredSettingError struct {
@@ -1242,61 +1220,45 @@ type UnsetRequiredSettingError struct {
 }
 
 func NewUnsetRequiredSettingError(settingName string) UnsetRequiredSettingError {
-
 	return UnsetRequiredSettingError{errors.Errorf("%v is required to be set, but it isn't", settingName)}
-
 }
 
 func (err UnsetRequiredSettingError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 func AddTurboFlag(cmd *cobra.Command) {
-
 	cmd.PersistentFlags().BoolVarP(&Turbo, "turbo", "", false,
 
 		"Ignore all kinds of throttling defined in config")
-
 }
 
 func isAllowedSetting(setting string, AllowedSettings map[string]bool) (exists bool) {
-
 	_, exists = AllowedSettings[setting]
 
 	return
-
 }
 
 // GetSetting extract setting by key if key is set, return empty string otherwise
 
 func GetSetting(key string) (value string, ok bool) {
-
 	if viper.IsSet(key) {
-
 		value := viper.GetString(key)
 
 		value = strings.TrimRight(value, "\r\n")
 
 		return value, true
-
 	}
 
 	return "", false
-
 }
 
 func GetWaleCompatibleSetting(key string) (value string, exists bool) {
-
 	return GetWaleCompatibleSettingFrom(key, viper.GetViper())
-
 }
 
 func GetWaleCompatibleSettingFrom(key string, config *viper.Viper) (value string, exists bool) {
-
 	settingKeys := []string{
-
 		"WALG_" + key,
 
 		"WALE_" + key,
@@ -1305,33 +1267,23 @@ func GetWaleCompatibleSettingFrom(key string, config *viper.Viper) (value string
 	// At first we try to check whether it is configured at all
 
 	for _, settingKey := range settingKeys {
-
 		if config.IsSet(settingKey) {
-
 			return config.GetString(settingKey), true
-
 		}
-
 	}
 
 	// Then we try to get default value
 
 	for _, settingKey := range settingKeys {
-
 		if val, ok := DefaultConfigValues[settingKey]; ok && len(val) > 0 {
-
 			return val, true
-
 		}
-
 	}
 
 	return "", false
-
 }
 
 func ConfigureLogging() error {
-
 	var logFile *os.File
 
 	logLevel := CommonDefaultConfigValues[LogLevelSetting]
@@ -1339,67 +1291,48 @@ func ConfigureLogging() error {
 	var err error
 
 	if viper.IsSet(LogLevelSetting) {
-
 		logLevel = viper.GetString(LogLevelSetting)
-
 	}
 
 	if viper.IsSet(LogDestinationSetting) && viper.GetString(LogDestinationSetting) != "stderr" {
-
 		logFileName := viper.GetString(LogDestinationSetting)
 
 		logFile, err = os.OpenFile(logFileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 
 		if err != nil {
-
 			return fmt.Errorf("could not open log file: %s", err)
-
 		}
-
 	} else {
-
 		logFile = os.Stderr
-
 	}
 
 	if err := tracelog.Setup(logFile, logLevel); err != nil {
-
 		return fmt.Errorf("failed to setup logging: %s", err)
-
 	}
 
 	if logging.LogFile != nil {
-
 		_ = logging.LogFile.Close()
-
 	}
 
 	if logFile != os.Stderr {
-
 		logging.LogFile = logFile
-
 	}
 
 	return nil
-
 }
 
 func Configure() {
-
 	err := ConfigureLogging()
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Println("Failed to configure logging.")
 
 		tracelog.ErrorLogger.FatalError(err)
-
 	}
 
 	// Show all relevant ENV vars in DEVEL Logging Mode
 
 	{
-
 		var buff bytes.Buffer
 
 		buff.WriteString("--- COMPILED ENVIRONMENT VARS ---\n")
@@ -1407,109 +1340,79 @@ func Configure() {
 		var keys []string
 
 		for k := range viper.AllSettings() {
-
 			keys = append(keys, strings.ToUpper(k))
-
 		}
 
 		sort.Strings(keys)
 
 		for _, k := range keys {
-
 			val, ok := os.LookupEnv(k)
 
 			if !ok {
-
 				continue
-
 			}
 
 			// for secret settings: leave them empty if they are defined but empty, otherwise hide their actual value
 
 			if secretSettings[k] && val != "" {
-
 				val = "--HIDDEN--"
-
 			}
 
 			fmt.Fprintf(&buff, "\t%s=%s\n", k, val)
-
 		}
 
 		tracelog.DebugLogger.Print(buff.String())
-
 	}
-
 }
 
 // ConfigureAndRunDefaultWebServer configures and runs web server
 
 func ConfigureAndRunDefaultWebServer() error {
-
 	var ws webserver.WebServer
 
 	httpListenAddr, httpListen := GetSetting(HTTPListen)
 
 	if httpListen {
-
 		ws = webserver.NewSimpleWebServer(httpListenAddr)
 
 		if err := ws.Serve(); err != nil {
-
 			return err
-
 		}
 
 		if err := webserver.SetDefaultWebServer(ws); err != nil {
-
 			return err
-
 		}
-
 	}
 
 	for setting, registerFunc := range HTTPSettingExposeFuncs {
-
 		enabled, err := GetBoolSettingDefault(setting, false)
 
 		if err != nil {
-
 			return err
-
 		}
 
 		if !enabled {
-
 			continue
-
 		}
 
 		if !httpListen {
-
 			return fmt.Errorf("%s failed: %s is not set", setting, HTTPListen)
-
 		}
 
 		if registerFunc == nil {
-
 			continue
-
 		}
 
 		registerFunc(ws)
-
 	}
 
 	return nil
-
 }
 
 func AddConfigFlags(Cmd *cobra.Command, hiddenCfgFlagAnnotation string) {
-
 	cfgFlags := &pflag.FlagSet{}
 
 	for k := range AllowedSettings {
-
 		flagName := ToFlagName(k)
 
 		isRequired, exist := RequiredSettings[k]
@@ -1517,37 +1420,28 @@ func AddConfigFlags(Cmd *cobra.Command, hiddenCfgFlagAnnotation string) {
 		flagUsage := ""
 
 		if exist && isRequired {
-
 			flagUsage = "Required, can be set though this flag or " + k + " variable"
-
 		}
 
 		cfgFlags.String(flagName, "", flagUsage)
 
 		_ = viper.BindPFlag(k, cfgFlags.Lookup(flagName))
-
 	}
 
 	cfgFlags.VisitAll(func(f *pflag.Flag) {
-
 		if f.Annotations == nil {
-
 			f.Annotations = map[string][]string{}
-
 		}
 
 		f.Annotations[hiddenCfgFlagAnnotation] = []string{"true"}
-
 	})
 
 	Cmd.PersistentFlags().AddFlagSet(cfgFlags)
-
 }
 
 // InitConfig reads config file and ENV variables if set.
 
 func InitConfig() {
-
 	var globalViper = viper.GetViper()
 
 	globalViper.AutomaticEnv() // read in environment variables that match
@@ -1557,9 +1451,7 @@ func InitConfig() {
 	SetGoMaxProcs(globalViper)
 
 	if CfgFile == "" {
-
 		CfgFile = os.Getenv(ConfigPathEnvVar)
-
 	}
 
 	ReadConfigFromFile(globalViper, CfgFile)
@@ -1569,19 +1461,14 @@ func InitConfig() {
 	WarnDeprecatedSettings(globalViper)
 
 	bindConfigToEnv(globalViper)
-
 }
 
 // ReadConfigFromFile read config to the viper instance
 
 func ReadConfigFromFile(config *viper.Viper, configFile string) {
-
 	if configFile != "" {
-
 		config.SetConfigFile(configFile)
-
 	} else {
-
 		// Find home directory.
 
 		usr, err := user.Current()
@@ -1593,7 +1480,6 @@ func ReadConfigFromFile(config *viper.Viper, configFile string) {
 		config.AddConfigPath(usr.HomeDir)
 
 		config.SetConfigName(".walg")
-
 	}
 
 	// If a config file is found, read it in.
@@ -1601,53 +1487,36 @@ func ReadConfigFromFile(config *viper.Viper, configFile string) {
 	err := config.ReadInConfig()
 
 	if err == nil {
-
 		tracelog.DebugLogger.Println("Using config file:", config.ConfigFileUsed())
-
 	} else {
-
 		if config.ConfigFileUsed() != "" {
-
 			// Config file is found, but parsing failed
 
 			tracelog.WarningLogger.Printf("Failed to parse config file %s. %s.", config.ConfigFileUsed(), err)
-
 		}
-
 	}
-
 }
 
 // SetDefaultValues set default settings to the viper instance
 
 func SetDefaultValues(config *viper.Viper) {
-
 	for setting, value := range DefaultConfigValues {
-
 		config.SetDefault(setting, value)
-
 	}
-
 }
 
 func SetGoMaxProcs(config *viper.Viper) {
-
 	gomaxprocs := config.GetInt(GoMaxProcs)
 
 	if !Turbo && gomaxprocs > 0 {
-
 		runtime.GOMAXPROCS(gomaxprocs)
-
 	}
-
 }
 
 // WarnDeprecatedSettings warns when retired settings are present in user config or env
 
 func WarnDeprecatedSettings(config *viper.Viper) {
-
 	if config.IsSet(SerializerTypeSetting) {
-
 		v := config.GetString(SerializerTypeSetting)
 
 		tracelog.DebugLogger.Printf("%s is deprecated and no longer has effect; streaming JSON is always used",
@@ -1655,35 +1524,26 @@ func WarnDeprecatedSettings(config *viper.Viper) {
 			SerializerTypeSetting)
 
 		if v != "" && v != "json_streamed" {
-
 			tracelog.WarningLogger.Printf("%s=%q selected non-streaming serialization, which is no longer available",
 
 				SerializerTypeSetting, v)
-
 		}
-
 	}
-
 }
 
 // CheckAllowedSettings warnings if a viper instance's setting not allowed
 
 func CheckAllowedSettings(config *viper.Viper) {
-
 	foundNotAllowed := false
 
 	for k := range config.AllSettings() {
-
 		k = strings.ToUpper(k)
 
 		if !isAllowedSetting(k, AllowedSettings) {
-
 			tracelog.WarningLogger.Println(k + " is unknown")
 
 			foundNotAllowed = true
-
 		}
-
 	}
 
 	// TODO delete in the future
@@ -1691,19 +1551,14 @@ func CheckAllowedSettings(config *viper.Viper) {
 	// Message for the first time.
 
 	if foundNotAllowed {
-
 		tracelog.WarningLogger.Println("We found that some variables in your config file detected as 'Unknown'. \n  " +
 
 			"If this is not right, please create issue https://github.com/lateos-ai/wal-g/issues/new")
-
 	}
-
 }
 
 func ToFlagName(s string) string {
-
 	return strings.ReplaceAll(strings.ToLower(s), "_", "-")
-
 }
 
 // Set the compiled config to ENV.
@@ -1711,9 +1566,7 @@ func ToFlagName(s string) string {
 // Applicable for Swift/Postgres/etc libs that waiting config paramenters only from ENV.
 
 func bindConfigToEnv(globalViper *viper.Viper) {
-
 	for k, v := range globalViper.AllSettings() {
-
 		val := cast.ToString(v)
 
 		k = strings.ToUpper(k)
@@ -1725,141 +1578,101 @@ func bindConfigToEnv(globalViper *viper.Viper) {
 		// we don't create an env variable at all
 
 		if val == "" && os.Getenv(k) == "" {
-
 			continue
-
 		}
 
 		if complexSettings[k] {
-
 			continue
-
 		}
 
 		err := os.Setenv(k, val)
 
 		if err != nil {
-
 			err = errors.Wrap(err, "Failed to bind config to env variable")
 
 			tracelog.ErrorLogger.FatalOnError(err)
-
 		}
-
 	}
-
 }
 
 func GetRequiredSetting(setting string) (string, error) {
-
 	val, ok := GetSetting(setting)
 
 	if !ok {
-
 		return "", NewUnsetRequiredSettingError(setting)
-
 	}
 
 	return val, nil
-
 }
 
 func GetBoolSettingDefault(setting string, def bool) (bool, error) {
-
 	val, ok := GetSetting(setting)
 
 	if !ok {
-
 		return def, nil
-
 	}
 
 	return strconv.ParseBool(val)
-
 }
 
 func GetBoolSetting(setting string) (val bool, ok bool, err error) {
-
 	valstr, ok := GetSetting(setting)
 
 	if !ok {
-
 		return false, false, nil
-
 	}
 
 	val, err = strconv.ParseBool(valstr)
 
 	return val, true, err
-
 }
 
 func GetFloatSettingDefault(setting string, def float64) (float64, error) {
-
 	val, ok := GetSetting(setting)
 
 	if !ok {
-
 		return def, nil
-
 	}
 
 	return strconv.ParseFloat(val, 64)
-
 }
 
 func GetFloatSetting(setting string) (val float64, ok bool, err error) {
-
 	valstr, ok := GetSetting(setting)
 
 	if !ok {
-
 		return 0, false, nil
-
 	}
 
 	val, err = strconv.ParseFloat(valstr, 64)
 
 	return val, true, err
-
 }
 
 func GetMaxUploadDiskConcurrency() (int, error) {
-
 	if Turbo {
-
 		return 4, nil
-
 	}
 
 	return GetMaxConcurrency(UploadDiskConcurrencySetting)
-
 }
 
 func GetMaxConcurrency(concurrencyType string) (int, error) {
-
 	concurrency := viper.GetInt(concurrencyType)
 
 	if concurrency < MinAllowedConcurrency {
-
 		return MinAllowedConcurrency, newInvalidConcurrencyValueError(concurrencyType, concurrency)
-
 	}
 
 	return concurrency, nil
-
 }
 
 func GetMaxDownloadConcurrency() (int, error) {
-
 	return GetMaxConcurrency(DownloadConcurrencySetting)
-
 }
 
 func GetMaxUploadConcurrency() (int, error) {
-
 	return GetMaxConcurrency(UploadConcurrencySetting)
-
 }
 
 // This setting is intentionally undocumented in README. Effectively, this configures how many prepared tar Files there
@@ -1867,103 +1680,75 @@ func GetMaxUploadConcurrency() (int, error) {
 // may be in uploading state during backup-push.
 
 func GetMaxUploadQueue() (int, error) {
-
 	return GetMaxConcurrency(UploadQueueSetting)
-
 }
 
 func GetFetchRetries() int {
-
 	concurrency := viper.GetInt(DownloadFileRetriesSetting)
 
 	return concurrency
-
 }
 
 func GetDurationSetting(setting string) (time.Duration, error) {
-
 	intervalStr, ok := GetSetting(setting)
 
 	if !ok {
-
 		return 0, NewUnsetRequiredSettingError(setting)
-
 	}
 
 	interval, err := time.ParseDuration(intervalStr)
 
 	if err != nil {
-
 		return 0, fmt.Errorf("duration expected for %s setting but given '%s': %w", setting, intervalStr, err)
-
 	}
 
 	return interval, nil
-
 }
 
 func GetDurationSettingDefault(setting string, def time.Duration) (time.Duration, error) {
-
 	intervalStr, ok := GetSetting(setting)
 
 	if !ok {
-
 		return def, nil
-
 	}
 
 	interval, err := time.ParseDuration(intervalStr)
 
 	if err != nil {
-
 		return 0, fmt.Errorf("duration expected for %s setting but given '%s': %w", setting, intervalStr, err)
-
 	}
 
 	return interval, nil
-
 }
 
 func GetOplogPITRDiscoveryIntervalSetting() (*time.Duration, error) {
-
 	durStr, ok := GetSetting(OplogPITRDiscoveryInterval)
 
 	if !ok {
-
 		return nil, nil
-
 	}
 
 	dur, err := time.ParseDuration(durStr)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("duration expected for %s setting but given '%s': %w", OplogPITRDiscoveryInterval, durStr, err)
-
 	}
 
 	return &dur, nil
-
 }
 
 func GetOplogBackupAdditionalSavingTimeSetting() (*time.Duration, error) {
-
 	durStr, ok := GetSetting(OplogBackupAdditionalSavingInterval)
 
 	if !ok {
-
 		return nil, nil
-
 	}
 
 	dur, err := time.ParseDuration(durStr)
 
 	if err != nil {
-
 		return nil, fmt.Errorf("duration expected for %s setting but given '%s': %w", OplogBackupAdditionalSavingInterval, durStr, err)
-
 	}
 
 	return &dur, nil
-
 }

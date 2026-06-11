@@ -9,16 +9,13 @@ import (
 )
 
 func TestFindLastCommonPoint_SameTimeline(t *testing.T) {
-
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 12, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 16, ""),
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 8, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 20, ""),
@@ -27,15 +24,12 @@ func TestFindLastCommonPoint_SameTimeline(t *testing.T) {
 	_, _, err := postgres.FindLastCommonPoint(target, source)
 
 	assert.Error(t, err)
-
 }
 
 func TestFindLastCommonPoint_OneOnTheFirstTimeline(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(12), uint32(1)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(wantTimeline, wantLsn, ""),
 	}
 
@@ -48,17 +42,14 @@ func TestFindLastCommonPoint_OneOnTheFirstTimeline(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_OneOnTheFirstTimelineMirror(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(12), uint32(1)
 
 	target := []*postgres.TimelineHistoryRecord{}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(wantTimeline, wantLsn, ""),
 	}
 
@@ -69,15 +60,12 @@ func TestFindLastCommonPoint_OneOnTheFirstTimelineMirror(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_FirstRandomCase(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(12), uint32(2)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 16, ""),
@@ -86,7 +74,6 @@ func TestFindLastCommonPoint_FirstRandomCase(t *testing.T) {
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(wantTimeline, wantLsn, ""),
@@ -99,15 +86,12 @@ func TestFindLastCommonPoint_FirstRandomCase(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_SecondRandomCase(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(20), uint32(3)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 16, ""),
@@ -118,7 +102,6 @@ func TestFindLastCommonPoint_SecondRandomCase(t *testing.T) {
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 16, ""),
@@ -133,15 +116,12 @@ func TestFindLastCommonPoint_SecondRandomCase(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_ThirdRandomCase(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(4), uint32(1)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(wantTimeline, wantLsn, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 7, ""),
@@ -152,7 +132,6 @@ func TestFindLastCommonPoint_ThirdRandomCase(t *testing.T) {
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 9, ""),
@@ -167,15 +146,12 @@ func TestFindLastCommonPoint_ThirdRandomCase(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_FourthRandomCase(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(32), uint32(4)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 9, ""),
@@ -188,7 +164,6 @@ func TestFindLastCommonPoint_FourthRandomCase(t *testing.T) {
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 9, ""),
@@ -205,15 +180,12 @@ func TestFindLastCommonPoint_FourthRandomCase(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestFindLastCommonPoint_FifthRandomCase(t *testing.T) {
-
 	wantLsn, wantTimeline := postgres.LSN(32), uint32(4)
 
 	target := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 9, ""),
@@ -226,7 +198,6 @@ func TestFindLastCommonPoint_FifthRandomCase(t *testing.T) {
 	}
 
 	source := []*postgres.TimelineHistoryRecord{
-
 		postgres.NewTimelineHistoryRecord(1, 5, ""),
 
 		postgres.NewTimelineHistoryRecord(2, 9, ""),
@@ -243,11 +214,9 @@ func TestFindLastCommonPoint_FifthRandomCase(t *testing.T) {
 	assert.Equal(t, wantLsn, lastLsn)
 
 	assert.Equal(t, wantTimeline, lastTimeline)
-
 }
 
 func TestGetMissingWals_TwoWalsOneMissingInARow(t *testing.T) {
-
 	wals := postgres.NewSegmentsSequence(1, postgres.WalSegmentNo(2))
 
 	walsToTl := make(map[uint32]*postgres.WalSegmentsSequence)
@@ -265,15 +234,11 @@ func TestGetMissingWals_TwoWalsOneMissingInARow(t *testing.T) {
 	assert.Equal(t, 1, len(result))
 
 	if len(result) == 1 {
-
 		assert.Equal(t, "000000010000000000000001", result[0])
-
 	}
-
 }
 
 func TestGetMissingWals_ThreeWalsTwoMissingInARow(t *testing.T) {
-
 	wals := postgres.NewSegmentsSequence(1, postgres.WalSegmentNo(3))
 
 	walsToTl := make(map[uint32]*postgres.WalSegmentsSequence)
@@ -291,17 +256,13 @@ func TestGetMissingWals_ThreeWalsTwoMissingInARow(t *testing.T) {
 	assert.Equal(t, 2, len(result))
 
 	if len(result) == 2 {
-
 		assert.Equal(t, "000000010000000000000002", result[0])
 
 		assert.Equal(t, "000000010000000000000001", result[1])
-
 	}
-
 }
 
 func TestGetMissingWals_FourWalsTwoMissingNotARow(t *testing.T) {
-
 	wals1Tl := postgres.NewSegmentsSequence(1, postgres.WalSegmentNo(2))
 
 	wals2Tl := postgres.NewSegmentsSequence(2, postgres.WalSegmentNo(4))
@@ -325,17 +286,13 @@ func TestGetMissingWals_FourWalsTwoMissingNotARow(t *testing.T) {
 	assert.Equal(t, 2, len(result))
 
 	if len(result) == 2 {
-
 		assert.Equal(t, "000000020000000000000003", result[0])
 
 		assert.Equal(t, "000000010000000000000001", result[1])
-
 	}
-
 }
 
 func TestGetMissingWals_ThreeWalsTwoMissingOnPrevTl(t *testing.T) {
-
 	wals := postgres.NewSegmentsSequence(2, postgres.WalSegmentNo(3))
 
 	walsToTl := make(map[uint32]*postgres.WalSegmentsSequence)
@@ -355,17 +312,13 @@ func TestGetMissingWals_ThreeWalsTwoMissingOnPrevTl(t *testing.T) {
 	assert.Equal(t, 2, len(result))
 
 	if len(result) == 2 {
-
 		assert.Equal(t, "000000010000000000000002", result[0])
 
 		assert.Equal(t, "000000010000000000000001", result[1])
-
 	}
-
 }
 
 func TestGetMissingWals_FiveWalsThreeMissingOnThreeTl(t *testing.T) {
-
 	wals2Tl := postgres.NewSegmentsSequence(2, postgres.WalSegmentNo(3))
 
 	wals3Tl := postgres.NewSegmentsSequence(3, postgres.WalSegmentNo(5))
@@ -391,19 +344,15 @@ func TestGetMissingWals_FiveWalsThreeMissingOnThreeTl(t *testing.T) {
 	assert.Equal(t, 3, len(result))
 
 	if len(result) == 3 {
-
 		assert.Equal(t, "000000030000000000000004", result[0])
 
 		assert.Equal(t, "000000020000000000000002", result[1])
 
 		assert.Equal(t, "000000010000000000000001", result[2])
-
 	}
-
 }
 
 func TestGetMissingWals_TwoWalsZeroMissing(t *testing.T) {
-
 	wals := postgres.NewSegmentsSequence(1, postgres.WalSegmentNo(1))
 
 	wals.AddWalSegmentNo(postgres.WalSegmentNo(2))
@@ -421,11 +370,9 @@ func TestGetMissingWals_TwoWalsZeroMissing(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, 0, len(result))
-
 }
 
 func TestGetMissingWals_FourWalsZeroMissingInTwoTls(t *testing.T) {
-
 	wals1Tl := postgres.NewSegmentsSequence(1, postgres.WalSegmentNo(1))
 
 	wals1Tl.AddWalSegmentNo(postgres.WalSegmentNo(2))
@@ -451,11 +398,9 @@ func TestGetMissingWals_FourWalsZeroMissingInTwoTls(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, 0, len(result))
-
 }
 
 func TestGetMissingWals_FirstRandomCase(t *testing.T) {
-
 	wals4Tl := postgres.NewSegmentsSequence(4, postgres.WalSegmentNo(9))
 
 	wals4Tl.AddWalSegmentNo(postgres.WalSegmentNo(10))
@@ -487,19 +432,15 @@ func TestGetMissingWals_FirstRandomCase(t *testing.T) {
 	assert.Equal(t, 3, len(result))
 
 	if len(result) == 3 {
-
 		assert.Equal(t, "000000030000000000000007", result[0])
 
 		assert.Equal(t, "000000030000000000000006", result[1])
 
 		assert.Equal(t, "000000020000000000000005", result[2])
-
 	}
-
 }
 
 func TestGetMissingWals_SecondRandomCase(t *testing.T) {
-
 	wals3Tl := postgres.NewSegmentsSequence(3, postgres.WalSegmentNo(7))
 
 	wals3Tl.AddWalSegmentNo(postgres.WalSegmentNo(10))
@@ -531,7 +472,6 @@ func TestGetMissingWals_SecondRandomCase(t *testing.T) {
 	assert.Equal(t, 4, len(result))
 
 	if len(result) == 4 {
-
 		assert.Equal(t, "000000030000000000000009", result[0])
 
 		assert.Equal(t, "000000030000000000000008", result[1])
@@ -539,13 +479,10 @@ func TestGetMissingWals_SecondRandomCase(t *testing.T) {
 		assert.Equal(t, "000000020000000000000005", result[2])
 
 		assert.Equal(t, "000000020000000000000004", result[3])
-
 	}
-
 }
 
 func TestGetMissingWals_ThirdRandomCase(t *testing.T) {
-
 	wals := postgres.NewSegmentsSequence(3, postgres.WalSegmentNo(7))
 
 	wals.AddWalSegmentNo(postgres.WalSegmentNo(8))
@@ -575,7 +512,6 @@ func TestGetMissingWals_ThirdRandomCase(t *testing.T) {
 	assert.Equal(t, 4, len(result))
 
 	if len(result) == 4 {
-
 		assert.Equal(t, "000000020000000000000006", result[0])
 
 		assert.Equal(t, "000000020000000000000005", result[1])
@@ -583,7 +519,5 @@ func TestGetMissingWals_ThirdRandomCase(t *testing.T) {
 		assert.Equal(t, "000000020000000000000004", result[2])
 
 		assert.Equal(t, "000000020000000000000003", result[3])
-
 	}
-
 }

@@ -1,17 +1,22 @@
 package st
 
 import (
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/spf13/cobra"
+
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 const pgWALsShortDescription = "Moves all PostgreSQL WAL files from one storage to another"
 
 // pgWALsCmd represents the pg-wals command
+
 var pgWALsCmd = &cobra.Command{
-	Use:   "pg-wals --source='source_storage' [--target='target_storage']",
+	Use: "pg-wals --source='source_storage' [--target='target_storage']",
+
 	Short: pgWALsShortDescription,
-	Args:  cobra.NoArgs,
+
+	Args: cobra.NoArgs,
+
 	Run: func(_ *cobra.Command, _ []string) {
 		transferFiles(utility.WalPath)
 	},

@@ -19,7 +19,6 @@ import (
 // Tests S3 get and set methods.
 
 func TestS3TarBall(t *testing.T) {
-
 	tarSizeThreshold := int64(10)
 
 	tarBallMaker := internal.NewStorageTarBallMaker("test", testtools.NewMockUploader(false, false))
@@ -41,7 +40,6 @@ func TestS3TarBall(t *testing.T) {
 	tarBallQueue.NewTarBall(false)
 
 	//assert.Equal(t, bundle.TarBall, tarBall)
-
 }
 
 // Tests S3 dependent functions for StorageTarBall such as
@@ -49,7 +47,6 @@ func TestS3TarBall(t *testing.T) {
 // SetUp(), CloseTar() and Finish().
 
 func TestS3DependentFunctions(t *testing.T) {
-
 	tarSizeThreshold := int64(100)
 
 	uploader := testtools.NewMockUploader(false, false)
@@ -73,7 +70,6 @@ func TestS3DependentFunctions(t *testing.T) {
 	// Write mock header.
 
 	mockHeader := &tar.Header{
-
 		Name: "mock",
 
 		Size: int64(len(mockData)),
@@ -82,9 +78,7 @@ func TestS3DependentFunctions(t *testing.T) {
 	err := tarWriter.WriteHeader(mockHeader)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Write body.
@@ -102,15 +96,12 @@ func TestS3DependentFunctions(t *testing.T) {
 	_, err = tarBall.TarWriter().Write(mockData)
 
 	assert.Error(t, err)
-
 }
 
 func TestPackFileTo(t *testing.T) {
-
 	mockData := "mock"
 
 	mockHeader := &tar.Header{
-
 		Name: "mock",
 
 		Mode: int64(0600),
@@ -125,7 +116,6 @@ func TestPackFileTo(t *testing.T) {
 	var size atomic.Int64
 
 	tarBallMaker := testtools.BufferTarBallMaker{
-
 		BufferToWrite: buffer,
 
 		Size: &size,
@@ -148,13 +138,10 @@ func TestPackFileTo(t *testing.T) {
 	interpreter := testtools.BufferTarInterpreter{}
 
 	for {
-
 		header, err := reader.Next()
 
 		if err == io.EOF {
-
 			break
-
 		}
 
 		assert.NoError(t, err)
@@ -162,9 +149,7 @@ func TestPackFileTo(t *testing.T) {
 		err = interpreter.Interpret(reader, header)
 
 		assert.NoError(t, err)
-
 	}
 
 	assert.Equal(t, []byte(mockData), interpreter.Out)
-
 }

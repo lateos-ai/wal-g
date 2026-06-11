@@ -18,7 +18,6 @@ import (
 )
 
 func TestFetch(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backupName := "test"
@@ -34,7 +33,6 @@ func TestFetch(t *testing.T) {
 	date := time.Date(2002, 3, 21, 0, 0, 0, 0, time.UTC)
 
 	testObject := postgres.ExtendedMetadataDto{
-
 		StartTime: date,
 
 		FinishTime: date,
@@ -51,7 +49,6 @@ func TestFetch(t *testing.T) {
 	}
 
 	var expectedResult = internal.GenericMetadata{
-
 		BackupName: backupName,
 
 		UncompressedSize: uncompressedSize,
@@ -67,7 +64,6 @@ func TestFetch(t *testing.T) {
 		IsPermanent: false,
 
 		IncrementDetails: postgres.NewIncrementDetailsFetcher(postgres.Backup{
-
 			Backup: internal.Backup{Name: backupName, Folder: folder},
 		}),
 
@@ -95,11 +91,9 @@ func TestFetch(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedResult, actualResult)
-
 }
 
 func TestFetchReturnErrorWhenNotFoundMetadata(t *testing.T) {
-
 	backupName := "test"
 
 	folder := testtools.CreateMockStorageFolder()
@@ -109,11 +103,9 @@ func TestFetchReturnErrorWhenNotFoundMetadata(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, storage.ObjectNotFoundError{}, err)
-
 }
 
 func TestSetUserData(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backupName := "test"
@@ -129,7 +121,6 @@ func TestSetUserData(t *testing.T) {
 	date := time.Date(2002, 3, 21, 0, 0, 0, 0, time.UTC)
 
 	testObject := postgres.ExtendedMetadataDto{
-
 		StartTime: date,
 
 		FinishTime: date,
@@ -158,11 +149,9 @@ func TestSetUserData(t *testing.T) {
 	assert.NoError(t, fetchErr)
 
 	assert.Equal(t, fetchResult.UserData, newUserData)
-
 }
 
 func TestSetUserDataReturnErrorWhenNotFoundMetadata(t *testing.T) {
-
 	backupName := "test"
 
 	folder := testtools.CreateMockStorageFolder()
@@ -174,11 +163,9 @@ func TestSetUserDataReturnErrorWhenNotFoundMetadata(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, storage.ObjectNotFoundError{}, errors.Cause(err))
-
 }
 
 func TestSetUserDataReturnErrorWhenFolderIsMultiStorage(t *testing.T) {
-
 	backupName := "test"
 
 	mockCtrl := gomock.NewController(t)
@@ -190,7 +177,6 @@ func TestSetUserDataReturnErrorWhenFolderIsMultiStorage(t *testing.T) {
 	statsCollectorMock.EXPECT().ReportOperationResult(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 	memFolders := map[string]storage.Folder{
-
 		"s1": memory.NewFolder("s1/", memory.NewKVS()),
 
 		"s2": memory.NewFolder("s2/", memory.NewKVS()),
@@ -205,17 +191,14 @@ func TestSetUserDataReturnErrorWhenFolderIsMultiStorage(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, "failed to modify metadata", err.Error())
-
 }
 
 func TestSetIsPermanent(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backupName := "test"
 
 	testObject := postgres.ExtendedMetadataDto{
-
 		IsPermanent: false,
 	}
 
@@ -230,5 +213,4 @@ func TestSetIsPermanent(t *testing.T) {
 	assert.NoError(t, fetchErr)
 
 	assert.Equal(t, true, actualResult.IsPermanent)
-
 }

@@ -10,9 +10,7 @@ import (
 )
 
 func TestBackup_PrintableFields(t *testing.T) {
-
 	b := Backup{
-
 		BackupName: "my first backup",
 
 		StartLocalTime: time.Unix(1692811111, 0).UTC(),
@@ -39,9 +37,7 @@ func TestBackup_PrintableFields(t *testing.T) {
 	prettyFinishTime := "Wednesday, 23-Aug-23 20:23:42 UTC"
 
 	want := []printlist.TableField{
-
 		{
-
 			Name: "name",
 
 			PrettyName: "Name",
@@ -52,7 +48,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "start_time",
 
 			PrettyName: "Start time",
@@ -63,7 +58,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "finish_time",
 
 			PrettyName: "Finish time",
@@ -74,7 +68,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "user_data",
 
 			PrettyName: "UserData",
@@ -85,7 +78,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "data_size",
 
 			PrettyName: "Data size",
@@ -96,7 +88,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "backup_size",
 
 			PrettyName: "Backup size",
@@ -107,7 +98,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "permanent",
 
 			PrettyName: "Permanent",
@@ -118,7 +108,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "backup_type",
 
 			PrettyName: "Backup type",
@@ -129,7 +118,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "version",
 
 			PrettyName: "Backup version",
@@ -140,7 +128,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "used_memory",
 
 			PrettyName: "Used memory (limited by maxmemory)",
@@ -151,7 +138,6 @@ func TestBackup_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "used_memory_rss",
 
 			PrettyName: "Used memory (as seen by OS))",
@@ -163,5 +149,4 @@ func TestBackup_PrintableFields(t *testing.T) {
 	}
 
 	assert.Equal(t, want, got)
-
 }

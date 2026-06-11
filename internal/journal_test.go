@@ -35,16 +35,12 @@ func NewEmptyTestJournal(
 	start, end string,
 
 ) internal.JournalInfo {
-
 	return internal.JournalInfo{
-
 		JournalDirectoryName: DefaultJournalDirectory,
 	}
-
 }
 
 func initTestS3() (storage.Folder, internal.Uploader) {
-
 	root := memory.NewFolder("", memory.NewKVS())
 
 	mockUploader := internal.NewRegularUploader(
@@ -55,17 +51,13 @@ func initTestS3() (storage.Folder, internal.Uploader) {
 	)
 
 	return root, mockUploader
-
 }
 
 func numberToJournalTimestamp(num int) time.Time {
-
 	return journalTimestamps[num]
-
 }
 
 func generateAndUploadData(t *testing.T, mockUploader internal.Uploader) {
-
 	recordCount := 100
 
 	recordSize := 1
@@ -73,7 +65,6 @@ func generateAndUploadData(t *testing.T, mockUploader internal.Uploader) {
 	record := strings.Repeat("a", recordSize)
 
 	for i := 1; i <= recordCount; i++ {
-
 		journalPath := fmt.Sprintf("%s/"+JournalFmt, DefaultJournalDirectory, i)
 
 		r := bytes.NewReader([]byte(record))
@@ -83,7 +74,6 @@ func generateAndUploadData(t *testing.T, mockUploader internal.Uploader) {
 		assert.NoError(t, err)
 
 		time.Sleep(time.Millisecond)
-
 	}
 
 	objs, _, err := mockUploader.Folder().GetSubFolder(DefaultJournalDirectory).ListFolder()
@@ -91,15 +81,12 @@ func generateAndUploadData(t *testing.T, mockUploader internal.Uploader) {
 	assert.NoError(t, err)
 
 	for _, obj := range objs {
-
 		value, err := strconv.Atoi(obj.GetName())
 
 		assert.NoError(t, err)
 
 		journalTimestamps[value] = obj.GetLastModified()
-
 	}
-
 }
 
 func CreateThreeJournals(
@@ -109,7 +96,6 @@ func CreateThreeJournals(
 	folder storage.Folder,
 
 ) (internal.JournalInfo, internal.JournalInfo, internal.JournalInfo) {
-
 	ji1 := internal.NewEmptyJournalInfo(
 
 		fmt.Sprintf(
@@ -190,21 +176,17 @@ func CreateThreeJournals(
 	assert.Equal(t, int64(0), ji3.SizeToNextBackup)
 
 	return ji1, ji2, ji3
-
 }
 
 func TestCreateThreeJournals(t *testing.T) {
-
 	folder, uploader := initTestS3()
 
 	generateAndUploadData(t, uploader)
 
 	CreateThreeJournals(t, folder)
-
 }
 
 func TestDeleteJournalInMiddle(t *testing.T) {
-
 	folder, uploader := initTestS3()
 
 	generateAndUploadData(t, uploader)
@@ -220,11 +202,9 @@ func TestDeleteJournalInMiddle(t *testing.T) {
 	assert.Equal(t, int64(66), ji1.SizeToNextBackup)
 
 	assert.Equal(t, int64(0), ji3.SizeToNextBackup)
-
 }
 
 func TestDeleteJournalInBegin(t *testing.T) {
-
 	folder, uploader := initTestS3()
 
 	generateAndUploadData(t, uploader)
@@ -240,11 +220,9 @@ func TestDeleteJournalInBegin(t *testing.T) {
 	assert.Equal(t, int64(33), ji2.SizeToNextBackup)
 
 	assert.Equal(t, int64(0), ji3.SizeToNextBackup)
-
 }
 
 func TestDeleteJournalInEnd(t *testing.T) {
-
 	folder, uploader := initTestS3()
 
 	generateAndUploadData(t, uploader)
@@ -262,11 +240,9 @@ func TestDeleteJournalInEnd(t *testing.T) {
 	assert.Equal(t, int64(0), ji2.SizeToNextBackup)
 
 	fmt.Println(ji1.JournalName, ji2.JournalName, ji3.JournalName)
-
 }
 
 func TestSafetyOfRepeatingMethodCalls(t *testing.T) {
-
 	folder, uploader := initTestS3()
 
 	generateAndUploadData(t, uploader)
@@ -276,7 +252,6 @@ func TestSafetyOfRepeatingMethodCalls(t *testing.T) {
 	// There are random method calls
 
 	for i := 0; i < 10; i++ {
-
 		assert.NoError(t, ji1.UpdateIntervalSize(folder, &internal.JournalFiles{}))
 
 		assert.NoError(t, ji1.Upload(folder))
@@ -294,7 +269,6 @@ func TestSafetyOfRepeatingMethodCalls(t *testing.T) {
 		assert.NoError(t, ji2.Read(folder))
 
 		assert.NoError(t, ji1.Read(folder))
-
 	}
 
 	assert.Equal(t, int64(33), ji1.SizeToNextBackup)
@@ -302,5 +276,4 @@ func TestSafetyOfRepeatingMethodCalls(t *testing.T) {
 	assert.Equal(t, int64(33), ji2.SizeToNextBackup)
 
 	assert.Equal(t, int64(0), ji3.SizeToNextBackup)
-
 }

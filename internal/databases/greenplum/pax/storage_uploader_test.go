@@ -46,23 +46,18 @@ type expected struct {
 }
 
 func newUploader(baseFiles pax.BackupFiles, bundleFiles internal.BundleFiles) *pax.StorageUploader {
-
 	storage := memory.NewKVS()
 
 	mockUploader := testtools.NewStoringMockUploader(storage)
 
 	crypter := openpgp.CrypterFromKeyPath(privateKeyFilePath, func() (string, bool) {
-
 		return "", false
-
 	})
 
 	return pax.NewStorageUploader(mockUploader, baseFiles, crypter, bundleFiles, deduplicationAgeLimit, newPaxFilesID)
-
 }
 
 func generateData(t *testing.T, files map[string]testFile) (string, map[string]testFile) {
-
 	cwd, _ := filepath.Abs("./")
 
 	dir, err := os.MkdirTemp(cwd, "data")
@@ -72,15 +67,12 @@ func generateData(t *testing.T, files map[string]testFile) (string, map[string]t
 	sb := testtools.NewStrideByteReader(10)
 
 	for name, tf := range files {
-
 		lr := &io.LimitedReader{R: sb, N: 100}
 
 		fullPath := filepath.Join(dir, name)
 
 		if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
-
 			t.Fatal(err)
-
 		}
 
 		f, err := os.Create(fullPath)
@@ -106,17 +98,14 @@ func generateData(t *testing.T, files map[string]testFile) (string, map[string]t
 		files[name] = tf
 
 		defer utility.LoggedClose(f, "")
-
 	}
 
 	return dir, files
-
 }
 
 func runUpload(t *testing.T, base pax.BackupFiles, bundleFiles *internal.RegularBundleFiles,
 
 	files map[string]testFile, want map[string]expected) {
-
 	uploader := newUploader(base, bundleFiles)
 
 	testDir, files := generateData(t, files)
@@ -124,13 +113,11 @@ func runUpload(t *testing.T, base pax.BackupFiles, bundleFiles *internal.Regular
 	defer os.RemoveAll(testDir)
 
 	for _, tf := range files {
-
 		cfi := tf.ComposeFileInfo
 
 		err := uploader.AddFile(&cfi, tf.RelFileMetadata, tf.FileKey)
 
 		assert.NoError(t, err)
-
 	}
 
 	gotMeta := uploader.GetFiles()
@@ -138,7 +125,6 @@ func runUpload(t *testing.T, base pax.BackupFiles, bundleFiles *internal.Regular
 	assert.Equal(t, len(want), len(gotMeta.Files))
 
 	for name, got := range gotMeta.Files {
-
 		exp, ok := want[name]
 
 		assert.True(t, ok, "unexpected file %s in metadata", name)
@@ -150,46 +136,34 @@ func runUpload(t *testing.T, base pax.BackupFiles, bundleFiles *internal.Regular
 		assert.Equal(t, exp.Kind, got.Kind, "name=%s", name)
 
 		assert.Equal(t, exp.BlockID, got.BlockID, "name=%s", name)
-
 	}
-
 }
 
 func TestRegularUpload_NoBaseFiles(t *testing.T) {
-
 	files := map[string]testFile{
-
 		"base/13/16385_pax/3": {
-
 			RelFileMetadata: pax.RelFileMetadata{
-
 				RelNameMd5: "md5val", BlockID: 3, Kind: pax.FileKindData,
 			},
 
 			FileKey: pax.FileKey{
-
 				SpcNode: 1009, DBNode: 13, RelFileNode: 16385, Filename: "3",
 			},
 		},
 
 		"base/13/16385_pax/3.toast": {
-
 			RelFileMetadata: pax.RelFileMetadata{
-
 				RelNameMd5: "md5val", BlockID: 3, Kind: pax.FileKindToast,
 			},
 
 			FileKey: pax.FileKey{
-
 				SpcNode: 1009, DBNode: 13, RelFileNode: 16385, Filename: "3.toast",
 			},
 		},
 	}
 
 	want := map[string]expected{
-
 		"base/13/16385_pax/3": {
-
 			StoragePath: "1009_13_md5val_16385_3_test_pax",
 
 			IsSkipped: false,
@@ -200,7 +174,6 @@ func TestRegularUpload_NoBaseFiles(t *testing.T) {
 		},
 
 		"base/13/16385_pax/3.toast": {
-
 			StoragePath: "1009_13_md5val_16385_3_toast_test_pax",
 
 			IsSkipped: false,
@@ -212,17 +185,13 @@ func TestRegularUpload_NoBaseFiles(t *testing.T) {
 	}
 
 	runUpload(t, pax.BackupFiles{}, &internal.RegularBundleFiles{}, files, want)
-
 }
 
 func TestSkipUpload_FileAlreadyInStorage(t *testing.T) {
-
 	now := time.Now()
 
 	base := pax.BackupFiles{
-
 		"base/13/16385_pax/3": {
-
 			StoragePath: "1009_13_md5val_16385_3_old_pax",
 
 			RelNameMd5: "md5val",
@@ -242,25 +211,19 @@ func TestSkipUpload_FileAlreadyInStorage(t *testing.T) {
 	}
 
 	files := map[string]testFile{
-
 		"base/13/16385_pax/3": {
-
 			RelFileMetadata: pax.RelFileMetadata{
-
 				RelNameMd5: "md5val", BlockID: 3, Kind: pax.FileKindData,
 			},
 
 			FileKey: pax.FileKey{
-
 				SpcNode: 1009, DBNode: 13, RelFileNode: 16385, Filename: "3",
 			},
 		},
 	}
 
 	want := map[string]expected{
-
 		"base/13/16385_pax/3": {
-
 			StoragePath: "1009_13_md5val_16385_3_old_pax", // reuses old storage path
 
 			IsSkipped: true,
@@ -272,17 +235,13 @@ func TestSkipUpload_FileAlreadyInStorage(t *testing.T) {
 	}
 
 	runUpload(t, base, &internal.RegularBundleFiles{}, files, want)
-
 }
 
 func TestRegularUpload_DedupAgeLimitPassed(t *testing.T) {
-
 	old := time.Now().Add(-(deduplicationAgeLimit + time.Minute))
 
 	base := pax.BackupFiles{
-
 		"base/13/16385_pax/3": {
-
 			StoragePath: "1009_13_md5val_16385_3_old_pax",
 
 			RelNameMd5: "md5val",
@@ -300,25 +259,19 @@ func TestRegularUpload_DedupAgeLimitPassed(t *testing.T) {
 	}
 
 	files := map[string]testFile{
-
 		"base/13/16385_pax/3": {
-
 			RelFileMetadata: pax.RelFileMetadata{
-
 				RelNameMd5: "md5val", BlockID: 3, Kind: pax.FileKindData,
 			},
 
 			FileKey: pax.FileKey{
-
 				SpcNode: 1009, DBNode: 13, RelFileNode: 16385, Filename: "3",
 			},
 		},
 	}
 
 	want := map[string]expected{
-
 		"base/13/16385_pax/3": {
-
 			StoragePath: "1009_13_md5val_16385_3_test_pax",
 
 			IsSkipped: false,
@@ -330,19 +283,15 @@ func TestRegularUpload_DedupAgeLimitPassed(t *testing.T) {
 	}
 
 	runUpload(t, base, &internal.RegularBundleFiles{}, files, want)
-
 }
 
 func TestRegularUpload_IdentityMismatch(t *testing.T) {
-
 	now := time.Now()
 
 	// remote shows kind=data,blockid=3; local says kind=toast,blockid=3 — mismatch -> re-upload
 
 	base := pax.BackupFiles{
-
 		"base/13/16385_pax/3.toast": {
-
 			StoragePath: "1009_13_md5val_16385_3_toast_old_pax",
 
 			RelNameMd5: "md5val",
@@ -360,25 +309,19 @@ func TestRegularUpload_IdentityMismatch(t *testing.T) {
 	}
 
 	files := map[string]testFile{
-
 		"base/13/16385_pax/3.toast": {
-
 			RelFileMetadata: pax.RelFileMetadata{
-
 				RelNameMd5: "md5val", BlockID: 3, Kind: pax.FileKindToast,
 			},
 
 			FileKey: pax.FileKey{
-
 				SpcNode: 1009, DBNode: 13, RelFileNode: 16385, Filename: "3.toast",
 			},
 		},
 	}
 
 	want := map[string]expected{
-
 		"base/13/16385_pax/3.toast": {
-
 			StoragePath: "1009_13_md5val_16385_3_toast_test_pax",
 
 			IsSkipped: false,
@@ -390,11 +333,9 @@ func TestRegularUpload_IdentityMismatch(t *testing.T) {
 	}
 
 	runUpload(t, base, &internal.RegularBundleFiles{}, files, want)
-
 }
 
 func TestUpload_FileDeletedBetweenWalkAndOpen(t *testing.T) {
-
 	uploader := newUploader(pax.BackupFiles{}, &internal.RegularBundleFiles{})
 
 	name := "missing_file"
@@ -424,11 +365,9 @@ func TestUpload_FileDeletedBetweenWalkAndOpen(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Empty(t, uploader.GetFiles().Files)
-
 }
 
 func TestUpload_StorageKeyShape(t *testing.T) {
-
 	// sanity check: manual key construction matches what the uploader produces.
 
 	// Dot in filename is replaced with `_` so the storage path has no extension.
@@ -442,5 +381,4 @@ func TestUpload_StorageKeyShape(t *testing.T) {
 	want := fmt.Sprintf("%d_%d_%s_%d_%s_%s_pax", 1009, 13, "md5val", 16385, "3_toast", "backup-id")
 
 	assert.Equal(t, want, got)
-
 }

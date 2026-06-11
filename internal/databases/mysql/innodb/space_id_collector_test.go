@@ -17,13 +17,10 @@ import (
 )
 
 func generateData(t *testing.T) string {
-
 	cwd, err := filepath.Abs("./")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Create temp directory.
@@ -31,30 +28,24 @@ func generateData(t *testing.T) string {
 	dir, err := os.MkdirTemp(cwd, "test_data")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Generates files with random data:
 
 	files := []string{
-
 		"orders.txt",
 
 		"orders",
 	}
 
 	for _, file := range files {
-
 		generateRandomFile(t, path.Join(dir, file))
-
 	}
 
 	// Generate innodb files with something like FSP-header:
 
 	ibdFiles := []string{
-
 		"main.ibd",
 
 		"test.ibd",
@@ -63,9 +54,7 @@ func generateData(t *testing.T) string {
 	}
 
 	for idx, file := range ibdFiles {
-
 		generateInnodbFile(t, path.Join(dir, file), SpaceID(idx+1))
-
 	}
 
 	// add nested dir & nested file:
@@ -73,23 +62,18 @@ func generateData(t *testing.T) string {
 	err = os.MkdirAll(path.Join(dir, "nested"), 0777)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	generateInnodbFile(t, path.Join(dir, "nested", "database.ibd"), SpaceID(999))
 
 	return dir
-
 }
 
 func generateRandomFile(t *testing.T, path string) {
-
 	sb := testtools.NewStrideByteReader(10)
 
 	lr := &io.LimitedReader{
-
 		R: sb,
 
 		N: int64(100),
@@ -98,27 +82,21 @@ func generateRandomFile(t *testing.T, path string) {
 	f, err := os.Create(path)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	io.Copy(f, lr)
 
 	defer utility.LoggedClose(f, "")
-
 }
 
 func generateInnodbFile(t *testing.T, path string, spaceId SpaceID) {
-
 	sb := testtools.NewStrideByteReader(10)
 
 	f, err := os.Create(path)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	var hexFile = `
@@ -142,7 +120,6 @@ func generateInnodbFile(t *testing.T, path string, spaceId SpaceID) {
 	io.Copy(f, bytes.NewReader(pageBytes))
 
 	lr := &io.LimitedReader{
-
 		R: sb,
 
 		N: int64(100),
@@ -151,11 +128,9 @@ func generateInnodbFile(t *testing.T, path string, spaceId SpaceID) {
 	io.Copy(f, lr)
 
 	defer utility.LoggedClose(f, "")
-
 }
 
 func TestSpaceIDCollector(t *testing.T) {
-
 	tempDir := generateData(t)
 
 	defer os.RemoveAll(tempDir)
@@ -167,7 +142,6 @@ func TestSpaceIDCollector(t *testing.T) {
 	raw := collector.(*spaceIDCollectorImpl).collected
 
 	expected := map[SpaceID]string{
-
 		SpaceID(1): "main.ibd",
 
 		SpaceID(2): "test.ibd",
@@ -178,5 +152,4 @@ func TestSpaceIDCollector(t *testing.T) {
 	}
 
 	assert.Equal(t, expected, raw)
-
 }

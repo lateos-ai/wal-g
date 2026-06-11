@@ -20,7 +20,6 @@ const actionCmd = "sed -i '/^recovery_target_action = /d' %s && echo 'recovery_t
 // nolint:gocritic
 
 func NewActionHandler(logsDir string, restoreCfgPath string) *ActionHandler {
-
 	restoreCfg, err := readRestoreConfig(restoreCfgPath)
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -30,9 +29,7 @@ func NewActionHandler(logsDir string, restoreCfgPath string) *ActionHandler {
 	segmentConfigs := make([]cluster.SegConfig, 0)
 
 	for contentID, segRestoreCfg := range restoreCfg.Segments {
-
 		segmentConfigs = append(segmentConfigs, segRestoreCfg.ToSegConfig(contentID))
-
 	}
 
 	globalCluster := cluster.NewCluster(segmentConfigs)
@@ -40,14 +37,11 @@ func NewActionHandler(logsDir string, restoreCfgPath string) *ActionHandler {
 	tracelog.DebugLogger.Printf("cluster %v\n", globalCluster)
 
 	return &ActionHandler{
-
 		cluster: globalCluster,
 	}
-
 }
 
 func (fh *ActionHandler) UpdateAction(action string) {
-
 	tracelog.InfoLogger.Printf("Updating recovery.conf recovery_target_action %s on segments and master...", action)
 
 	remoteOutput := fh.cluster.GenerateAndExecuteCommand("Updating recovery.conf on segments and master",
@@ -55,7 +49,6 @@ func (fh *ActionHandler) UpdateAction(action string) {
 		cluster.ON_SEGMENTS|cluster.INCLUDE_MASTER,
 
 		func(contentID int) string {
-
 			segment := fh.cluster.ByContent[contentID][0]
 
 			pathToRestore := path.Join(segment.DataDir, viper.GetString(conf.GPRelativeRecoveryConfPath))
@@ -65,19 +58,14 @@ func (fh *ActionHandler) UpdateAction(action string) {
 			tracelog.DebugLogger.Printf("Command to run on segment %d: %s", contentID, cmd)
 
 			return cmd
-
 		})
 
 	fh.cluster.CheckClusterError(remoteOutput, "Unable to update recovery_target_action", func(contentID int) string {
-
 		return fmt.Sprintf("Unable to create recovery.conf on segment %d", contentID)
-
 	})
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
 
 		tracelog.DebugLogger.Printf("Update recovery.conf output (segment %d):\n%s\n", command.Content, command.Stderr)
-
 	}
-
 }

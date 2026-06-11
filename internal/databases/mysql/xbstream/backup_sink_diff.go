@@ -22,7 +22,6 @@ import (
 // * let xtrabackup do its job
 
 func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
-
 	err := os.MkdirAll(dataDir, 0777) // FIXME: permission & UMASK
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -32,7 +31,6 @@ func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	factory := fileSinkFactory{
-
 		dataDir: dataDir,
 
 		incrementalDir: incrementalDir,
@@ -47,13 +45,10 @@ func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
 	sinks := make(map[string]fileSink)
 
 	for {
-
 		chunk, err := stream.Next()
 
 		if err == io.EOF {
-
 			break
-
 		}
 
 		tracelog.ErrorLogger.FatalfOnError("Cannot read next chunk: %v", err)
@@ -63,41 +58,29 @@ func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
 		sink, ok := sinks[dsKey]
 
 		if !ok {
-
 			sink = factory.NewDataSink(chunk.Path)
 
 			sinks[dsKey] = sink
-
 		}
 
 		err = sink.Process(chunk)
 
 		if errors.Is(err, ErrSinkEOF) {
-
 			delete(sinks, dsKey)
-
 		} else if err != nil {
-
 			tracelog.ErrorLogger.Fatalf("Error in chunk %v: %v", chunk.Path, err)
-
 		}
-
 	}
 
 	for path := range sinks {
-
 		tracelog.WarningLogger.Printf("File %v wasn't clossed properly. Probably xbstream is broken", path)
-
 	}
-
 }
 
 // Deprecated: name doesnt match actual behavior
 
 func AsyncDiffBackupSink(wg *sync.WaitGroup, stream *Reader, dataDir string, incrementalDir string) {
-
 	defer wg.Done()
 
 	DiffBackupSink(stream, dataDir, incrementalDir)
-
 }

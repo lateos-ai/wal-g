@@ -15,9 +15,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestDeleteObjects(t *testing.T) {
-
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.Delete = policies.DeletePolicyFirst
@@ -25,11 +23,9 @@ func TestDeleteObjects(t *testing.T) {
 		err := folder.DeleteObjects([]storage.Object{storage.NewLocalObject("a/b/c/file", time.Time{}, 0)})
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	t.Run("delete objects from first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Delete = policies.DeletePolicyFirst
@@ -61,11 +57,9 @@ func TestDeleteObjects(t *testing.T) {
 		exists, err = folder.usedFolders[1].Exists("a/b/c/file2")
 
 		assert.True(t, exists)
-
 	})
 
 	t.Run("delete objects from all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Delete = policies.DeletePolicyAll
@@ -83,23 +77,17 @@ func TestDeleteObjects(t *testing.T) {
 		require.NoError(t, err)
 
 		for storageIdx := 0; storageIdx < 2; storageIdx++ {
-
 			for _, file := range []string{"a/b/c/file1", "a/b/c/file2"} {
-
 				exists, err := folder.usedFolders[storageIdx].Exists(file)
 
 				require.NoError(t, err)
 
 				assert.False(t, exists)
-
 			}
-
 		}
-
 	})
 
 	t.Run("dont throw error if there is no such objects", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Delete = policies.DeletePolicyAll
@@ -111,19 +99,13 @@ func TestDeleteObjects(t *testing.T) {
 		require.NoError(t, err)
 
 		for storageIdx := 0; storageIdx < 2; storageIdx++ {
-
 			for _, file := range []string{"a/b/c/file1", "a/b/c/file2"} {
-
 				exists, err := folder.usedFolders[storageIdx].Exists(file)
 
 				require.NoError(t, err)
 
 				assert.False(t, exists)
-
 			}
-
 		}
-
 	})
-
 }

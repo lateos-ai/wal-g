@@ -15,39 +15,28 @@ type DeleteHandler struct {
 }
 
 func makeLessFunc(folder storage.Folder) func(object1, object2 storage.Object) bool {
-
 	return func(object1, object2 storage.Object) bool {
-
 		time1, ok := utility.TryFetchTimeRFC3999(object1.GetName())
 
 		if !ok {
-
 			time1 = object1.GetLastModified().Format(utility.BackupTimeFormat)
-
 		}
 
 		time2, ok := utility.TryFetchTimeRFC3999(object2.GetName())
 
 		if !ok {
-
 			time2 = object2.GetLastModified().Format(utility.BackupTimeFormat)
-
 		}
 
 		return time1 < time2
-
 	}
-
 }
 
 func NewDeleteHandler(folder storage.Folder) (*DeleteHandler, error) {
-
 	backupSentinels, err := internal.GetBackupSentinelObjects(folder)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	backupObjects, err := MakeMySQLBackupObjects(folder, backupSentinels)
@@ -59,19 +48,14 @@ func NewDeleteHandler(folder storage.Folder) (*DeleteHandler, error) {
 	permanentBackupNames := make([]string, 0, len(permanentBackups))
 
 	for name := range permanentBackups {
-
 		permanentBackupNames = append(permanentBackupNames, name)
-
 	}
 
 	isPermanentFunc := func(object storage.Object) bool {
-
 		return internal.IsPermanent(object.GetName(), permanentBackups, internal.StreamBackupNameLength)
-
 	}
 
 	return &DeleteHandler{
-
 		DeleteHandler: *internal.NewDeleteHandler(
 
 			folder,
@@ -85,11 +69,8 @@ func NewDeleteHandler(folder storage.Folder) (*DeleteHandler, error) {
 
 		permanentBackups: permanentBackupNames,
 	}, nil
-
 }
 
 func (h *DeleteHandler) HandleDeleteEverything(args []string, confirmed bool) {
-
 	h.DeleteHandler.HandleDeleteEverything(args, h.permanentBackups, confirmed)
-
 }

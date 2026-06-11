@@ -9,7 +9,6 @@ import (
 )
 
 func TestMetadataParser(t *testing.T) {
-
 	var tests = []struct {
 		testName string
 
@@ -17,9 +16,7 @@ func TestMetadataParser(t *testing.T) {
 
 		expected deltaMetadata
 	}{
-
 		{
-
 			testName: "idb file",
 
 			rawFileContent: testutils.HexToBytes(`
@@ -33,7 +30,6 @@ func TestMetadataParser(t *testing.T) {
 				00000030  65 5f 66 6c 61 67 73 20  3d 20 33 33 0a           |e_flags = 33.|`),
 
 			expected: deltaMetadata{
-
 				PageSize: 16 * 1024,
 
 				ZipSize: 0,
@@ -45,7 +41,6 @@ func TestMetadataParser(t *testing.T) {
 		},
 
 		{
-
 			testName: "undo file",
 
 			rawFileContent: testutils.HexToBytes(`
@@ -61,7 +56,6 @@ func TestMetadataParser(t *testing.T) {
 				00000040  20 3d 20 30 0a                                    | = 0.|`),
 
 			expected: deltaMetadata{
-
 				PageSize: 16 * 1024,
 
 				ZipSize: 0,
@@ -74,17 +68,12 @@ func TestMetadataParser(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.testName, func(t *testing.T) {
-
 			actual, err := parseDiffMetadata(tt.rawFileContent)
 
 			assert.NoError(t, err)
 
 			assert.Equal(t, tt.expected, actual)
-
 		})
-
 	}
-
 }

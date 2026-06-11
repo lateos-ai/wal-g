@@ -23,7 +23,6 @@ const (
 )
 
 func TestZeroPageParsing(t *testing.T) {
-
 	zeroPage := make([]byte, WalPageSize)
 
 	parser := NewWalParser()
@@ -33,11 +32,9 @@ func TestZeroPageParsing(t *testing.T) {
 	assert.Nilf(t, pageData, "not nil pageData")
 
 	assert.IsType(t, err, ZeroPageError{})
-
 }
 
 func doPartialFileParsingTesting(t *testing.T, pageReader WalPageReader, parser WalParser) {
-
 	page, err := pageReader.ReadPageData()
 
 	assert.NoError(t, err)
@@ -45,11 +42,9 @@ func doPartialFileParsingTesting(t *testing.T, pageReader WalPageReader, parser 
 	_, _, err = parser.ParseRecordsFromPage(bytes.NewReader(page))
 
 	assert.IsType(t, err, PartialPageError{})
-
 }
 
 func doWalSwitchParsingTesting(t *testing.T, pageReader WalPageReader, parser WalParser) {
-
 	firstPage, err := pageReader.ReadPageData() // first page contains first part of WAL-Switch record
 
 	assert.NoError(t, err)
@@ -67,11 +62,9 @@ func doWalSwitchParsingTesting(t *testing.T, pageReader WalPageReader, parser Wa
 	assert.NoError(t, err)
 
 	assert.Truef(t, records[len(records)-1].isWALSwitch(), "expected WAL Switch record")
-
 }
 
 func doLongRecordParsingTesting(t *testing.T, pageReader WalPageReader, parser WalParser) {
-
 	firstPage, err := pageReader.ReadPageData() // first page contains a beginning of the long record
 
 	assert.NoError(t, err)
@@ -109,11 +102,9 @@ func doLongRecordParsingTesting(t *testing.T, pageReader WalPageReader, parser W
 	assert.Nil(t, discarded)
 
 	assert.NotEmpty(t, records)
-
 }
 
 func parsingTestCase(t *testing.T, filename string, doTesting func(*testing.T, WalPageReader, WalParser)) {
-
 	walFile, err := os.Open(filename)
 
 	defer utility.LoggedClose(walFile, "")
@@ -125,41 +116,29 @@ func parsingTestCase(t *testing.T, filename string, doTesting func(*testing.T, W
 	parser := NewWalParser()
 
 	doTesting(t, pageReader, *parser)
-
 }
 
 func TestParsing_SmallPartial(t *testing.T) {
-
 	parsingTestCase(t, SmallPartialTestPath, doPartialFileParsingTesting)
-
 }
 
 func TestParsing_Partial(t *testing.T) {
-
 	parsingTestCase(t, PartialTestPath, doPartialFileParsingTesting)
-
 }
 
 func TestParsing_WalSwitch(t *testing.T) {
-
 	parsingTestCase(t, WalSwitchTestPath, doWalSwitchParsingTesting)
-
 }
 
 func TestParsing_CutWALSwitch(t *testing.T) {
-
 	parsingTestCase(t, CutWALSwitchTestPath, doWalSwitchParsingTesting)
-
 }
 
 func TestParsing_LongRecord(t *testing.T) {
-
 	parsingTestCase(t, LongRecordTestPath, doLongRecordParsingTesting)
-
 }
 
 func TestSaveLoadWalParser(t *testing.T) {
-
 	walParser := LoadWalParserFromCurrentRecordHead([]byte{1, 2, 3, 4, 5, 6})
 
 	var walParserData bytes.Buffer
@@ -173,5 +152,4 @@ func TestSaveLoadWalParser(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, walParser, loadedWalParser)
-
 }

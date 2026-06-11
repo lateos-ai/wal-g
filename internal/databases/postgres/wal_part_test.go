@@ -10,7 +10,6 @@ import (
 )
 
 func TestSaveLoadWalPart(t *testing.T) {
-
 	walPart := postgres.NewWalPart(postgres.WalTailType, 5, []byte{1, 2, 3, 4, 5})
 
 	var walPartData bytes.Buffer
@@ -24,5 +23,4 @@ func TestSaveLoadWalPart(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, walPart, loadedWalPart)
-
 }

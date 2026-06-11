@@ -12,43 +12,32 @@ import (
 )
 
 func TestIsComplete_Complete(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	partFile.PreviousWalHead = make([]byte, 0)
 
 	for i := range partFile.WalHeads {
-
 		partFile.WalHeads[i] = make([]byte, 0)
-
 	}
 
 	for i := range partFile.WalTails {
-
 		partFile.WalTails[i] = make([]byte, 0)
-
 	}
 
 	assert.True(t, partFile.IsComplete())
-
 }
 
 func TestIsComplete_NotComplete(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	partFile.PreviousWalHead = make([]byte, 0)
 
 	for i := range partFile.WalHeads {
-
 		partFile.WalHeads[i] = make([]byte, 0)
-
 	}
 
 	for i := range partFile.WalTails {
-
 		partFile.WalTails[i] = make([]byte, 0)
-
 	}
 
 	partFile.PreviousWalHead = nil
@@ -68,11 +57,9 @@ func TestIsComplete_NotComplete(t *testing.T) {
 	assert.False(t, partFile.IsComplete())
 
 	partFile.WalHeads[6] = make([]byte, 0)
-
 }
 
 func TestSaveLoadWalPartFile(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	partFile.PreviousWalHead = []byte{1, 2, 3, 4, 5}
@@ -92,11 +79,9 @@ func TestSaveLoadWalPartFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, *partFile, *loadedPartFile)
-
 }
 
 func TestCombineRecords(t *testing.T) {
-
 	partFile := postgres.NewWalPartFile()
 
 	xLogRecord, recordData := testtools.GetXLogRecordData()
@@ -110,5 +95,4 @@ func TestCombineRecords(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, []walparser.XLogRecord{xLogRecord}, actualRecords)
-
 }

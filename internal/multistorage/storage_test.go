@@ -11,13 +11,10 @@ import (
 )
 
 func TestNameAndOrderStorages(t *testing.T) {
-
 	t.Run("sort storages by keys", func(t *testing.T) {
-
 		primary := &testStorage{hash: "primary_hash"}
 
 		failovers := map[string]storage.HashableStorage{
-
 			"failover_1": &testStorage{hash: "failover_1_hash"},
 
 			"failover_2": &testStorage{hash: "failover_2_hash"},
@@ -28,11 +25,8 @@ func TestNameAndOrderStorages(t *testing.T) {
 		namedStorages := NameAndOrderStorages(primary, failovers)
 
 		want := NamedStorages{
-
 			{
-
 				Key: cache.Key{
-
 					Name: "default",
 
 					Hash: "primary_hash",
@@ -44,9 +38,7 @@ func TestNameAndOrderStorages(t *testing.T) {
 			},
 
 			{
-
 				Key: cache.Key{
-
 					Name: "failover_1",
 
 					Hash: "failover_1_hash",
@@ -58,9 +50,7 @@ func TestNameAndOrderStorages(t *testing.T) {
 			},
 
 			{
-
 				Key: cache.Key{
-
 					Name: "failover_2",
 
 					Hash: "failover_2_hash",
@@ -72,9 +62,7 @@ func TestNameAndOrderStorages(t *testing.T) {
 			},
 
 			{
-
 				Key: cache.Key{
-
 					Name: "failover_3",
 
 					Hash: "failover_3_hash",
@@ -87,21 +75,16 @@ func TestNameAndOrderStorages(t *testing.T) {
 		}
 
 		assert.Equal(t, want, namedStorages)
-
 	})
 
 	t.Run("works with no failover storages", func(t *testing.T) {
-
 		primary := &testStorage{hash: "primary_hash"}
 
 		namedStorages := NameAndOrderStorages(primary, nil)
 
 		want := NamedStorages{
-
 			{
-
 				Key: cache.Key{
-
 					Name: "default",
 
 					Hash: "primary_hash",
@@ -114,15 +97,11 @@ func TestNameAndOrderStorages(t *testing.T) {
 		}
 
 		assert.Equal(t, want, namedStorages)
-
 	})
-
 }
 
 func TestNamedStorages_Names(t *testing.T) {
-
 	storages := NamedStorages{
-
 		{Name: "default"},
 
 		{Name: "failover_1"},
@@ -137,17 +116,12 @@ func TestNamedStorages_Names(t *testing.T) {
 	want := []string{"default", "failover_1", "failover_2", "failover_3"}
 
 	assert.Equal(t, want, names)
-
 }
 
 func TestNamedStorages_Keys(t *testing.T) {
-
 	storages := NamedStorages{
-
 		{
-
 			Key: cache.Key{
-
 				Name: "default",
 
 				Hash: "primary_hash",
@@ -157,9 +131,7 @@ func TestNamedStorages_Keys(t *testing.T) {
 		},
 
 		{
-
 			Key: cache.Key{
-
 				Name: "failover_1",
 
 				Hash: "failover_1_hash",
@@ -169,9 +141,7 @@ func TestNamedStorages_Keys(t *testing.T) {
 		},
 
 		{
-
 			Key: cache.Key{
-
 				Name: "failover_2",
 
 				Hash: "failover_2_hash",
@@ -181,9 +151,7 @@ func TestNamedStorages_Keys(t *testing.T) {
 		},
 
 		{
-
 			Key: cache.Key{
-
 				Name: "failover_3",
 
 				Hash: "failover_3_hash",
@@ -196,7 +164,6 @@ func TestNamedStorages_Keys(t *testing.T) {
 	keys := storages.Keys()
 
 	want := map[string]cache.Key{
-
 		"default": storages[0].Key,
 
 		"failover_1": storages[1].Key,
@@ -207,19 +174,14 @@ func TestNamedStorages_Keys(t *testing.T) {
 	}
 
 	assert.Equal(t, want, keys)
-
 }
 
 func TestNamedStorages_RootFolders(t *testing.T) {
-
 	storages := NamedStorages{
-
 		{
-
 			Name: "default",
 
 			HashableStorage: &testStorage{
-
 				hash: "default_hash",
 
 				rootFolder: memory.NewFolder("default/", memory.NewKVS()),
@@ -227,11 +189,9 @@ func TestNamedStorages_RootFolders(t *testing.T) {
 		},
 
 		{
-
 			Name: "failover_1",
 
 			HashableStorage: &testStorage{
-
 				hash: "failover_1_hash",
 
 				rootFolder: memory.NewFolder("failover_1/", memory.NewKVS()),
@@ -239,11 +199,9 @@ func TestNamedStorages_RootFolders(t *testing.T) {
 		},
 
 		{
-
 			Name: "failover_2",
 
 			HashableStorage: &testStorage{
-
 				hash: "failover_2_hash",
 
 				rootFolder: memory.NewFolder("failover_2/", memory.NewKVS()),
@@ -251,11 +209,9 @@ func TestNamedStorages_RootFolders(t *testing.T) {
 		},
 
 		{
-
 			Name: "failover_3",
 
 			HashableStorage: &testStorage{
-
 				hash: "failover_3_hash",
 
 				rootFolder: memory.NewFolder("failover_3/", memory.NewKVS()),
@@ -266,7 +222,6 @@ func TestNamedStorages_RootFolders(t *testing.T) {
 	rootFolders := storages.RootFolders()
 
 	want := map[string]storage.Folder{
-
 		"default": storages[0].RootFolder(),
 
 		"failover_1": storages[1].RootFolder(),
@@ -277,7 +232,6 @@ func TestNamedStorages_RootFolders(t *testing.T) {
 	}
 
 	assert.Equal(t, want, rootFolders)
-
 }
 
 var _ storage.HashableStorage = &testStorage{}
@@ -291,13 +245,9 @@ type testStorage struct {
 }
 
 func (ts *testStorage) ConfigHash() string {
-
 	return ts.hash
-
 }
 
 func (ts *testStorage) RootFolder() storage.Folder {
-
 	return ts.rootFolder
-
 }

@@ -64,9 +64,7 @@ type Section struct {
 }
 
 func NewIndex(f storage.Folder) *Index {
-
 	idx := &Index{
-
 		folder: f,
 
 		icache: make(map[string]*Block),
@@ -75,23 +73,17 @@ func NewIndex(f storage.Folder) *Index {
 	go idx.saver()
 
 	return idx
-
 }
 
 func (idx *Index) Load() error {
-
 	reader, err := idx.folder.ReadObject(IndexFileName)
 
 	if err != nil {
-
 		if _, ok := err.(storage.ObjectNotFoundError); ok {
-
 			return ErrNotFound
-
 		}
 
 		return err
-
 	}
 
 	defer reader.Close()
@@ -99,9 +91,7 @@ func (idx *Index) Load() error {
 	data, err := io.ReadAll(reader)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	idx.Lock()
@@ -111,47 +101,34 @@ func (idx *Index) Load() error {
 	err = json.Unmarshal(data, idx)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	idx.buildCache()
 
 	return nil
-
 }
 
 func (idx *Index) buildCache() {
-
 	idx.ocache = make([]*Block, 0, len(idx.Blocks))
 
 	idx.icache = make(map[string]*Block, len(idx.Blocks))
 
 	for _, b := range idx.Blocks {
-
 		idx.icache[b.ID] = b
 
 		if b.CommittedRev > 0 {
-
 			idx.ocache = append(idx.ocache, b)
-
 		}
-
 	}
 
 	slices.SortFunc(idx.ocache, func(a, b *Block) int {
-
 		return cmp.Compare(a.Offset, b.Offset)
-
 	})
-
 }
 
 func (idx *Index) saver() {
-
 	for range time.NewTicker(BgSaveInterval).C {
-
 		idx.Lock()
 
 		needSave := idx.needSave
@@ -161,19 +138,14 @@ func (idx *Index) saver() {
 		idx.Unlock()
 
 		if needSave {
-
 			err := idx.Save()
 
 			tracelog.ErrorLogger.PrintOnError(err)
-
 		}
-
 	}
-
 }
 
 func (idx *Index) Save() error {
-
 	idx.Lock()
 
 	data, err := json.Marshal(idx)
@@ -181,27 +153,21 @@ func (idx *Index) Save() error {
 	idx.Unlock()
 
 	if err == nil {
-
 		err = idx.folder.PutObject(IndexFileName, bytes.NewBuffer(data))
-
 	}
 
 	return err
-
 }
 
 func (idx *Index) SaveDelayed() {
-
 	idx.Lock()
 
 	idx.needSave = true
 
 	idx.Unlock()
-
 }
 
 func (idx *Index) PutBlock(id string, size uint64) string {
-
 	idx.Lock()
 
 	defer idx.Unlock()
@@ -209,29 +175,23 @@ func (idx *Index) PutBlock(id string, size uint64) string {
 	block, ok := idx.icache[id]
 
 	if !ok {
-
 		block = &Block{ID: id, UploadedRev: 1}
 
 		idx.Blocks = append(idx.Blocks, block)
 
 		idx.icache[id] = block
-
 	} else {
-
 		block.UploadedRev = block.CommittedRev + 1
-
 	}
 
 	block.UploadedSize = size
 
 	return fmt.Sprintf("%s.%d", block.ID, block.UploadedRev)
-
 }
 
 // nolint: funlen,gocyclo
 
 func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
-
 	idx.Lock()
 
 	defer idx.Unlock()
@@ -245,13 +205,10 @@ func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
 	size := uint64(0)
 
 	for _, xb := range xblocklist.Blocks {
-
 		block, ok := idx.icache[xb.ID]
 
 		if !ok {
-
 			return nil, fmt.Errorf("proxy: blocklist operation contains not-uploaded block ID: %s", xb.ID)
-
 		}
 
 		block.Offset = size
@@ -259,37 +216,28 @@ func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
 		newBlocks = append(newBlocks, block)
 
 		switch xb.Mode {
-
 		case BlockCommitted:
 
 			if block.CommittedRev == 0 {
-
 				return nil, fmt.Errorf("proxy: blocklist operation block %s is not committed", xb.ID)
-
 			}
 
 			if block.UploadedRev != 0 {
-
 				block.UploadedRev = 0
 
 				block.UploadedSize = 0
 
 				garbage = append(garbage, fmt.Sprintf("%s.%d", xb.ID, block.UploadedRev))
-
 			}
 
 		case BlockUncommitted:
 
 			if block.UploadedRev == 0 {
-
 				return nil, fmt.Errorf("proxy: blocklist operation block %s is not committed", xb.ID)
-
 			}
 
 			if block.CommittedRev != 0 {
-
 				garbage = append(garbage, fmt.Sprintf("%s.%d", xb.ID, block.CommittedRev))
-
 			}
 
 			block.CommittedRev = block.UploadedRev
@@ -303,11 +251,8 @@ func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
 		case BlockLatest:
 
 			if block.UploadedRev != 0 {
-
 				if block.CommittedRev != 0 {
-
 					garbage = append(garbage, fmt.Sprintf("%s.%d", xb.ID, block.CommittedRev))
-
 				}
 
 				block.CommittedRev = block.UploadedRev
@@ -317,17 +262,14 @@ func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
 				block.UploadedRev = 0
 
 				block.UploadedSize = 0
-
 			}
 
 		default:
 
 			panic(fmt.Sprintf("unexpected block mode: %s", xb.Mode))
-
 		}
 
 		size += block.CommittedSize
-
 	}
 
 	idx.Size = size
@@ -337,31 +279,21 @@ func (idx *Index) PutBlockList(xblocklist *XBlockListIn) ([]string, error) {
 	idx.buildCache()
 
 	for _, block := range oldBlocks {
-
 		if _, ok := idx.icache[block.ID]; !ok {
-
 			if block.UploadedRev != 0 {
-
 				garbage = append(garbage, fmt.Sprintf("%s.%d", block.ID, block.UploadedRev))
-
 			}
 
 			if block.CommittedRev != 0 {
-
 				garbage = append(garbage, fmt.Sprintf("%s.%d", block.ID, block.CommittedRev))
-
 			}
-
 		}
-
 	}
 
 	return garbage, nil
-
 }
 
 func (idx *Index) GetBlockList(ltype string) *XBlockListOut {
-
 	idx.Lock()
 
 	defer idx.Unlock()
@@ -369,51 +301,35 @@ func (idx *Index) GetBlockList(ltype string) *XBlockListOut {
 	var bl XBlockListOut
 
 	if ltype == BlockCommitted || ltype == BlockAll {
-
 		for _, b := range idx.ocache {
-
 			bl.CommittedBlocks.Blocks = append(bl.CommittedBlocks.Blocks, XBlockOut{
-
 				Name: b.ID,
 
 				Size: b.CommittedSize,
 			})
-
 		}
-
 	}
 
 	if ltype == BlockUncommitted || ltype == BlockAll {
-
 		for _, b := range idx.Blocks {
-
 			if b.UploadedRev > 0 {
-
 				bl.UncommittedBlocks.Blocks = append(bl.UncommittedBlocks.Blocks, XBlockOut{
-
 					Name: b.ID,
 
 					Size: b.UploadedSize,
 				})
-
 			}
-
 		}
 
 		slices.SortFunc(bl.UncommittedBlocks.Blocks, func(a, b XBlockOut) int {
-
 			return cmp.Compare(a.Name, b.Name)
-
 		})
-
 	}
 
 	return &bl
-
 }
 
 func (idx *Index) Clear() []string {
-
 	idx.Lock()
 
 	defer idx.Unlock()
@@ -421,19 +337,13 @@ func (idx *Index) Clear() []string {
 	var garbage []string
 
 	for _, block := range idx.Blocks {
-
 		if block.UploadedRev != 0 {
-
 			garbage = append(garbage, fmt.Sprintf("%s.%d", block.ID, block.UploadedRev))
-
 		}
 
 		if block.CommittedRev != 0 {
-
 			garbage = append(garbage, fmt.Sprintf("%s.%d", block.ID, block.CommittedRev))
-
 		}
-
 	}
 
 	idx.Blocks = []*Block{}
@@ -441,11 +351,9 @@ func (idx *Index) Clear() []string {
 	idx.buildCache()
 
 	return garbage
-
 }
 
 func (idx *Index) GetSections(rangeMin, rangeMax uint64) []Section {
-
 	idx.Lock()
 
 	defer idx.Unlock()
@@ -459,61 +367,45 @@ func (idx *Index) GetSections(rangeMin, rangeMax uint64) []Section {
 	r := len(idx.ocache) - 1
 
 	for r > l {
-
 		m := (r + l) / 2
 
 		block := idx.ocache[m]
 
 		if (block.Offset + block.CommittedSize - 1) < rangeMin {
-
 			l = m + 1
-
 		} else if block.Offset > rangeMin {
-
 			r = m - 1
-
 		} else {
-
 			l = m
 
 			break
-
 		}
-
 	}
 
 	// scan next blocks
 
 	for i := l; i < len(idx.ocache); i++ {
-
 		block := idx.ocache[i]
 
 		if block.Offset > rangeMax {
-
 			break
-
 		}
 
 		offset := uint64(0)
 
 		if rangeMin > block.Offset {
-
 			offset = rangeMin - block.Offset
-
 		}
 
 		limit := block.CommittedSize
 
 		if rangeMax < (block.Offset + block.CommittedSize - 1) {
-
 			limit = rangeMax - block.Offset + 1
-
 		}
 
 		limit -= offset
 
 		sections = append(sections, Section{
-
 			Path: fmt.Sprintf("%s.%d", block.ID, block.CommittedRev),
 
 			Offset: offset,
@@ -522,21 +414,15 @@ func (idx *Index) GetSections(rangeMin, rangeMax uint64) []Section {
 
 			BlockSize: block.CommittedSize,
 		})
-
 	}
 
 	return sections
-
 }
 
 // nolint: unused
 
 func (idx *Index) debugBlocks() {
-
 	for i, b := range idx.ocache {
-
 		tracelog.DebugLogger.Printf("BLK %05d %s\t %020d %08d", i, b.ID, b.Offset, b.CommittedSize)
-
 	}
-
 }

@@ -43,9 +43,7 @@ type Writer struct {
 // NewWriter creates Writer from ordinary writer and key
 
 func NewWriter(writer io.Writer, key []byte) io.WriteCloser {
-
 	return &Writer{
-
 		Writer: writer,
 
 		in: make([]byte, chunkSize),
@@ -54,11 +52,9 @@ func NewWriter(writer io.Writer, key []byte) io.WriteCloser {
 
 		key: key,
 	}
-
 }
 
 func (writer *Writer) writeHeader() {
-
 	header := make([]byte, C.crypto_secretstream_xchacha20poly1305_HEADERBYTES)
 
 	var state C.crypto_secretstream_xchacha20poly1305_state
@@ -73,31 +69,24 @@ func (writer *Writer) writeHeader() {
 	)
 
 	if _, err := writer.Writer.Write(header); err != nil {
-
 		writer.headerErr = errors.Wrap(err, "failed to write libsodium header")
 
 		return
-
 	}
 
 	writer.state = state
-
 }
 
 // Write implements io.Writer
 
 func (writer *Writer) Write(p []byte) (n int, err error) {
-
 	writer.onceHeader.Do(writer.writeHeader)
 
 	if writer.headerErr != nil {
-
 		return 0, err
-
 	}
 
 	for n != len(p) {
-
 		count := copy(writer.in[writer.inIdx:], p[n:])
 
 		writer.inIdx += count
@@ -105,31 +94,22 @@ func (writer *Writer) Write(p []byte) (n int, err error) {
 		n += count
 
 		if writer.inIdx == len(writer.in) {
-
 			if err = writer.writeNextChunk(false); err != nil {
-
 				return
-
 			}
-
 		}
-
 	}
 
 	return
-
 }
 
 func (writer *Writer) writeNextChunk(last bool) (err error) {
-
 	var outLen C.ulonglong
 
 	var tag C.uchar
 
 	if last {
-
 		tag = C.crypto_secretstream_xchacha20poly1305_TAG_FINAL
-
 	}
 
 	C.crypto_secretstream_xchacha20poly1305_push(
@@ -152,27 +132,20 @@ func (writer *Writer) writeNextChunk(last bool) (err error) {
 	)
 
 	if _, err = writer.Writer.Write(writer.out[:int(outLen)]); err != nil {
-
 		return
-
 	}
 
 	writer.inIdx = 0
 
 	return
-
 }
 
 // Close implements io.Closer
 
 func (writer *Writer) Close() (err error) {
-
 	if closer, ok := writer.Writer.(io.Closer); ok {
-
 		defer closer.Close()
-
 	}
 
 	return writer.writeNextChunk(true)
-
 }

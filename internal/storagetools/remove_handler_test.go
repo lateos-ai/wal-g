@@ -11,9 +11,7 @@ import (
 )
 
 func TestHandleRemove(t *testing.T) {
-
 	t.Run("throw err when there is no files at prefix", func(t *testing.T) {
-
 		emptyFolder := memory.NewFolder("test/", memory.NewKVS())
 
 		err := HandleRemove("a/b/c/nonexistent", emptyFolder)
@@ -21,17 +19,14 @@ func TestHandleRemove(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Contains(t, err.Error(), "does not exist")
-
 	})
 
 	t.Run("remove single file", func(t *testing.T) {
-
 		folder := memory.NewFolder("test/", memory.NewKVS())
 
 		targetFile := "a/b/c/target"
 
 		targetFolder := []string{
-
 			"a/b/c/target/1",
 
 			"a/b/c/target/1/2",
@@ -40,11 +35,9 @@ func TestHandleRemove(t *testing.T) {
 		}
 
 		for _, f := range append(targetFolder, targetFile) {
-
 			err := folder.PutObject(f, bytes.NewBufferString("123"))
 
 			require.NoError(t, err)
-
 		}
 
 		err := HandleRemove("a/b/c/target", folder)
@@ -58,25 +51,20 @@ func TestHandleRemove(t *testing.T) {
 		assert.False(t, exists)
 
 		for _, f := range targetFolder {
-
 			exists, err = folder.Exists(f)
 
 			require.NoError(t, err)
 
 			assert.True(t, exists)
-
 		}
-
 	})
 
 	t.Run("remove all files in folder", func(t *testing.T) {
-
 		folder := memory.NewFolder("test/", memory.NewKVS())
 
 		targetFile := "a/b/c/target"
 
 		targetFolder := []string{
-
 			"a/b/c/target/1",
 
 			"a/b/c/target/1/2",
@@ -85,11 +73,9 @@ func TestHandleRemove(t *testing.T) {
 		}
 
 		for _, f := range append(targetFolder, targetFile) {
-
 			err := folder.PutObject(f, bytes.NewBufferString("123"))
 
 			require.NoError(t, err)
-
 		}
 
 		err := HandleRemove("a/b/c/target/", folder)
@@ -103,23 +89,18 @@ func TestHandleRemove(t *testing.T) {
 		assert.True(t, exists)
 
 		for _, f := range targetFolder {
-
 			exists, err = folder.Exists(f)
 
 			require.NoError(t, err)
 
 			assert.False(t, exists)
-
 		}
-
 	})
 
 	t.Run("remove files that match glob pattern", func(t *testing.T) {
-
 		folder := memory.NewFolder("test/", memory.NewKVS())
 
 		targetFiles := []string{
-
 			"a/b/c/target",
 
 			"a/b/c/target/1",
@@ -128,7 +109,6 @@ func TestHandleRemove(t *testing.T) {
 		}
 
 		targetFolder := []string{
-
 			"a/b/c/target/3",
 
 			"a/b/c/target/3a/4",
@@ -137,11 +117,9 @@ func TestHandleRemove(t *testing.T) {
 		}
 
 		for _, f := range append(targetFolder, targetFiles...) {
-
 			err := folder.PutObject(f, bytes.NewBufferString("123"))
 
 			require.NoError(t, err)
-
 		}
 
 		err := HandleRemoveWithGlobPattern("a/b/c/target/3*", folder)
@@ -149,25 +127,19 @@ func TestHandleRemove(t *testing.T) {
 		require.NoError(t, err)
 
 		for _, f := range targetFiles {
-
 			exists, err := folder.Exists(f)
 
 			require.NoError(t, err)
 
 			assert.True(t, exists)
-
 		}
 
 		for _, f := range targetFolder {
-
 			exists, err := folder.Exists(f)
 
 			require.NoError(t, err)
 
 			assert.False(t, exists)
-
 		}
-
 	})
-
 }

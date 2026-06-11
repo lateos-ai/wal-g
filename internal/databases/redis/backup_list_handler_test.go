@@ -22,27 +22,21 @@ import (
 )
 
 func init() {
-
 	internal.ConfigureSettings("")
 
 	config.InitConfig()
 
 	config.Configure()
-
 }
 
 func TestHandleDetailedBackupList(t *testing.T) {
-
 	t.Run("print correct backup details in correct order", func(t *testing.T) {
-
 		folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 		curTime := time.Unix(1690000000, 0)
 
 		backups := []archive.Backup{
-
 			{
-
 				BackupName: "b0",
 
 				StartLocalTime: curTime.Add(4 * time.Second).UTC(),
@@ -63,7 +57,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 			},
 
 			{
-
 				BackupName: "b1",
 
 				StartLocalTime: curTime.Add(0 * time.Second).UTC(),
@@ -84,7 +77,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 			},
 
 			{
-
 				BackupName: "b2",
 
 				StartLocalTime: curTime.Add(2 * time.Second).UTC(),
@@ -106,7 +98,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		}
 
 		for _, b := range backups {
-
 			serialized, _ := json.Marshal(b)
 
 			assert.NoError(
@@ -117,7 +108,6 @@ func TestHandleDetailedBackupList(t *testing.T) {
 
 				"couldn't put sentinel in the folder",
 			)
-
 		}
 
 		rescueStdout := os.Stdout
@@ -135,9 +125,7 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		got, _ := io.ReadAll(r)
 
 		slices.SortFunc(backups, func(a, b archive.Backup) int {
-
 			return int(a.FinishLocalTime.Sub(b.FinishLocalTime))
-
 		})
 
 		serializedBackups, _ := json.Marshal(backups)
@@ -145,11 +133,9 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		want := string(serializedBackups)
 
 		assert.JSONEq(t, want, string(got))
-
 	})
 
 	t.Run("handle error with no backups", func(t *testing.T) {
-
 		folder := memory.NewFolder("", memory.NewKVS())
 
 		infoOutput := new(bytes.Buffer)
@@ -177,7 +163,5 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		assert.Empty(t, string(captured))
 
 		assert.Contains(t, infoOutput.String(), "No backups found")
-
 	})
-
 }

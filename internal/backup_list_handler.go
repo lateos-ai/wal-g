@@ -10,7 +10,6 @@ import (
 )
 
 func HandleDefaultBackupList(folder storage.Folder, pretty, json bool) {
-
 	backupTimes, err := GetBackups(folder)
 
 	err = FilterOutNoBackupFoundError(err, json)
@@ -22,13 +21,10 @@ func HandleDefaultBackupList(folder storage.Folder, pretty, json bool) {
 	printableEntities := make([]printlist.Entity, len(backupTimes))
 
 	for i := range backupTimes {
-
 		printableEntities[i] = backupTimes[i]
-
 	}
 
 	err = printlist.List(printableEntities, os.Stdout, pretty, json)
 
 	tracelog.ErrorLogger.FatalfOnError("Print backups: %v", err)
-
 }

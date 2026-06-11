@@ -14,7 +14,6 @@ import (
 )
 
 func TestResolveOplogReplaySequenceFallsBackToFullList(t *testing.T) {
-
 	since := models.Timestamp{TS: 600, Inc: 1}
 
 	until := models.Timestamp{TS: 630, Inc: 1}
@@ -38,19 +37,15 @@ func TestResolveOplogReplaySequenceFallsBackToFullList(t *testing.T) {
 		"ListOplogArchivesSegment",
 
 		testifymock.MatchedBy(func(value *string) bool {
-
 			actualSince = value
 
 			return value != nil && *value == expectedSince
-
 		}),
 
 		testifymock.MatchedBy(func(value *string) bool {
-
 			actualUntil = value
 
 			return value != nil && *value == expectedUntil
-
 		}),
 	).Return([]models.Archive{firstArch}, nil).Once()
 
@@ -69,11 +64,9 @@ func TestResolveOplogReplaySequenceFallsBackToFullList(t *testing.T) {
 	assert.Equal(t, expectedSince, *actualSince)
 
 	assert.Equal(t, expectedUntil, *actualUntil)
-
 }
 
 func mustArchive(t *testing.T, start, end models.Timestamp) models.Archive {
-
 	t.Helper()
 
 	arch, err := models.NewArchive(start, end, "lz4", models.ArchiveTypeOplog)
@@ -81,5 +74,4 @@ func mustArchive(t *testing.T, start, end models.Timestamp) models.Archive {
 	require.NoError(t, err)
 
 	return arch
-
 }

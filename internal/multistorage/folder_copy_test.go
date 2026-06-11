@@ -15,9 +15,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestCopyObject(t *testing.T) {
-
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.Copy = policies.CopyPolicyFirst
@@ -25,11 +23,9 @@ func TestCopyObject(t *testing.T) {
 		err := folder.CopyObject("a/b/c/file", "file2")
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	t.Run("copy in first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Copy = policies.CopyPolicyFirst
@@ -43,7 +39,6 @@ func TestCopyObject(t *testing.T) {
 		require.NoError(t, err)
 
 		for _, file := range []string{"a/b/c/file1", "file2"} {
-
 			reader, err := folder.usedFolders[0].ReadObject(file)
 
 			require.NoError(t, err)
@@ -51,17 +46,14 @@ func TestCopyObject(t *testing.T) {
 			content, _ := io.ReadAll(reader)
 
 			assert.Equal(t, "abc", string(content))
-
 		}
 
 		_, err = folder.usedFolders[1].ReadObject("file2")
 
 		assert.ErrorAs(t, err, &storage.ObjectNotFoundError{})
-
 	})
 
 	t.Run("copy in all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Copy = policies.CopyPolicyAll
@@ -75,9 +67,7 @@ func TestCopyObject(t *testing.T) {
 		require.NoError(t, err)
 
 		for storageIdx := 0; storageIdx < 2; storageIdx++ {
-
 			for _, file := range []string{"a/b/c/file1", "file2"} {
-
 				reader, err := folder.usedFolders[storageIdx].ReadObject(file)
 
 				require.NoError(t, err)
@@ -85,15 +75,11 @@ func TestCopyObject(t *testing.T) {
 				content, _ := io.ReadAll(reader)
 
 				assert.Equal(t, "abc", string(content))
-
 			}
-
 		}
-
 	})
 
 	t.Run("throw error if all storages dont have the object", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Copy = policies.CopyPolicyAll
@@ -101,11 +87,9 @@ func TestCopyObject(t *testing.T) {
 		err := folder.CopyObject("a/b/c/file1", "file2")
 
 		require.ErrorAs(t, err, &storage.ObjectNotFoundError{})
-
 	})
 
 	t.Run("dont throw error if any of storages has the object", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Copy = policies.CopyPolicyAll
@@ -115,7 +99,5 @@ func TestCopyObject(t *testing.T) {
 		err := folder.CopyObject("a/b/c/file1", "file2")
 
 		require.NoError(t, err)
-
 	})
-
 }

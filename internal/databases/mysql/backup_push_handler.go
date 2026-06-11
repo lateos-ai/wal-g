@@ -16,7 +16,6 @@ import (
 )
 
 //nolint:funlen
-
 func HandleBackupPush(
 
 	ctx context.Context,
@@ -38,15 +37,12 @@ func HandleBackupPush(
 	deltaBackupConfigurator DeltaBackupConfigurator,
 
 ) {
-
 	hostname, err := os.Hostname()
 
 	if err != nil {
-
 		hostname = ""
 
 		tracelog.WarningLogger.Printf("Failed to obtain the OS hostname")
-
 	}
 
 	db, err := getMySQLConnection()
@@ -86,17 +82,13 @@ func HandleBackupPush(
 	var xtrabackupInfo XtrabackupExtInfo
 
 	if isXtrabackup(backupCmd) {
-
 		prevBackupInfo, incrementCount, err = deltaBackupConfigurator.Configure(isFullBackup, hostname, serverUUID, version)
 
 		tracelog.ErrorLogger.FatalfOnError("failed to get previous backup for delta backup: %v", err)
 
 		backupName, xtrabackupInfo, err = handleXtrabackupBackup(ctx, uploader, backupCmd, isFullBackup, &prevBackupInfo)
-
 	} else {
-
 		backupName, err = handleRegularBackup(ctx, uploader, backupCmd)
-
 	}
 
 	tracelog.ErrorLogger.FatalfOnError("backup create command failed: %v", err)
@@ -110,17 +102,13 @@ func HandleBackupPush(
 	uploadedSize, err := uploader.UploadedDataSize()
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Failed to calc uploaded data size: %v", err)
-
 	}
 
 	rawSize, err := uploader.RawDataSize()
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Failed to calc raw data size: %v", err)
-
 	}
 
 	userData, err := internal.UnmarshalSentinelUserData(userDataRaw)
@@ -130,21 +118,16 @@ func HandleBackupPush(
 	var incrementFrom *string
 
 	if (prevBackupInfo != PrevBackupInfo{}) {
-
 		incrementFrom = &prevBackupInfo.name
-
 	}
 
 	var tool = WalgUnspecifiedStreamBackupTool
 
 	if isXtrabackup(backupCmd) {
-
 		tool = WalgXtrabackupTool
-
 	}
 
 	sentinel := StreamSentinelDto{
-
 		Tool: tool,
 
 		BinLogStart: binlogStart,
@@ -193,21 +176,17 @@ func HandleBackupPush(
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	if !countJournals {
-
 		tracelog.InfoLogger.Printf("binlog counting mode is disabled: option is disabled")
 
 		return
-
 	}
 
 	// permanent backups can live longer than binlogs; they should not take part in binlog counting
 
 	if isPermanent {
-
 		tracelog.InfoLogger.Printf("binlog counting mode is disabled: the backup is permanent")
 
 		return
-
 	}
 
 	mostRecentJournalInfo, err := internal.GetMostRecentJournalInfo(
@@ -218,11 +197,9 @@ func HandleBackupPush(
 	)
 
 	if err != nil {
-
 		// there can be no backups on S3
 
 		tracelog.WarningLogger.Printf("can not find the last journal info: %s", err.Error())
-
 	}
 
 	journalInfo := internal.NewEmptyJournalInfo(
@@ -237,29 +214,23 @@ func HandleBackupPush(
 	err = journalInfo.Upload(folder)
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("can not upload the journal info: %s", err.Error())
 
 		return
-
 	}
 
 	err = journalInfo.UpdateIntervalSize(folder, &internal.JournalFiles{})
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("can not calculate journal size: %s", err.Error())
 
 		return
-
 	}
 
 	tracelog.InfoLogger.Printf("uploaded journal info for %s", backupName)
-
 }
 
 func handleRegularBackup(ctx context.Context, uploader internal.Uploader, backupCmd *exec.Cmd) (backupName string, err error) {
-
 	stdout, stderr, err := utility.StartCommandWithStdoutStderr(backupCmd)
 
 	tracelog.ErrorLogger.FatalfOnError("failed to start backup create command: %v", err)
@@ -271,13 +242,10 @@ func handleRegularBackup(ctx context.Context, uploader internal.Uploader, backup
 	err = backupCmd.Wait()
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Backup command output:\n%s", stderr.String())
-
 	}
 
 	return
-
 }
 
 func handleXtrabackupBackup(
@@ -293,11 +261,8 @@ func handleXtrabackupBackup(
 	prevBackupInfo *PrevBackupInfo,
 
 ) (backupName string, backupExtInfo XtrabackupExtInfo, err error) {
-
 	if prevBackupInfo == nil {
-
 		tracelog.ErrorLogger.Fatalf("PrevBackupInfo is null")
-
 	}
 
 	tmpDirRoot := "/tmp" // There is no Percona XtraBackup for Windows (c) @PeterZaitsev
@@ -321,21 +286,16 @@ func handleXtrabackupBackup(
 	cmdErr := backupCmd.Wait()
 
 	if cmdErr != nil {
-
 		tracelog.ErrorLogger.Printf("Backup command output:\n%s", stderr.String())
-
 	}
 
 	backupInfo, err := readXtrabackupInfo(xtrabackupExtraDirectory)
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("failed to read and parse `xtrabackup_checkpoints`: %v", err)
-
 	}
 
 	backupExtInfo = XtrabackupExtInfo{
-
 		XtrabackupInfo: backupInfo,
 
 		// it is hard to run `wal-g xtrabackup-push` on remote host. So, expect that local OS/Arch is ok.
@@ -348,11 +308,8 @@ func handleXtrabackupBackup(
 	err = removeTemporaryDirectory(xtrabackupExtraDirectory)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("failed to remove tmp directory from diff-backup: %v", err)
-
 	}
 
 	return backupName, backupExtInfo, cmdErr
-
 }

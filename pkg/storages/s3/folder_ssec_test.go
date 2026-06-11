@@ -24,42 +24,32 @@ type MockS3ClientSSEC struct {
 }
 
 func (m *MockS3ClientSSEC) GetObject(input *s3.GetObjectInput) (*s3.GetObjectOutput, error) {
-
 	m.LastGetObjectInput = input
 
 	output := &s3.GetObjectOutput{
-
 		Body: io.NopCloser(strings.NewReader("mock encrypted content")),
 	}
 
 	return output, nil
-
 }
 
 func (m *MockS3ClientSSEC) HeadObject(input *s3.HeadObjectInput) (*s3.HeadObjectOutput, error) {
-
 	m.LastHeadObjectInput = input
 
 	return &s3.HeadObjectOutput{}, nil
-
 }
 
 func (m *MockS3ClientSSEC) CopyObject(input *s3.CopyObjectInput) (*s3.CopyObjectOutput, error) {
-
 	m.LastCopyObjectInput = input
 
 	return &s3.CopyObjectOutput{}, nil
-
 }
 
 func createSSECUploader(sseAlgorithm, sseKey string) *walgs3.Uploader {
-
 	return walgs3.NewUploader(nil, sseAlgorithm, sseKey, "", "STANDARD", "GOVERNANCE", 0)
-
 }
 
 func TestReadObject_WithSSEC_AddsCorrectHeaders(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	sseKey := "MySecretKey32BytesLongForSSE!123"
@@ -95,11 +85,9 @@ func TestReadObject_WithSSEC_AddsCorrectHeaders(t *testing.T) {
 	assert.NotNil(t, mockClient.LastGetObjectInput.SSECustomerKeyMD5)
 
 	assert.Equal(t, expectedMD5, *mockClient.LastGetObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestReadObject_WithoutSSEC_NoHeadersAdded(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("", "")
@@ -123,11 +111,9 @@ func TestReadObject_WithoutSSEC_NoHeadersAdded(t *testing.T) {
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestExists_WithSSEC_AddsCorrectHeaders(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	sseKey := "MySecretKey32BytesLongForSSE!123"
@@ -161,11 +147,9 @@ func TestExists_WithSSEC_AddsCorrectHeaders(t *testing.T) {
 	assert.NotNil(t, mockClient.LastHeadObjectInput.SSECustomerKeyMD5)
 
 	assert.Equal(t, expectedMD5, *mockClient.LastHeadObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestExists_WithoutSSEC_NoHeadersAdded(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("", "")
@@ -187,11 +171,9 @@ func TestExists_WithoutSSEC_NoHeadersAdded(t *testing.T) {
 	assert.Nil(t, mockClient.LastHeadObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastHeadObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestCopyObject_WithSSEC_AddsCorrectHeadersForSourceAndDestination(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	sseKey := "MySecretKey32BytesLongForSSE!123"
@@ -235,11 +217,9 @@ func TestCopyObject_WithSSEC_AddsCorrectHeadersForSourceAndDestination(t *testin
 	assert.NotNil(t, mockClient.LastCopyObjectInput.SSECustomerKeyMD5)
 
 	assert.Equal(t, expectedMD5, *mockClient.LastCopyObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestCopyObject_WithoutSSEC_NoHeadersAdded(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("", "")
@@ -265,11 +245,9 @@ func TestCopyObject_WithoutSSEC_NoHeadersAdded(t *testing.T) {
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestReadObject_WithSSECButNoAlgorithm_NoHeadersAdded(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("", "MySecretKey32BytesLongForSSE!123")
@@ -293,11 +271,9 @@ func TestReadObject_WithSSECButNoAlgorithm_NoHeadersAdded(t *testing.T) {
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestReadObject_WithSSECButNoKey_NoHeadersAdded(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("AES256", "")
@@ -321,11 +297,9 @@ func TestReadObject_WithSSECButNoKey_NoHeadersAdded(t *testing.T) {
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastGetObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestReadObject_WithSSEC_CorrectObjectPath(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	uploader := createSSECUploader("AES256", "MySecretKey32BytesLongForSSE!123")
@@ -343,11 +317,9 @@ func TestReadObject_WithSSEC_CorrectObjectPath(t *testing.T) {
 	assert.Equal(t, "base/path/subfolder/file.txt", *mockClient.LastGetObjectInput.Key)
 
 	assert.Equal(t, "test-bucket", *mockClient.LastGetObjectInput.Bucket)
-
 }
 
 func TestCopyObject_WithSSEKMS_AddsCorrectHeadersForKMS(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	sseAlgorithm := "aws:kms"
@@ -385,11 +357,9 @@ func TestCopyObject_WithSSEKMS_AddsCorrectHeadersForKMS(t *testing.T) {
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKeyMD5)
-
 }
 
 func TestCopyObject_WithSSES3_AddsCorrectHeadersForS3(t *testing.T) {
-
 	mockClient := &MockS3ClientSSEC{}
 
 	sseAlgorithm := "AES256"
@@ -423,5 +393,4 @@ func TestCopyObject_WithSSES3_AddsCorrectHeadersForS3(t *testing.T) {
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKey)
 
 	assert.Nil(t, mockClient.LastCopyObjectInput.SSECustomerKeyMD5)
-
 }

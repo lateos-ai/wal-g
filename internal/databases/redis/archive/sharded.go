@@ -27,23 +27,18 @@ import (
 const SlotsFileName = "slots.json"
 
 func GetSlotsCompressedFileName(backupName string) (string, error) {
-
 	upl, err := internal.ConfigureUploader()
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	fileName := utility.AddFileExtension(SlotsFileName, upl.Compression().FileExtension())
 
 	return filepath.Join(backupName, fileName), nil
-
 }
 
 func getFQDNToIDMap() (map[string]string, error) {
-
 	var fqdnMap map[string]string
 
 	fqdnMapRaw := viper.GetString(conf.RedisFQDNToIDMap)
@@ -53,13 +48,10 @@ func getFQDNToIDMap() (map[string]string, error) {
 	err := json.Unmarshal([]byte(fqdnMapRaw), &fqdnMap)
 
 	if err != nil {
-
 		return nil, errors.Wrapf(err, "failed to parse FQDN to id mapping as a JSON object")
-
 	}
 
 	return fqdnMap, nil
-
 }
 
 type MigratingSlotsError struct {
@@ -67,19 +59,14 @@ type MigratingSlotsError struct {
 }
 
 func NewMigratingSlotsError(slots string) MigratingSlotsError {
-
 	return MigratingSlotsError{errors.Errorf("there are slots migrating: %s", strings.TrimSpace(slots))}
-
 }
 
 func (err MigratingSlotsError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 func getIntervals(line string) ([][]string, error) {
-
 	// 56cac18e538888e2fb81b09b8491e819d2bda1e1 <ip>:6379@16379 master,nofailover -
 
 	// 0 1747228909000 44 connected 2731-5460 10923-13653 [10923->3d68e5b49b010564b64c8a4ac26536a8d6a756f8]
@@ -87,37 +74,26 @@ func getIntervals(line string) ([][]string, error) {
 	slotsPart := strings.Split(line, "connected")[1]
 
 	if strings.Contains(slotsPart, "[") {
-
 		return [][]string{}, NewMigratingSlotsError(slotsPart)
-
 	}
 
 	var intervals [][]string
 
 	for _, intervalRaw := range strings.Split(slotsPart, " ") {
-
 		if strings.TrimSpace(intervalRaw) == "" {
-
 			continue
-
 		}
 
 		if strings.Contains(intervalRaw, "-") {
-
 			ends := strings.Split(intervalRaw, "-")
 
 			intervals = append(intervals, []string{ends[0], ends[1]})
-
 		} else {
-
 			intervals = append(intervals, []string{intervalRaw, intervalRaw})
-
 		}
-
 	}
 
 	return intervals, nil
-
 }
 
 type NetI interface {
@@ -127,29 +103,23 @@ type NetI interface {
 type NetImpl struct{}
 
 func (n NetImpl) LookupAddr(addr string) (names []string, err error) {
-
 	return net.LookupAddr(addr)
-
 }
 
 func extractFQDNs(line string, netImpl NetI) ([]string, error) {
-
 	ipWithPortsAndTail := strings.Split(line, " ")[1]
 
 	parts := strings.Split(ipWithPortsAndTail, ",")
 
 	if len(parts) > 1 && parts[1] != "" {
-
 		// 1. 17b6be48fa511f0adad8c887dc01dd7067e7bfe5 <ip>:6379@16379,<hostname>,tls-port=0,shard-id=078c4272db66981a314129680c33a980ebd2e037
 
 		// master,fail,nofailover - 1750694758775 1750694758775 419 connected
 
 		return []string{parts[1]}, nil
-
 	}
 
 	if strings.Contains(line, ",fail,") {
-
 		// 2. d36dacb40728f82b6453a611941cded23915d24a <ip>:6379@16379,,tls-port=0,shard-id=3e0c8579c9f33534b4ccaafe168eb9a1d97c116e
 
 		// master,fail,nofailover - 1750771752642 1750771748000 53 connected
@@ -161,7 +131,6 @@ func extractFQDNs(line string, netImpl NetI) ([]string, error) {
 		// if that's not the case and it's some kind of trouble in cluster, we prefer to fail backup further
 
 		return []string{}, nil
-
 	}
 
 	ipWithPorts := strings.Split(parts[0], "@")[0]
@@ -171,7 +140,6 @@ func extractFQDNs(line string, netImpl NetI) ([]string, error) {
 	ip := strings.Join(parts[:len(parts)-1], ":")
 
 	if ip == "" {
-
 		// 3. 56cac18e538888e2fb81b09b8491e819d2bda1e1 :6379@16379 master,nofailover -
 
 		// 0 1747228909000 44 connected 2731-5460 10923-13653 [10923->3d68e5b49b010564b64c8a4ac26536a8d6a756f8]
@@ -179,13 +147,10 @@ func extractFQDNs(line string, netImpl NetI) ([]string, error) {
 		host, err := os.Hostname()
 
 		if err != nil {
-
 			return nil, err
-
 		}
 
 		return []string{host}, nil
-
 	}
 
 	// 4. 56cac18e538888e2fb81b09b8491e819d2bda1e1 <ip>:6379@16379 master,nofailover -
@@ -195,39 +160,27 @@ func extractFQDNs(line string, netImpl NetI) ([]string, error) {
 	fqdns, err := netImpl.LookupAddr(ip)
 
 	if err != nil {
-
 		return nil, errors.Wrapf(err, "failed to find address %s", ip)
-
 	}
 
 	return fqdns, nil
-
 }
 
 func validateFqdns(fqdnToIDMap map[string]string, idToSlots map[string][][]string) (map[string][][]string, error) {
-
 	for _, id := range fqdnToIDMap {
-
 		if _, exists := idToSlots[id]; !exists {
-
 			return map[string][][]string{}, fmt.Errorf("failed to find all IDs from %+v\nfound only %+v", fqdnToIDMap, idToSlots)
-
 		}
-
 	}
 
 	return idToSlots, nil
-
 }
 
 func GetSlotsMap(netImpl NetI) (map[string][][]string, error) {
-
 	fqdnToIDMap, err := getFQDNToIDMap()
 
 	if err != nil {
-
 		return map[string][][]string{}, err
-
 	}
 
 	clusterConfPath := viper.GetString(conf.RedisClusterConfPath)
@@ -235,9 +188,7 @@ func GetSlotsMap(netImpl NetI) (map[string][][]string, error) {
 	clusterConf, err := os.Open(clusterConfPath)
 
 	if err != nil {
-
 		return map[string][][]string{}, err
-
 	}
 
 	defer clusterConf.Close()
@@ -247,41 +198,31 @@ func GetSlotsMap(netImpl NetI) (map[string][][]string, error) {
 	scanner := bufio.NewScanner(clusterConf)
 
 	for scanner.Scan() {
-
 		line := scanner.Text()
 
 		if !strings.Contains(line, "master") {
-
 			continue
-
 		}
 
 		intervals, err := getIntervals(line)
 
 		if err != nil {
-
 			return map[string][][]string{}, err
-
 		}
 
 		fqdns, err := extractFQDNs(line, netImpl)
 
 		if err != nil {
-
 			return map[string][][]string{}, err
-
 		}
 
 		if len(fqdns) == 0 {
-
 			continue
-
 		}
 
 		found := false
 
 		for i, fqdn := range fqdns {
-
 			// LookupAddr may add trailing dot for some hosts
 
 			fqdn = strings.TrimRight(fqdn, ".")
@@ -289,35 +230,25 @@ func GetSlotsMap(netImpl NetI) (map[string][][]string, error) {
 			fqdns[i] = fqdn
 
 			if id, ok := fqdnToIDMap[fqdn]; ok {
-
 				found = true
 
 				idToSlots[id] = intervals
-
 			}
-
 		}
 
 		if !found {
-
 			return map[string][][]string{}, fmt.Errorf("failed to find ID from %+v in %+v", fqdns, fqdnToIDMap)
-
 		}
-
 	}
 
 	return validateFqdns(fqdnToIDMap, idToSlots)
-
 }
 
 func FetchSlotsDataFromStorage(folder storage.Folder, backup *Backup) (string, error) {
-
 	tmpDir, err := os.MkdirTemp("/tmp", "slots_data")
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	defer os.RemoveAll(tmpDir)
@@ -325,9 +256,7 @@ func FetchSlotsDataFromStorage(folder storage.Folder, backup *Backup) (string, e
 	compressedFileName, err := GetSlotsCompressedFileName(backup.BackupName)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	fileName := utility.TrimFileExtension(compressedFileName)
@@ -343,9 +272,7 @@ func FetchSlotsDataFromStorage(folder storage.Folder, backup *Backup) (string, e
 	err = internal.ExtractAll(tarInterpreter, []internal.ReaderMaker{pathToExtract})
 
 	if err != nil {
-
 		return "", errors.Wrapf(err, "file %s in folder %s", compressedFileName, storageFolder.GetPath())
-
 	}
 
 	localPath := filepath.Join(tmpDir, fileName)
@@ -353,13 +280,10 @@ func FetchSlotsDataFromStorage(folder storage.Folder, backup *Backup) (string, e
 	f, err := os.ReadFile(localPath)
 
 	if err != nil {
-
 		return "", err
-
 	}
 
 	return string(f), nil
-
 }
 
 type FileUploader interface {
@@ -375,27 +299,20 @@ type FillSlotsForShardedArgs struct {
 }
 
 func FillSlotsForSharded(ctx context.Context, args FillSlotsForShardedArgs) error {
-
 	if !args.Sharded {
-
 		return nil
-
 	}
 
 	idToSlots, err := GetSlotsMap(NetImpl{})
 
 	if err != nil {
-
 		return err
-
 	}
 
 	jsonData, err := json.Marshal(idToSlots)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf("packing %s", string(jsonData))
@@ -403,9 +320,7 @@ func FillSlotsForSharded(ctx context.Context, args FillSlotsForShardedArgs) erro
 	fullPath, err := GetSlotsCompressedFileName(args.BackupName)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	file := ioextensions.NewNamedReaderImpl(bytes.NewReader(jsonData), fullPath)
@@ -413,11 +328,8 @@ func FillSlotsForSharded(ctx context.Context, args FillSlotsForShardedArgs) erro
 	err = args.Uploader.UploadExactFile(ctx, file)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	return nil
-
 }

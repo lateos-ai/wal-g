@@ -41,7 +41,6 @@ type StorageUploader struct {
 func NewStorageUploader(uploader internal.Uploader, baseFiles BackupFiles, crypter crypto.Crypter,
 
 	files internal.BundleFiles, deduplicationAgeLimit time.Duration, newPaxFilesID string) *StorageUploader {
-
 	// Separate uploader for PAX files with disabled file size tracking, matching the AO/AOCS handling path.
 
 	paxFileUploader := uploader.Clone()
@@ -49,7 +48,6 @@ func NewStorageUploader(uploader internal.Uploader, baseFiles BackupFiles, crypt
 	paxFileUploader.DisableSizeTracking()
 
 	return &StorageUploader{
-
 		uploader: paxFileUploader,
 
 		baseFiles: baseFiles,
@@ -64,59 +62,46 @@ func NewStorageUploader(uploader internal.Uploader, baseFiles BackupFiles, crypt
 
 		newPaxFilesID: newPaxFilesID,
 	}
-
 }
 
 func (u *StorageUploader) GetFiles() *FilesMetadataDTO {
-
 	return u.meta
-
 }
 
 func (u *StorageUploader) AddFile(cfi *internal.ComposeFileInfo, meta RelFileMetadata, fileKey FileKey) error {
-
 	err := u.addFile(cfi, meta, fileKey)
 
 	if _, ok := err.(internal.FileNotExistError); ok {
-
 		// File was deleted between walk and open. Treat as "did not exist".
 
 		tracelog.WarningLogger.Println(err)
 
 		return nil
-
 	}
 
 	return err
-
 }
 
 func (u *StorageUploader) addFile(cfi *internal.ComposeFileInfo, meta RelFileMetadata, fileKey FileKey) error {
-
 	remoteFile, ok := u.baseFiles[cfi.Header.Name]
 
 	if !ok {
-
 		tracelog.DebugLogger.Printf("%s: no base PAX file in storage, will upload", cfi.Header.Name)
 
 		return u.regularUpload(cfi, meta, fileKey)
-
 	}
 
 	if remoteFile.InitialUploadTS.Before(u.deduplicationMinAge) {
-
 		tracelog.DebugLogger.Printf("%s: PAX dedup age limit passed (initial upload %s), will re-upload",
 
 			cfi.Header.Name, remoteFile.InitialUploadTS)
 
 		return u.regularUpload(cfi, meta, fileKey)
-
 	}
 
 	// if dedup check failed -> upload new file
 
 	if remoteFile.RelNameMd5 != meta.RelNameMd5 || remoteFile.BlockID != meta.BlockID || remoteFile.Kind != meta.Kind {
-
 		tracelog.DebugLogger.Printf(
 
 			"%s: PAX identity mismatch (remote md5=%s blockid=%d kind=%s vs local md5=%s blockid=%d kind=%s), will re-upload",
@@ -128,7 +113,6 @@ func (u *StorageUploader) addFile(cfi *internal.ComposeFileInfo, meta RelFileMet
 			meta.RelNameMd5, meta.BlockID, meta.Kind)
 
 		return u.regularUpload(cfi, meta, fileKey)
-
 	}
 
 	tracelog.DebugLogger.Printf("%s: PAX file already in storage as %s, will skip",
@@ -136,13 +120,11 @@ func (u *StorageUploader) addFile(cfi *internal.ComposeFileInfo, meta RelFileMet
 		cfi.Header.Name, remoteFile.StoragePath)
 
 	return u.skipUpload(cfi, meta, remoteFile.StoragePath, remoteFile.InitialUploadTS)
-
 }
 
 func (u *StorageUploader) skipUpload(cfi *internal.ComposeFileInfo, meta RelFileMetadata,
 
 	storageKey string, initialUploadTS time.Time) error {
-
 	u.addMetadata(cfi, storageKey, meta, true, initialUploadTS)
 
 	u.bundleFiles.AddSkippedFile(cfi.Header, cfi.FileInfo)
@@ -150,11 +132,9 @@ func (u *StorageUploader) skipUpload(cfi *internal.ComposeFileInfo, meta RelFile
 	tracelog.DebugLogger.Printf("Skipping %s PAX file (already exists in storage as %s)", cfi.Path, storageKey)
 
 	return nil
-
 }
 
 func (u *StorageUploader) regularUpload(cfi *internal.ComposeFileInfo, meta RelFileMetadata, fileKey FileKey) error {
-
 	storageKey := MakeFileStorageKey(meta.RelNameMd5, fileKey, u.newPaxFilesID)
 
 	tracelog.DebugLogger.Printf("Uploading %s PAX file to %s", cfi.Path, storageKey)
@@ -162,9 +142,7 @@ func (u *StorageUploader) regularUpload(cfi *internal.ComposeFileInfo, meta RelF
 	fileReadCloser, err := internal.StartReadingFile(cfi.Header, cfi.FileInfo, cfi.Path)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	defer utility.LoggedClose(fileReadCloser, "Failed to close PAX file")
@@ -178,9 +156,7 @@ func (u *StorageUploader) regularUpload(cfi *internal.ComposeFileInfo, meta RelF
 	uploadPath := path.Join(StoragePath, storageKey)
 
 	if err := u.uploader.Upload(context.Background(), uploadPath, uploadContents); err != nil {
-
 		return err
-
 	}
 
 	u.addMetadata(cfi, storageKey, meta, false, time.Now())
@@ -188,13 +164,11 @@ func (u *StorageUploader) regularUpload(cfi *internal.ComposeFileInfo, meta RelF
 	u.bundleFiles.AddFile(cfi.Header, cfi.FileInfo, false)
 
 	return nil
-
 }
 
 func (u *StorageUploader) addMetadata(cfi *internal.ComposeFileInfo, storageKey string,
 
 	meta RelFileMetadata, isSkipped bool, initialUplTS time.Time) {
-
 	u.metaMutex.Lock()
 
 	defer u.metaMutex.Unlock()
@@ -202,5 +176,4 @@ func (u *StorageUploader) addMetadata(cfi *internal.ComposeFileInfo, storageKey 
 	u.meta.AddFile(cfi.Header.Name, storageKey, cfi.FileInfo.ModTime(), initialUplTS,
 
 		meta, cfi.Header.Mode, isSkipped)
-
 }

@@ -19,53 +19,40 @@ type indexHandler struct {
 }
 
 func newIndexHandler(dstDir string) *indexHandler {
-
 	ih := new(indexHandler)
 
 	ih.dstDir = dstDir
 
 	return ih
-
 }
 
 func (ih *indexHandler) handleBinlog(binlogPath string) error {
-
 	ih.binlogs = append(ih.binlogs, path.Base(binlogPath))
 
 	return nil
-
 }
 
 func (ih *indexHandler) createIndexFile() error {
-
 	indexFile, err := os.Create(filepath.Join(ih.dstDir, "binlogs_order"))
 
 	if err != nil {
-
 		return err
-
 	}
 
 	defer indexFile.Close()
 
 	for _, binlog := range ih.binlogs {
-
 		_, err = indexFile.WriteString(binlog + "\n")
 
 		if err != nil {
-
 			return err
-
 		}
-
 	}
 
 	return nil
-
 }
 
 func HandleBinlogFetch(folder storage.Folder, backupName string, untilTS string, untilBinlogLastModifiedTS string) {
-
 	dstDir, err := internal.GetLogsDstSettings(conf.MysqlBinlogDstSetting)
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -85,5 +72,4 @@ func HandleBinlogFetch(folder storage.Folder, backupName string, untilTS string,
 	err = handler.createIndexFile()
 
 	tracelog.ErrorLogger.FatalfOnError("Failed to create binlog index file: %v", err)
-
 }

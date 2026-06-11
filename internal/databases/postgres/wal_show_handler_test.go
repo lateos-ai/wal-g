@@ -25,13 +25,11 @@ type MockWalShowOutputWriter struct {
 }
 
 func (writer *MockWalShowOutputWriter) Write(timelineInfos []*postgres.TimelineInfo) error {
-
 	// append timeline infos in case future implementations will call the Write() multiple times
 
 	writer.timelineInfos = append(writer.timelineInfos, timelineInfos...)
 
 	return nil
-
 }
 
 // TestTimelineSetup holds test setup information about single timeline
@@ -53,25 +51,20 @@ type TestTimelineSetup struct {
 // GetWalFilenames returns slice of existing wal segments filenames
 
 func (timelineSetup *TestTimelineSetup) GetWalFilenames() []string {
-
 	walFileSuffix := "." + lz4.FileExtension
 
 	filenamesWithExtension := make([]string, 0, len(timelineSetup.existSegments))
 
 	for _, name := range timelineSetup.existSegments {
-
 		filenamesWithExtension = append(filenamesWithExtension, name+walFileSuffix)
-
 	}
 
 	return filenamesWithExtension
-
 }
 
 // newTimelineHistoryFile returns .history file name and compressed contents
 
 func newTimelineHistoryFile(contents string, timelineId uint32) (string, *bytes.Buffer, error) {
-
 	compressor := compression.Compressors[lz4.AlgorithmName]
 
 	var compressedData bytes.Buffer
@@ -81,39 +74,29 @@ func newTimelineHistoryFile(contents string, timelineId uint32) (string, *bytes.
 	_, err := utility.FastCopy(compressingWriter, strings.NewReader(contents))
 
 	if err != nil {
-
 		return "", nil, err
-
 	}
 
 	err = compressingWriter.Close()
 
 	if err != nil {
-
 		return "", nil, err
-
 	}
 
 	return fmt.Sprintf("%08X.history."+lz4.FileExtension, timelineId), &compressedData, nil
-
 }
 
 // TestWalShow test series is used to test the HandleWalShow() functionality
 
 func TestWalShow_NoSegmentsInStorage(t *testing.T) {
-
 	timelineInfos := executeWalShow([]string{}, make(map[string]*bytes.Buffer))
 
 	assert.Empty(t, timelineInfos)
-
 }
 
 func TestWalShow_NoMissingSegments(t *testing.T) {
-
 	timelineSetup := &TestTimelineSetup{
-
 		existSegments: []string{
-
 			"000000010000000000000090",
 
 			"000000010000000000000091",
@@ -129,15 +112,11 @@ func TestWalShow_NoMissingSegments(t *testing.T) {
 	}
 
 	testSingleTimeline(t, timelineSetup, make(map[string]*bytes.Buffer))
-
 }
 
 func TestWalShow_OneSegmentMissing(t *testing.T) {
-
 	timelineSetup := &TestTimelineSetup{
-
 		existSegments: []string{
-
 			"000000010000000000000090",
 
 			"000000010000000000000092",
@@ -148,7 +127,6 @@ func TestWalShow_OneSegmentMissing(t *testing.T) {
 		},
 
 		missingSegments: []string{
-
 			"000000010000000000000091",
 		},
 
@@ -156,15 +134,11 @@ func TestWalShow_OneSegmentMissing(t *testing.T) {
 	}
 
 	testSingleTimeline(t, timelineSetup, make(map[string]*bytes.Buffer))
-
 }
 
 func TestWalShow_MultipleSegmentsMissing(t *testing.T) {
-
 	timelineSetup := &TestTimelineSetup{
-
 		existSegments: []string{
-
 			"000000010000000000000090",
 
 			"000000010000000000000092",
@@ -175,7 +149,6 @@ func TestWalShow_MultipleSegmentsMissing(t *testing.T) {
 		},
 
 		missingSegments: []string{
-
 			"000000010000000000000091",
 
 			"000000010000000000000094",
@@ -185,15 +158,11 @@ func TestWalShow_MultipleSegmentsMissing(t *testing.T) {
 	}
 
 	testSingleTimeline(t, timelineSetup, make(map[string]*bytes.Buffer))
-
 }
 
 func TestWalShow_SingleTimelineWithHistory(t *testing.T) {
-
 	timelineSetup := &TestTimelineSetup{
-
 		existSegments: []string{
-
 			"000000020000000000000090",
 
 			"000000020000000000000091",
@@ -225,17 +194,12 @@ func TestWalShow_SingleTimelineWithHistory(t *testing.T) {
 	assert.NoError(t, err)
 
 	testSingleTimeline(t, timelineSetup, map[string]*bytes.Buffer{fileName: contents})
-
 }
 
 func TestWalShow_TwoTimelinesWithHistory(t *testing.T) {
-
 	timelineSetups := []*TestTimelineSetup{
-
 		{
-
 			existSegments: []string{
-
 				"00000001000000000000008F",
 
 				"000000010000000000000090",
@@ -251,9 +215,7 @@ func TestWalShow_TwoTimelinesWithHistory(t *testing.T) {
 		},
 
 		{
-
 			existSegments: []string{
-
 				"000000020000000000000090",
 
 				"000000020000000000000091",
@@ -284,20 +246,14 @@ func TestWalShow_TwoTimelinesWithHistory(t *testing.T) {
 	assert.NoError(t, err)
 
 	testMultipleTimelines(t, timelineSetups, map[string]*bytes.Buffer{
-
 		fileName: contents,
 	})
-
 }
 
 func TestWalShow_TwoTimelinesWithHistory_HighTLI(t *testing.T) {
-
 	timelineSetups := []*TestTimelineSetup{
-
 		{
-
 			existSegments: []string{
-
 				"00EEEEED000000000000008F",
 
 				"00EEEEED0000000000000090",
@@ -313,9 +269,7 @@ func TestWalShow_TwoTimelinesWithHistory_HighTLI(t *testing.T) {
 		},
 
 		{
-
 			existSegments: []string{
-
 				"00EEEEEE0000000000000090",
 
 				"00EEEEEE0000000000000091",
@@ -348,22 +302,16 @@ func TestWalShow_TwoTimelinesWithHistory_HighTLI(t *testing.T) {
 	assert.NoError(t, err)
 
 	testMultipleTimelines(t, timelineSetups, map[string]*bytes.Buffer{
-
 		fileName: contents,
 	})
-
 }
 
 func TestWalShow_MultipleTimelines(t *testing.T) {
-
 	timelineSetups := []*TestTimelineSetup{
-
 		// first timeline
 
 		{
-
 			existSegments: []string{
-
 				"000000010000000000000090",
 
 				"000000010000000000000091",
@@ -379,9 +327,7 @@ func TestWalShow_MultipleTimelines(t *testing.T) {
 		// second timeline
 
 		{
-
 			existSegments: []string{
-
 				"000000020000000000000091",
 
 				"000000020000000000000092",
@@ -392,55 +338,43 @@ func TestWalShow_MultipleTimelines(t *testing.T) {
 	}
 
 	testMultipleTimelines(t, timelineSetups, make(map[string]*bytes.Buffer))
-
 }
 
 // testSingleTimeline is used to test wal-show with only one timeline in WAL storage
 
 func testSingleTimeline(t *testing.T, setup *TestTimelineSetup, walFolderFiles map[string]*bytes.Buffer) {
-
 	timelines := executeWalShow(setup.GetWalFilenames(), walFolderFiles)
 
 	assert.Len(t, timelines, 1)
 
 	verifySingleTimeline(t, setup, timelines[0])
-
 }
 
 // testMultipleTimelines is used to test wal-show in case of multiple timelines in WAL storage
 
 func testMultipleTimelines(t *testing.T, timelineSetups []*TestTimelineSetup, walFolderFiles map[string]*bytes.Buffer) {
-
 	walFilenames := concatWalFilenames(timelineSetups)
 
 	timelineInfos := executeWalShow(walFilenames, walFolderFiles)
 
 	slices.SortFunc(timelineInfos, func(a, b *postgres.TimelineInfo) int {
-
 		return cmp.Compare(a.ID, b.ID)
-
 	})
 
 	slices.SortFunc(timelineSetups, func(a, b *TestTimelineSetup) int {
-
 		return cmp.Compare(a.id, b.id)
-
 	})
 
 	assert.Len(t, timelineInfos, len(timelineSetups))
 
 	for idx, info := range timelineInfos {
-
 		verifySingleTimeline(t, timelineSetups[idx], info)
-
 	}
-
 }
 
 // verifySingleTimeline checks that setup values for timeline matches the output timeline info values
 
 func verifySingleTimeline(t *testing.T, setup *TestTimelineSetup, timelineInfo *postgres.TimelineInfo) {
-
 	// sort setup.existSegments to pick the correct start and end segment
 
 	slices.Sort(setup.existSegments)
@@ -448,13 +382,10 @@ func verifySingleTimeline(t *testing.T, setup *TestTimelineSetup, timelineInfo *
 	expectedStatus := postgres.TimelineOkStatus
 
 	if len(setup.missingSegments) > 0 {
-
 		expectedStatus = postgres.TimelineLostSegmentStatus
-
 	}
 
 	expectedTimelineInfo := postgres.TimelineInfo{
-
 		ID: setup.id,
 
 		ParentID: setup.parentId,
@@ -483,7 +414,6 @@ func verifySingleTimeline(t *testing.T, setup *TestTimelineSetup, timelineInfo *
 	expectedTimelineInfo.MissingSegments = timelineInfo.MissingSegments
 
 	assert.Equal(t, expectedTimelineInfo, *timelineInfo)
-
 }
 
 // executeWalShow invokes the HandleWalShow() with fake storage filled with
@@ -491,7 +421,6 @@ func verifySingleTimeline(t *testing.T, setup *TestTimelineSetup, timelineInfo *
 // provided wal segments and other folder files
 
 func executeWalShow(walFilenames []string, walFolderFiles map[string]*bytes.Buffer) []*postgres.TimelineInfo {
-
 	rootFolder := setupTestStorageFolder()
 
 	walFolder := rootFolder.GetSubFolder(utility.WalPath)
@@ -499,9 +428,7 @@ func executeWalShow(walFilenames []string, walFolderFiles map[string]*bytes.Buff
 	putWalSegments(walFilenames, walFolder)
 
 	for name, content := range walFolderFiles {
-
 		_ = walFolder.PutObject(name, content)
-
 	}
 
 	mockOutputWriter := &MockWalShowOutputWriter{}
@@ -509,39 +436,28 @@ func executeWalShow(walFilenames []string, walFolderFiles map[string]*bytes.Buff
 	postgres.HandleWalShow(rootFolder, false, mockOutputWriter)
 
 	return mockOutputWriter.timelineInfos
-
 }
 
 func putWalSegments(walFilenames []string, walFolder storage.Folder) {
-
 	for _, name := range walFilenames {
-
 		// we don't use the WAL file contents so let it be it empty inside
 
 		_ = walFolder.PutObject(name, new(bytes.Buffer))
-
 	}
-
 }
 
 func setupTestStorageFolder() storage.Folder {
-
 	memoryStorage := memory.NewKVS()
 
 	return memory.NewFolder("in_memory/", memoryStorage)
-
 }
 
 func concatWalFilenames(timelineSetups []*TestTimelineSetup) []string {
-
 	filenames := make([]string, 0)
 
 	for _, timelineSetup := range timelineSetups {
-
 		filenames = append(filenames, timelineSetup.GetWalFilenames()...)
-
 	}
 
 	return filenames
-
 }

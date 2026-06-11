@@ -11,7 +11,6 @@ import (
 )
 
 func TestXBStreamReader(t *testing.T) {
-
 	// echo "hello" > test1.txt
 
 	// echo "world" > test2.txt
@@ -49,7 +48,6 @@ func TestXBStreamReader(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -80,7 +78,6 @@ func TestXBStreamReader(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -107,7 +104,6 @@ func TestXBStreamReader(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -138,7 +134,6 @@ func TestXBStreamReader(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -161,11 +156,9 @@ func TestXBStreamReader(t *testing.T) {
 	_, err = reader.Next()
 
 	assert.Equal(t, err, io.EOF)
-
 }
 
 func TestXBStreamReader_with_sparse(t *testing.T) {
-
 	// There is no way to create sparse file with xbstream CLI - only during backup of database with compressed tables
 
 	// Here an example from test db
@@ -245,7 +238,6 @@ func TestXBStreamReader_with_sparse(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -261,7 +253,6 @@ func TestXBStreamReader_with_sparse(t *testing.T) {
 		Checksum: uint32(0x7370fe85),
 
 		SparseMap: []SparseChunk{
-
 			{SkipBytes: 0x00000000, WriteBytes: 0x000100b8},
 
 			{SkipBytes: 0x00003f48, WriteBytes: 0x00008000},
@@ -283,7 +274,6 @@ func TestXBStreamReader_with_sparse(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, ChunkHeader{
-
 		Magic: chunkMagic,
 
 		Flags: 0,
@@ -306,5 +296,4 @@ func TestXBStreamReader_with_sparse(t *testing.T) {
 	_, err = reader.Next()
 
 	assert.Equal(t, err, io.EOF)
-
 }

@@ -212,9 +212,7 @@ func TestBuildBackupPushCommand(t *testing.T) {
 
 		if !strings.HasPrefix(cmdLine, tc.cmdLineBeginning) ||
 			!strings.HasSuffix(cmdLine, tc.cmdLineEnd) {
-
 			t.Fatalf("wrong cmdLine")
-
 		}
 		var segData SegmentUserData
 		marshalled := strings.TrimPrefix(cmdLine, tc.cmdLineBeginning)
@@ -223,7 +221,6 @@ func TestBuildBackupPushCommand(t *testing.T) {
 		err := json.Unmarshal([]byte(marshalled), &segData)
 		if err != nil {
 			t.Fatalf("cant unmarshal UserData")
-
 		}
 
 		_, err = uuid.Parse(segData.ID)
@@ -238,7 +235,6 @@ func TestBuildBackupPushCommand(t *testing.T) {
 }
 
 func TestBuildBackupPushCommandCrushes(t *testing.T) {
-
 	handler := &BackupHandler{
 		arguments: BackupArguments{
 			Uploader:       nil,

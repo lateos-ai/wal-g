@@ -17,7 +17,6 @@ import (
 )
 
 func init() {
-
 	// this setting affects the ProbablyUploading segments range size
 
 	viper.Set(conf.UploadConcurrencySetting, "4")
@@ -25,7 +24,6 @@ func init() {
 	// this setting controls the ProbablyDelayed segments range size
 
 	viper.Set(conf.MaxDelayedSegmentsCount, "3")
-
 }
 
 type WalVerifyTestSetup struct {
@@ -59,19 +57,16 @@ type MockWalVerifyOutputWriter struct {
 func (writer *MockWalVerifyOutputWriter) Write(
 
 	result map[postgres.WalVerifyCheckType]postgres.WalVerifyCheckResult) error {
-
 	writer.lastResult = result
 
 	writer.writeCallsCount += 1
 
 	return nil
-
 }
 
 // test that wal-verify works correctly on empty storage
 
 func TestWalVerify_EmptyStorage(t *testing.T) {
-
 	currentSegmentName := "00000003000000000000000A"
 
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
@@ -81,13 +76,10 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 	storageSegments := make([]string, 0)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000001",
@@ -100,7 +92,6 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000003",
@@ -113,7 +104,6 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000007",
@@ -128,11 +118,9 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: 0,
@@ -144,7 +132,6 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -158,22 +145,18 @@ func TestWalVerify_EmptyStorage(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that storage garbage doesn't affect the wal-verify command
 
 func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
-
 	storageSegments := []string{
-
 		"00000007000000000000000K",
 
 		"0000000Y000000000000000K",
 	}
 
 	storageFiles := map[string]*bytes.Buffer{
-
 		"some_garbage_file": new(bytes.Buffer),
 
 		" ": new(bytes.Buffer),
@@ -184,13 +167,10 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000001",
@@ -203,7 +183,6 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000003",
@@ -216,7 +195,6 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 3,
 
 				StartSegment: "000000030000000000000007",
@@ -231,11 +209,9 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			// WAL storage folder is empty so highest found timeline should be zero
@@ -249,7 +225,6 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -263,15 +238,12 @@ func TestWalVerify_OnlyGarbageInStorage(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that wal-verify works for single timeline
 
 func TestWalVerify_SingleTimeline_Ok(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -286,13 +258,10 @@ func TestWalVerify_SingleTimeline_Ok(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -307,11 +276,9 @@ func TestWalVerify_SingleTimeline_Ok(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -323,7 +290,6 @@ func TestWalVerify_SingleTimeline_Ok(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -337,15 +303,12 @@ func TestWalVerify_SingleTimeline_Ok(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that wal-verify correctly marks delayed segments
 
 func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -360,13 +323,10 @@ func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -379,7 +339,6 @@ func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000005",
@@ -394,11 +353,9 @@ func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -410,7 +367,6 @@ func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -424,15 +380,12 @@ func TestWalVerify_SingleTimeline_SomeDelayed(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that wal-verify correctly marks uploading segments
 
 func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -449,13 +402,10 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusWarning,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -468,7 +418,6 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000004",
@@ -481,7 +430,6 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000005",
@@ -494,7 +442,6 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000006",
@@ -507,7 +454,6 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000007",
@@ -522,11 +468,9 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -538,7 +482,6 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -552,15 +495,12 @@ func TestWalVerify_SingleTimeline_SomeUploading(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that wal-verify correctly follows timeline switches
 
 func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -615,13 +555,10 @@ func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -634,7 +571,6 @@ func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 6,
 
 				StartSegment: "000000060000000000000005",
@@ -649,11 +585,9 @@ func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -665,7 +599,6 @@ func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -679,15 +612,12 @@ func TestWalVerify_TwoTimelines_Ok(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // check that wal-verify correctly reports Lost segments
 
 func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -722,13 +652,10 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusFailure,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -741,7 +668,6 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000003",
@@ -754,7 +680,6 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000004",
@@ -767,7 +692,6 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 6,
 
 				StartSegment: "000000060000000000000005",
@@ -780,7 +704,6 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 			},
 
 			{
-
 				TimelineID: 6,
 
 				StartSegment: "000000060000000000000007",
@@ -795,11 +718,9 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -811,7 +732,6 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -825,15 +745,12 @@ func TestWalVerify_TwoTimelines_SomeLost(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // wal-verify timeline check test
 
 func TestWalVerify_HigherTimelineExists(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -852,13 +769,10 @@ func TestWalVerify_HigherTimelineExists(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 5,
 
 				StartSegment: "000000050000000000000001",
@@ -873,11 +787,9 @@ func TestWalVerify_HigherTimelineExists(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusFailure,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: 7,
@@ -889,7 +801,6 @@ func TestWalVerify_HigherTimelineExists(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -903,15 +814,12 @@ func TestWalVerify_HigherTimelineExists(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // Check that correct backup is chosen for wal-verify range start
 
 func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -954,7 +862,6 @@ func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
 	// should be selected as the first one
 
 	backupsWalNames := map[string]postgres.ExtendedMetadataDto{
-
 		// INCORRECT: this backup should not be selected as the earliest,
 
 		// because it does not belong to the current timeline history
@@ -1005,13 +912,10 @@ func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 6,
 
 				StartSegment: "000000060000000000000006",
@@ -1026,11 +930,9 @@ func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -1042,7 +944,6 @@ func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -1056,15 +957,12 @@ func TestWalVerify_WalkUntilFirstBackup(t *testing.T) {
 
 		postgres.BackupSearchParams{true, nil},
 	)
-
 }
 
 // Check that correct backup with specific name is chosen for wal-verify range start
 
 func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
-
 	storageSegments := []string{
-
 		"000000050000000000000001",
 
 		"000000050000000000000002",
@@ -1107,7 +1005,6 @@ func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
 	// should be selected as the first one
 
 	backupsWalNames := map[string]postgres.ExtendedMetadataDto{
-
 		// INCORRECT: this backup should not be selected as the earliest,
 
 		// because it does not belong to the current timeline history
@@ -1158,13 +1055,10 @@ func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
 	currentSegment, _ := postgres.NewWalSegmentDescription(currentSegmentName)
 
 	expectedIntegrityCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.IntegrityCheckDetails{
-
 			{
-
 				TimelineID: 6,
 
 				StartSegment: "000000060000000000000007",
@@ -1179,11 +1073,9 @@ func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
 	}
 
 	expectedTimelineCheck := postgres.WalVerifyCheckResult{
-
 		Status: postgres.StatusOk,
 
 		Details: postgres.TimelineCheckDetails{
-
 			CurrentTimelineID: currentSegment.Timeline,
 
 			HighestStorageTimelineID: currentSegment.Timeline,
@@ -1197,7 +1089,6 @@ func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
 		t,
 
 		WalVerifyTestSetup{
-
 			expectedIntegrityCheck: expectedIntegrityCheck,
 
 			expectedTimelineCheck: expectedTimelineCheck,
@@ -1211,13 +1102,10 @@ func TestWalVerify_ChooseBackupWithSpecificName(t *testing.T) {
 
 		postgres.BackupSearchParams{false, &specificBackupName},
 	)
-
 }
 
 func addMockBackupsStorageFiles(backups map[string]postgres.ExtendedMetadataDto, storageFiles map[string]*bytes.Buffer) {
-
 	for name, meta := range backups {
-
 		// sentinel
 
 		storageFiles[utility.BaseBackupPath+utility.BackupNamePrefix+name+utility.SentinelSuffix] = new(bytes.Buffer)
@@ -1227,15 +1115,11 @@ func addMockBackupsStorageFiles(backups map[string]postgres.ExtendedMetadataDto,
 		metaBytes, _ := json.Marshal(meta)
 
 		storageFiles[utility.BaseBackupPath+utility.BackupNamePrefix+name+"/"+utility.MetadataFileName] = bytes.NewBuffer(metaBytes)
-
 	}
-
 }
 
 func testWalVerify(t *testing.T, setup WalVerifyTestSetup, backupSearchParams postgres.BackupSearchParams) {
-
 	expectedResult := map[postgres.WalVerifyCheckType]postgres.WalVerifyCheckResult{
-
 		postgres.WalVerifyTimelineCheck: setup.expectedTimelineCheck,
 
 		postgres.WalVerifyIntegrityCheck: setup.expectedIntegrityCheck,
@@ -1255,7 +1139,6 @@ func testWalVerify(t *testing.T, setup WalVerifyTestSetup, backupSearchParams po
 	assert.Equal(t, 1, outputCallsCount)
 
 	compareResults(t, expectedResult, result)
-
 }
 
 // executeWalShow invokes the HandleWalVerify() with fake storage filled with
@@ -1273,15 +1156,12 @@ func executeWalVerify(
 	backupSearchParams postgres.BackupSearchParams,
 
 ) (map[postgres.WalVerifyCheckType]postgres.WalVerifyCheckResult, int) {
-
 	rootFolder := setupTestStorageFolder()
 
 	walFolder := rootFolder.GetSubFolder(utility.WalPath)
 
 	for name, content := range storageFiles {
-
 		_ = rootFolder.PutObject(name, content)
-
 	}
 
 	putWalSegments(walFilenames, walFolder)
@@ -1289,13 +1169,11 @@ func executeWalVerify(
 	mockOutputWriter := &MockWalVerifyOutputWriter{}
 
 	checkTypes := []postgres.WalVerifyCheckType{
-
 		postgres.WalVerifyTimelineCheck, postgres.WalVerifyIntegrityCheck}
 
 	postgres.HandleWalVerify(checkTypes, rootFolder, currentWalSegment, backupSearchParams, mockOutputWriter)
 
 	return mockOutputWriter.lastResult, mockOutputWriter.writeCallsCount
-
 }
 
 func compareResults(
@@ -1305,11 +1183,9 @@ func compareResults(
 	expected map[postgres.WalVerifyCheckType]postgres.WalVerifyCheckResult,
 
 	returned map[postgres.WalVerifyCheckType]postgres.WalVerifyCheckResult) {
-
 	assert.Equal(t, len(expected), len(returned))
 
 	for checkType, checkResult := range returned {
-
 		assert.Contains(t, expected, checkType)
 
 		assert.Equal(t, expected[checkType].Status, checkResult.Status,
@@ -1319,17 +1195,13 @@ func compareResults(
 		assert.True(t, reflect.DeepEqual(expected[checkType].Details, checkResult.Details),
 
 			"Result details don't match the expected values")
-
 	}
-
 }
 
 func newMockExtendedMetadataDto(isPermanent bool) postgres.ExtendedMetadataDto {
-
 	// currently we do not need any fields except the isPermanent
 
 	return postgres.ExtendedMetadataDto{
-
 		StartTime: time.Now(),
 
 		FinishTime: time.Now().Add(time.Second),
@@ -1356,5 +1228,4 @@ func newMockExtendedMetadataDto(isPermanent bool) postgres.ExtendedMetadataDto {
 
 		UserData: nil,
 	}
-
 }

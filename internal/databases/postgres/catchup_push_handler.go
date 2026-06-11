@@ -11,19 +11,14 @@ import (
 )
 
 func extendExcludedFiles() {
-
 	for _, fname := range []string{"pg_hba.conf", "postgresql.conf", "postgresql.auto.conf"} {
-
 		ExcludedFilenames[fname] = utility.Empty{}
-
 	}
-
 }
 
 // HandleCatchupPush is invoked to perform a wal-g catchup-push
 
 func HandleCatchupPush(ctx context.Context, pgDataDirectory string, fromLSN LSN) {
-
 	uploader, err := internal.ConfigureUploader()
 
 	tracelog.ErrorLogger.FatalOnError(err)
@@ -31,7 +26,6 @@ func HandleCatchupPush(ctx context.Context, pgDataDirectory string, fromLSN LSN)
 	pgDataDirectory = utility.ResolveSymlink(pgDataDirectory)
 
 	fakePreviousBackupSentinelDto := BackupSentinelDto{
-
 		BackupStartLSN: &fromLSN,
 	}
 
@@ -52,9 +46,7 @@ func HandleCatchupPush(ctx context.Context, pgDataDirectory string, fromLSN LSN)
 		userData, false)
 
 	if orioledb.IsEnabled(pgDataDirectory) {
-
 		tracelog.InfoLogger.Printf("Catchup incremental backup is not implemented for orioledb. Full backup will be performed.")
-
 	}
 
 	backupConfig, err := NewBackupHandler(backupArguments)
@@ -62,5 +54,4 @@ func HandleCatchupPush(ctx context.Context, pgDataDirectory string, fromLSN LSN)
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	backupConfig.HandleBackupPush(ctx)
-
 }

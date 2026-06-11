@@ -34,17 +34,13 @@ type TarballStreamerRemap struct {
 type TarballStreamerRemaps []TarballStreamerRemap
 
 func NewTarballStreamerRemap(from string, to string) (tsr *TarballStreamerRemap, err error) {
-
 	fromRe, err := regexp.Compile(from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return &TarballStreamerRemap{from: fromRe, to: to}, nil
-
 }
 
 // TarballStreamer is used to modify tar files which are received streaming.
@@ -58,7 +54,6 @@ func NewTarballStreamerRemap(from string, to string) (tsr *TarballStreamerRemap,
 // In addition TarballStreamer maintains a list of files with their info
 
 type TarballStreamer struct {
-
 	// The tar stream we read from
 
 	inputTar *tar.Reader
@@ -137,15 +132,11 @@ type TarballStreamer struct {
 // which signals part rotation within an ongoing archive.
 
 func (streamer *TarballStreamer) ArchiveDone() bool {
-
 	return streamer.inputExhausted
-
 }
 
 func NewTarballStreamer(input io.Reader, maxTarSize int64, bundleFiles internal.BundleFiles) (streamer *TarballStreamer) {
-
 	streamer = &TarballStreamer{
-
 		maxTarSize: maxTarSize,
 
 		inputTar: tar.NewReader(input),
@@ -162,33 +153,25 @@ func NewTarballStreamer(input io.Reader, maxTarSize int64, bundleFiles internal.
 	streamer.teeTar = tar.NewWriter(streamer.TeeIo)
 
 	return streamer
-
 }
 
 // NextInputFile is what makes the TarballStreamer move to the next file.
 
 func (streamer *TarballStreamer) NextInputFile() (err error) {
-
 	// First output tar, or switching to next
 
 	if streamer.outputTar == nil {
-
 		streamer.outputTar = tar.NewWriter(streamer.outputIo)
 
 		streamer.tarFileReadIndex = 0
 
 		if streamer.curHeader != nil {
-
 			return streamer.addFile()
-
 		}
-
 	}
 
 	if streamer.curHeader != nil {
-
 		return errTarInputHeaderAlreadySet
-
 	}
 
 	tracelog.DebugLogger.Printf("Next file")
@@ -196,15 +179,11 @@ func (streamer *TarballStreamer) NextInputFile() (err error) {
 	streamer.curHeader, err = streamer.inputTar.Next()
 
 	if err != nil {
-
 		if err == io.EOF {
-
 			streamer.inputExhausted = true
-
 		}
 
 		return err
-
 	}
 
 	streamer.fileReadIndex = 0
@@ -212,29 +191,23 @@ func (streamer *TarballStreamer) NextInputFile() (err error) {
 	streamer.remap()
 
 	return streamer.addFile()
-
 }
 
 // addFile adds the new file to the stream
 
 func (streamer *TarballStreamer) addFile() (err error) {
-
 	if streamer.tarFileReadIndex+streamer.curHeader.Size > streamer.maxTarSize {
-
 		if streamer.tarFileReadIndex > 0 {
-
 			// Seems like output file is going to exceed maxTarSize. Next file.
 
 			tracelog.DebugLogger.Printf("Exceeding maxTarSize")
 
 			return errTarStreamerOutputEOF
-
 		}
 
 		tracelog.WarningLogger.Printf("This file %s is larger than max tar size. "+
 
 			"It will have its own tar file, which will be larger than the selected max tar size.", streamer.curHeader.Name)
-
 	}
 
 	tracelog.DebugLogger.Printf("Adding file %s", streamer.curHeader.Name)
@@ -242,35 +215,26 @@ func (streamer *TarballStreamer) addFile() (err error) {
 	err = streamer.outputTar.WriteHeader(streamer.curHeader)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	streamer.teeing = false
 
 	for _, t := range streamer.Tee {
-
 		if t == streamer.curHeader.Name {
-
 			streamer.teeing = true
 
 			err = streamer.teeTar.WriteHeader(streamer.curHeader)
 
 			if err != nil {
-
 				return err
-
 			}
 
 			break
-
 		}
-
 	}
 
 	if !streamer.curHeader.FileInfo().IsDir() {
-
 		filePath := streamer.curHeader.Name
 
 		filePath = strings.TrimPrefix(filePath, "./")
@@ -278,47 +242,34 @@ func (streamer *TarballStreamer) addFile() (err error) {
 		streamer.Files.AddFileDescription(filePath, internal.BackupFileDescription{MTime: streamer.curHeader.ModTime})
 
 		streamer.tarFileReadIndex += streamer.curHeader.Size
-
 	}
 
 	return nil
-
 }
 
 // remap rebuilds the name of the file according to remapping rules
 
 func (streamer *TarballStreamer) remap() {
-
 	for _, remap := range streamer.Remaps {
-
 		streamer.curHeader.Name = remap.from.ReplaceAllString(streamer.curHeader.Name, remap.to)
-
 	}
-
 }
 
 // readFileData reads the data from a tarred file
 
 func (streamer *TarballStreamer) readFileData() (err error) {
-
 	err = streamer.NextInputFile()
 
 	if err != nil && err != errTarInputHeaderAlreadySet {
-
 		return err
-
 	} else if streamer.curHeader.FileInfo().IsDir() {
-
 		streamer.curHeader = nil
 
 		return errTarInputIsDir
-
 	}
 
 	if streamer.bufReadIndex < streamer.bufDataSize {
-
 		return nil
-
 	}
 
 	// read index is at last byte. All is read. Read next block.
@@ -332,127 +283,96 @@ func (streamer *TarballStreamer) readFileData() (err error) {
 	streamer.fileReadIndex += int64(streamer.bufDataSize)
 
 	if streamer.fileReadIndex > streamer.curHeader.Size {
-
 		// Issue. We are reading more bytes than size in header.
 
 		return tar.ErrWriteTooLong
-
 	} else if streamer.fileReadIndex == streamer.curHeader.Size {
-
 		// Seems we have read all from this file. Next file.
 
 		streamer.curHeader = nil
 
 		return nil
-
 	}
 
 	if err == io.EOF && streamer.bufDataSize > 0 {
-
 		// stream reached end of file. Bytes where read, but let's ignore on this pass.
 
 		return nil
-
 	}
 
 	return err
-
 }
 
 // pipeFileData calls readFileData to read file data from tar and then writes it to output tar writer
 
 func (streamer *TarballStreamer) pipeFileData() (err error) {
-
 	if streamer.outputIo.Len() > 0 {
-
 		// There is still data in the buffer. Just stream that.
 
 		return nil
-
 	}
 
 	err = streamer.readFileData()
 
 	if err != nil && err != errTarInputHeaderAlreadySet {
-
 		return err
-
 	}
 
 	// Write from streamer.inputBuf to outputTar
 
 	if streamer.bufReadIndex < streamer.bufDataSize {
-
 		nTar, err := streamer.outputTar.Write(streamer.inputBuf[streamer.bufReadIndex : streamer.bufDataSize-
 
 			streamer.bufReadIndex])
 
 		if err != nil {
-
 			return err
-
 		}
 
 		if streamer.teeing {
-
 			// Also tee to teeTar
 
 			teeN, err := streamer.teeTar.Write(streamer.inputBuf[streamer.bufReadIndex : streamer.bufReadIndex+nTar])
 
 			if err != nil {
-
 				return err
-
 			}
 
 			if teeN != nTar {
-
 				return errors.Errorf("Could not stream to tee tar file (%d out of %d only).", teeN, nTar)
-
 			}
-
 		}
 
 		streamer.bufReadIndex += nTar
-
 	}
 
 	return nil
-
 }
 
 // Read is what makes the TarballStreamer an io.Reader, which can be handled by WalUploader.UploadFile.
 
 func (streamer *TarballStreamer) Read(p []byte) (n int, err error) {
-
 	// Handle next file header if needed, read file data if needed, and write to output tar writer
 
 	err = streamer.pipeFileData()
 
 	if err == errTarStreamerOutputEOF {
-
 		tracelog.InfoLogger.Printf("maxTarSize exceeded. Closing this tar.")
 
 		closeErr := streamer.outputTar.Close()
 
 		if closeErr != nil {
-
 			return 0, closeErr
-
 		}
 
 		n, readErr := streamer.outputIo.Read(p)
 
 		if readErr != nil && readErr != io.EOF {
-
 			return 0, readErr
-
 		}
 
 		if streamer.outputIo.Len() > 0 {
-
 			tracelog.ErrorLogger.Printf("maxTarSize exceeded, but could not write buffer in one run.")
-
 		}
 
 		streamer.outputTar = nil
@@ -462,7 +382,6 @@ func (streamer *TarballStreamer) Read(p []byte) (n int, err error) {
 		streamer.tarFileReadIndex = 0
 
 		return n, io.EOF
-
 	}
 
 	// If err == errTarStreamerOutputEOF, we received end of output tar.
@@ -470,9 +389,7 @@ func (streamer *TarballStreamer) Read(p []byte) (n int, err error) {
 	// streamer.outputIo.Read will probably return all data and return io.EOF which will close this output tar file.
 
 	if err != nil && err != errTarInputIsDir {
-
 		return 0, err
-
 	}
 
 	// Write output of outputTar to p array passed by caller of Read()
@@ -482,33 +399,24 @@ func (streamer *TarballStreamer) Read(p []byte) (n int, err error) {
 	n, err = streamer.outputIo.Read(p)
 
 	if err == io.EOF && streamer.curHeader.Size > streamer.fileReadIndex {
-
 		pipeErr := streamer.pipeFileData()
 
 		if pipeErr != nil {
-
 			return 0, pipeErr
-
 		}
 
 		n, readErr := streamer.outputIo.Read(p)
 
 		if readErr != nil {
-
 			return n, readErr
-
 		}
 
 		return n, errTarStreamerOutputEOF
-
 	}
 
 	if err != nil {
-
 		return n, err
-
 	}
 
 	return n, nil
-
 }

@@ -15,7 +15,6 @@ type pair struct {
 }
 
 func TestGetOnlyWalName(t *testing.T) {
-
 	samples := make([]pair, 0, 0)
 
 	samples = append(samples, pair{"123456765.done", "123456765"})
@@ -25,9 +24,6 @@ func TestGetOnlyWalName(t *testing.T) {
 	samples = append(samples, pair{"somedir/123456765.done", "123456765"})
 
 	for _, sample := range samples {
-
 		assert.Equal(t, sample.expectedResult, asm.GetOnlyWalName(sample.testData))
-
 	}
-
 }

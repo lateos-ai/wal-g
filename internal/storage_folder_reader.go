@@ -17,9 +17,7 @@ type StorageFolderReader interface {
 }
 
 func NewFolderReader(folder storage.Folder) StorageFolderReader {
-
 	return &FolderReaderImpl{folder}
-
 }
 
 type FolderReaderImpl struct {
@@ -27,35 +25,25 @@ type FolderReaderImpl struct {
 }
 
 func (fsr *FolderReaderImpl) SubFolder(subFolderRelativePath string) StorageFolderReader {
-
 	return NewFolderReader(fsr.GetSubFolder(subFolderRelativePath))
-
 }
 
 func PrepareMultiStorageFolderReader(folder storage.Folder, targetStorage string) (StorageFolderReader, error) {
-
 	folder = multistorage.SetPolicies(folder, policies.MergeAllStorages)
 
 	var err error
 
 	if targetStorage == "" {
-
 		folder, err = multistorage.UseAllAliveStorages(folder)
-
 	} else {
-
 		folder, err = multistorage.UseSpecificStorage(targetStorage, folder)
-
 	}
 
 	tracelog.DebugLogger.Printf("Files will be read from storages: %v", multistorage.UsedStorages(folder))
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return NewFolderReader(folder), nil
-
 }

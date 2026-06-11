@@ -15,15 +15,12 @@ import (
 // HandleCopy copy specific or all backups from one storage to another
 
 func HandleCopy(fromConfigFile string, toConfigFile string, backupName string, withAllHistory bool) {
-
 	var from, fromError = internal.StorageFromConfig(fromConfigFile)
 
 	var to, toError = internal.StorageFromConfig(toConfigFile)
 
 	if fromError != nil || toError != nil {
-
 		return
-
 	}
 
 	infos, err := getCopyingInfos(backupName, from.RootFolder(), to.RootFolder(), withAllHistory)
@@ -35,11 +32,9 @@ func HandleCopy(fromConfigFile string, toConfigFile string, backupName string, w
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	tracelog.InfoLogger.Println("Success copy.")
-
 }
 
 func BackupCopyingInfo(backup Backup, from storage.Folder, to storage.Folder) ([]copy.InfoProvider, error) {
-
 	tracelog.InfoLogger.Print("Collecting backup files...")
 
 	var backupPrefix = path.Join(utility.BaseBackupPath, backup.Name)
@@ -47,9 +42,7 @@ func BackupCopyingInfo(backup Backup, from storage.Folder, to storage.Folder) ([
 	var objects, err = storage.ListFolderRecursively(from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	var hasBackupPrefix = func(object storage.Object) bool { return strings.HasPrefix(object.GetName(), backupPrefix) }
@@ -68,7 +61,6 @@ func BackupCopyingInfo(backup Backup, from storage.Folder, to storage.Folder) ([
 
 		copy.NoopSourceTransformer,
 	), nil
-
 }
 
 func getCopyingInfos(backupName string,
@@ -78,13 +70,10 @@ func getCopyingInfos(backupName string,
 	to storage.Folder,
 
 	withAllHistory bool) ([]copy.InfoProvider, error) {
-
 	if backupName == "" {
-
 		tracelog.InfoLogger.Printf("Copy all backups and history.")
 
 		return WildcardInfo(from, to)
-
 	}
 
 	tracelog.InfoLogger.Printf("Handle backupname '%s'.", backupName)
@@ -92,9 +81,7 @@ func getCopyingInfos(backupName string,
 	backup, err := internal.GetBackupByName(backupName, utility.BaseBackupPath, from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	pgBackup := ToPgBackup(backup)
@@ -102,27 +89,21 @@ func getCopyingInfos(backupName string,
 	infos, err := BackupCopyingInfo(pgBackup, from, to)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	history, err := HistoryCopyingInfo(pgBackup, from, to, withAllHistory)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	infos = append(infos, history...)
 
 	return infos, nil
-
 }
 
 func HistoryCopyingInfo(backup Backup, from storage.Folder, to storage.Folder, withAllHistory bool) ([]copy.InfoProvider, error) {
-
 	tracelog.DebugLogger.Print("Collecting history files... ")
 
 	var fromWalFolder = from.GetSubFolder(utility.WalPath)
@@ -130,17 +111,13 @@ func HistoryCopyingInfo(backup Backup, from storage.Folder, to storage.Folder, w
 	var lastWalFilename, err = GetLastWalFilename(backup)
 
 	if err != nil {
-
 		return make([]copy.InfoProvider, 0), err
-
 	}
 
 	firstWalFilename, err := GetFirstWalFilename(backup)
 
 	if err != nil {
-
 		return make([]copy.InfoProvider, 0), err
-
 	}
 
 	tracelog.DebugLogger.Print("getLastWalFilename not failed!")
@@ -148,17 +125,13 @@ func HistoryCopyingInfo(backup Backup, from storage.Folder, to storage.Folder, w
 	objects, err := storage.ListFolderRecursively(fromWalFolder)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	var match = func(object storage.Object) bool {
-
 		return GetWalFileName(object.GetName()) >= firstWalFilename &&
 
 			(withAllHistory || GetWalFileName(object.GetName()) <= lastWalFilename)
-
 	}
 
 	return copy.BuildCopyingInfos(
@@ -175,29 +148,21 @@ func HistoryCopyingInfo(backup Backup, from storage.Folder, to storage.Folder, w
 
 		copy.NoopSourceTransformer,
 	), nil
-
 }
 
 func GetWalFileName(filename string) string {
-
 	if !strings.Contains(filename, ".") {
-
 		return filename
-
 	}
 
 	return strings.Split(filename, ".")[0]
-
 }
 
 func WildcardInfo(from storage.Folder, to storage.Folder) ([]copy.InfoProvider, error) {
-
 	objects, err := storage.ListFolderRecursively(from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return copy.BuildCopyingInfos(
@@ -214,5 +179,4 @@ func WildcardInfo(from storage.Folder, to storage.Folder) ([]copy.InfoProvider, 
 
 		copy.NoopSourceTransformer,
 	), nil
-
 }

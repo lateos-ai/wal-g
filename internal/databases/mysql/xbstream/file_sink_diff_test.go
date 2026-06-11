@@ -9,7 +9,6 @@ import (
 )
 
 func TestBuildFakeDiff(t *testing.T) {
-
 	pageSize := 16 * 1024
 
 	header := testutils.HexToBytes(`
@@ -37,7 +36,6 @@ func TestBuildFakeDiff(t *testing.T) {
 	expected = append(expected, page...)
 
 	sink := &diffFileSink{
-
 		meta: &deltaMetadata{PageSize: uint32(pageSize)},
 	}
 
@@ -72,19 +70,14 @@ func TestBuildFakeDiff(t *testing.T) {
 	assert.Equal(t, pageSize, len(actual))
 
 	assert.Equal(t, expected, actual)
-
 }
 
 func generateBytes(size int) []byte {
-
 	result := make([]byte, size)
 
 	for i := 0; i < size; i++ {
-
 		result[i] = byte(i % 256)
-
 	}
 
 	return result
-
 }

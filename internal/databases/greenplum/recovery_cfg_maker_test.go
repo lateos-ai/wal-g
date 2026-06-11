@@ -17,7 +17,6 @@ const (
 )
 
 func TestGenerateRecoveryConf(t *testing.T) {
-
 	recCfgMaker := greenplum.NewRecoveryConfigMaker(walgPath, cfgPath, recoveryTargetName, false)
 
 	contentID := -1
@@ -31,11 +30,9 @@ recovery_target_timeline = latest`
 	actualCfg := recCfgMaker.Make(contentID, 90400)
 
 	assert.Equal(t, expectedCfg, actualCfg, "Actual recovery.conf does not match the expected one")
-
 }
 
 func TestGenerateRecoveryConfWithShutdown(t *testing.T) {
-
 	recCfgMaker := greenplum.NewRecoveryConfigMaker(walgPath, cfgPath, recoveryTargetName, true)
 
 	contentID := -1
@@ -51,5 +48,4 @@ recovery_target_action = 'shutdown'`
 	actualCfg := recCfgMaker.Make(contentID, 120000)
 
 	assert.Equal(t, expectedCfg, actualCfg, "Actual recovery.conf does not match the expected one")
-
 }

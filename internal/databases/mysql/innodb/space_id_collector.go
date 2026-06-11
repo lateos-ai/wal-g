@@ -18,7 +18,6 @@ import (
 var ErrSpaceIDNotFound = errors.New("SpaceID not found")
 
 type SpaceIDCollector interface {
-
 	// GetFileForSpaceID locates InnoDB file (path relative to dataDir) for requested SpaceID
 
 	GetFileForSpaceID(spaceID SpaceID) (string, error)
@@ -37,7 +36,6 @@ type spaceIDCollectorImpl struct {
 var _ SpaceIDCollector = &spaceIDCollectorImpl{}
 
 func NewSpaceIDCollector(dataDir string) (SpaceIDCollector, error) {
-
 	dataDir = filepath.ToSlash(dataDir)
 
 	result := &spaceIDCollectorImpl{dataDir: dataDir}
@@ -49,43 +47,31 @@ func NewSpaceIDCollector(dataDir string) (SpaceIDCollector, error) {
 	// storage/innobase/xtrabackup/src/xtrabackup.cc#L5321-L5567
 
 	err := filepath.WalkDir(dataDir, func(path string, info fs.DirEntry, walkErr error) error {
-
 		if walkErr != nil {
-
 			return fmt.Errorf("error encountered during dataDir traverse %v: %w", path, walkErr)
-
 		}
 
 		if !info.IsDir() && strings.HasSuffix(info.Name(), ".ibd") {
-
 			_, err := result.collect(path)
 
 			if err != nil && !errors.Is(err, ErrSpaceIDNotFound) {
-
 				return err
-
 			}
-
 		}
 
 		return nil
-
 	})
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	tracelog.DebugLogger.Printf("SpaceIDCollector for dir %v collected %v", dataDir, result.collected)
 
 	return result, nil
-
 }
 
 func (c *spaceIDCollectorImpl) collect(filePath string) (SpaceID, error) {
-
 	filePath = filepath.ToSlash(filePath)
 
 	// read first FPS page (always first page in the file)
@@ -93,21 +79,17 @@ func (c *spaceIDCollectorImpl) collect(filePath string) (SpaceID, error) {
 	file, err := fsutil.OpenFileSecure(filePath, os.O_RDONLY, 0) // FIXME: test performance with O_SYNC
 
 	if err != nil {
-
 		tracelog.DebugLogger.Printf("error opening file %v: %v", filePath, err)
 
 		return SpaceIDUnknown, ErrSpaceIDNotFound
-
 	}
 
 	reader, err := NewPageReader(file)
 
 	if err != nil {
-
 		tracelog.InfoLogger.Printf("cannot collect spaceID from file %v: %v", filePath, err)
 
 		return SpaceIDUnknown, ErrSpaceIDNotFound
-
 	}
 
 	defer utility.LoggedClose(reader, "")
@@ -115,15 +97,11 @@ func (c *spaceIDCollectorImpl) collect(filePath string) (SpaceID, error) {
 	// FIXME: use os.Root [go 1.24] https://github.com/golang/go/issues/67002
 
 	if !strings.HasPrefix(filePath, c.dataDir) {
-
 		tracelog.ErrorLogger.Fatalf("File %v is out of data dir %v", filePath, c.dataDir)
-
 	}
 
 	if prevPath, ok := c.collected[reader.SpaceID]; ok {
-
 		tracelog.ErrorLogger.Fatalf("duplicate SpaceID %v found '%v' and '%v'", reader.SpaceID, prevPath, filePath)
-
 	}
 
 	fileName := filePath[len(c.dataDir):]
@@ -131,25 +109,19 @@ func (c *spaceIDCollectorImpl) collect(filePath string) (SpaceID, error) {
 	c.collected[reader.SpaceID] = strings.TrimPrefix(fileName, "/")
 
 	return reader.SpaceID, nil
-
 }
 
 func (c *spaceIDCollectorImpl) GetFileForSpaceID(spaceID SpaceID) (string, error) {
-
 	result, ok := c.collected[spaceID]
 
 	if ok {
-
 		return result, nil
-
 	}
 
 	return "", fmt.Errorf("file for SpaceID %v not found: %w", spaceID, ErrSpaceIDNotFound)
-
 }
 
 func (c *spaceIDCollectorImpl) CheckFileForSpaceID(spaceID SpaceID, filePath string) error {
-
 	// MySQL can store InnoDB files in multiple places, with different file extensions
 
 	// we may not be aware of these files... so check suggested pair spaceID + filePath
@@ -157,17 +129,12 @@ func (c *spaceIDCollectorImpl) CheckFileForSpaceID(spaceID SpaceID, filePath str
 	actualSpaceID, err := c.collect(path.Join(c.dataDir, filePath))
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if actualSpaceID != spaceID {
-
 		return ErrSpaceIDNotFound
-
 	}
 
 	return nil
-
 }

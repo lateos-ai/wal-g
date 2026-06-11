@@ -12,14 +12,12 @@ import (
 )
 
 var locations = []walparser.BlockLocation{
-
 	*walparser.NewBlockLocation(1, 2, 3, 4),
 
 	*walparser.NewBlockLocation(5, 6, 7, 8),
 }
 
 func TestReadWrite(t *testing.T) {
-
 	var buf bytes.Buffer
 
 	writer := walparser.NewBlockLocationWriter(&buf)
@@ -27,37 +25,29 @@ func TestReadWrite(t *testing.T) {
 	reader := walparser.NewBlockLocationReader(&buf)
 
 	for _, location := range locations {
-
 		err := writer.WriteLocation(location)
 
 		assert.NoError(t, err)
-
 	}
 
 	actualLocations := make([]walparser.BlockLocation, 0)
 
 	for {
-
 		location, err := reader.ReadNextLocation()
 
 		if errors.Cause(err) == io.EOF {
-
 			break
-
 		}
 
 		assert.NoError(t, err)
 
 		actualLocations = append(actualLocations, *location)
-
 	}
 
 	assert.Equal(t, locations, actualLocations)
-
 }
 
 func TestWriteLocationsTo(t *testing.T) {
-
 	var buf bytes.Buffer
 
 	err := walparser.WriteLocationsTo(&buf, locations)
@@ -69,27 +59,21 @@ func TestWriteLocationsTo(t *testing.T) {
 	actualLocations := make([]walparser.BlockLocation, 0)
 
 	for {
-
 		location, err := reader.ReadNextLocation()
 
 		if errors.Cause(err) == io.EOF {
-
 			break
-
 		}
 
 		assert.NoError(t, err)
 
 		actualLocations = append(actualLocations, *location)
-
 	}
 
 	assert.Equal(t, locations, actualLocations)
-
 }
 
 func TestReadLocationsFrom(t *testing.T) {
-
 	var buf bytes.Buffer
 
 	err := walparser.WriteLocationsTo(&buf, locations)
@@ -101,5 +85,4 @@ func TestReadLocationsFrom(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, locations, actualLocations)
-
 }

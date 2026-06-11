@@ -44,31 +44,23 @@ type deltaMetadata struct {
 }
 
 func parseDiffMetadata(rows []byte) (deltaMetadata, error) {
-
 	result := deltaMetadata{}
 
 	cfg, err := ini.Load(rows)
 
 	if err != nil {
-
 		return deltaMetadata{}, err
-
 	}
 
 	err = cfg.MapTo(&result)
 
 	if err != nil {
-
 		return deltaMetadata{}, err
-
 	}
 
 	if result.PageSize > 64*1024 {
-
 		tracelog.ErrorLogger.Fatalf("page_size in diff is greater than supported. page_size = %v", result.PageSize)
-
 	}
 
 	return result, nil
-
 }

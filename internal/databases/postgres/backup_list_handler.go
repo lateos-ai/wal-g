@@ -11,7 +11,6 @@ import (
 )
 
 func HandleDetailedBackupList(folder storage.Folder, pretty bool, json bool) {
-
 	backups, err := internal.GetBackups(folder)
 
 	err = internal.FilterOutNoBackupFoundError(err, json)
@@ -27,13 +26,10 @@ func HandleDetailedBackupList(folder storage.Folder, pretty bool, json bool) {
 	printableEntities := make([]printlist.Entity, len(backupDetails))
 
 	for i := range backupDetails {
-
 		printableEntities[i] = &backupDetails[i]
-
 	}
 
 	err = printlist.List(printableEntities, os.Stdout, pretty, json)
 
 	tracelog.ErrorLogger.FatalfOnError("Print backups: %v", err)
-
 }

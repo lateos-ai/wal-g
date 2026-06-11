@@ -9,7 +9,6 @@ import (
 )
 
 func TestAzureFolder(t *testing.T) {
-
 	t.Skip("Credentials needed to run Azure Storage tests")
 
 	st, err := ConfigureStorage("azure://test-container/test-folder/Sub0", make(map[string]string))
@@ -17,11 +16,9 @@ func TestAzureFolder(t *testing.T) {
 	assert.NoError(t, err)
 
 	storage.RunFolderTest(st.RootFolder(), t)
-
 }
 
 func TestConfigureStorage_WithoutAccountNameSetting(t *testing.T) {
-
 	settings := map[string]string{}
 
 	prefix := "azure://test-container/test-folder/Sub0"
@@ -29,13 +26,10 @@ func TestConfigureStorage_WithoutAccountNameSetting(t *testing.T) {
 	_, err := ConfigureStorage(prefix, settings)
 
 	assert.Error(t, err)
-
 }
 
 func TestConfigureStorage_WithValidInput(t *testing.T) {
-
 	settings := map[string]string{
-
 		"AZURE_STORAGE_ACCOUNT": "test-account",
 	}
 
@@ -46,13 +40,11 @@ func TestConfigureStorage_WithValidInput(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.NotNil(t, storage)
-
 }
 
 var ConfigureAuthType = configureAuthType
 
 func TestConfigureAccessKeyAuthType(t *testing.T) {
-
 	settings := map[string]string{AccessKeySetting: "foo"}
 
 	authType, accountToken, accessKey := ConfigureAuthType(settings)
@@ -62,11 +54,9 @@ func TestConfigureAccessKeyAuthType(t *testing.T) {
 	assert.Empty(t, accountToken)
 
 	assert.Equal(t, accessKey, "foo")
-
 }
 
 func TestConfigureSASTokenAuth(t *testing.T) {
-
 	settings := map[string]string{SASTokenSetting: "foo"}
 
 	authType, accountToken, accessKey := ConfigureAuthType(settings)
@@ -76,11 +66,9 @@ func TestConfigureSASTokenAuth(t *testing.T) {
 	assert.Equal(t, accountToken, "?foo")
 
 	assert.Empty(t, accessKey)
-
 }
 
 func TestConfigureDefaultAuth(t *testing.T) {
-
 	settings := make(map[string]string)
 
 	authType, accountToken, accessKey := ConfigureAuthType(settings)
@@ -90,5 +78,4 @@ func TestConfigureDefaultAuth(t *testing.T) {
 	assert.Empty(t, accountToken)
 
 	assert.Empty(t, accessKey)
-
 }

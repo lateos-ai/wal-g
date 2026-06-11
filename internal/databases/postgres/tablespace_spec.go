@@ -44,9 +44,7 @@ type TablespaceLocation struct {
 }
 
 func NewTablespaceSpec(basePrefix string) TablespaceSpec {
-
 	spec := TablespaceSpec{
-
 		"",
 
 		make([]string, 0),
@@ -57,170 +55,121 @@ func NewTablespaceSpec(basePrefix string) TablespaceSpec {
 	spec.setBasePrefix(basePrefix)
 
 	return spec
-
 }
 
 func (spec *TablespaceSpec) findTablespaceLocation(pathInsideTablespace string) (TablespaceLocation, bool) {
-
 	for _, location := range spec.tablespaceLocations() {
-
 		if utility.IsInDirectory(pathInsideTablespace, location.Location) {
-
 			return location, true
-
 		}
-
 	}
 
 	return TablespaceLocation{}, false
-
 }
 
 func (spec *TablespaceSpec) length() int {
-
 	return len(spec.TablespaceNames())
-
 }
 
 func (spec *TablespaceSpec) empty() bool {
-
 	return spec.length() == 0
-
 }
 
 func (spec *TablespaceSpec) TablespaceNames() []string {
-
 	return spec.tablespaceNames
-
 }
 
 func (spec *TablespaceSpec) tablespaceLocations() []TablespaceLocation {
-
 	locations := make([]TablespaceLocation, 0, spec.length())
 
 	for _, location := range spec.tablespaceLocationMap {
-
 		locations = append(locations, location)
-
 	}
 
 	return locations
-
 }
 
 func (spec *TablespaceSpec) location(symlinkName string) (TablespaceLocation, bool) {
-
 	location, ok := spec.tablespaceLocationMap[symlinkName]
 
 	if ok {
-
 		return location, true
-
 	}
 
 	return TablespaceLocation{}, false
-
 }
 
 func (spec *TablespaceSpec) setBasePrefix(basePrefix string) {
-
 	spec.basePrefix = utility.NormalizePath(basePrefix)
-
 }
 
 func (spec *TablespaceSpec) BasePrefix() (string, bool) {
-
 	if spec.basePrefix != "" {
-
 		return spec.basePrefix, true
-
 	}
 
 	return "", false
-
 }
 
 func (spec *TablespaceSpec) addTablespace(symlinkName string, actualLocation string) {
-
 	actualLocation = utility.NormalizePath(actualLocation)
 
 	spec.tablespaceNames = append(spec.tablespaceNames, symlinkName)
 
 	spec.tablespaceLocationMap[symlinkName] = TablespaceLocation{
-
 		Location: actualLocation,
 
 		Symlink: path.Join(TablespaceFolder, symlinkName),
 	}
-
 }
 
 func (spec *TablespaceSpec) makeTablespaceSymlinkPath(tblPath string) (string, error) {
-
 	basePrefix, ok := spec.BasePrefix()
 
 	if !ok {
-
 		return "", ErrorBasePrefixMissing
-
 	}
 
 	if utility.IsInDirectory(tblPath, basePrefix) {
-
 		return tblPath, nil
-
 	}
 
 	location, ok := spec.findTablespaceLocation(tblPath)
 
 	if !ok {
-
 		return tblPath, fmt.Errorf("tablespace at path %s wasn't found", tblPath)
-
 	}
 
 	tblPath = path.Join(basePrefix, location.Symlink, utility.GetSubdirectoryRelativePath(tblPath, location.Location))
 
 	return tblPath, nil
-
 }
 
 func (spec *TablespaceSpec) isTablespaceSymlink(tblPath string) (bool, error) {
-
 	basePrefix, ok := spec.BasePrefix()
 
 	if !ok {
-
 		return false, ErrorBasePrefixMissing
-
 	}
 
 	return slices.ContainsFunc(spec.tablespaceLocations(), func(l TablespaceLocation) bool {
-
 		return utility.PathsEqual(tblPath, path.Join(basePrefix, l.Symlink))
-
 	}), nil
-
 }
 
 func (spec *TablespaceSpec) UnmarshalJSON(b []byte) error {
-
 	jsonAsMap := make(map[string]interface{})
 
 	err := json.Unmarshal(b, &jsonAsMap)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	basePrefix, ok := jsonAsMap[BasePrefix].(string)
 
 	if !ok {
-
 		return ErrorBasePrefixMissing
-
 	}
 
 	spec.setBasePrefix(basePrefix)
@@ -228,47 +177,35 @@ func (spec *TablespaceSpec) UnmarshalJSON(b []byte) error {
 	spec.tablespaceNames = make([]string, 0)
 
 	if interfaces, ok := jsonAsMap[Tablespaces].([]interface{}); ok {
-
 		for _, item := range interfaces {
-
 			spec.tablespaceNames = append(spec.tablespaceNames, item.(string))
-
 		}
-
 	}
 
 	spec.tablespaceLocationMap = make(map[string]TablespaceLocation)
 
 	for _, symlinkName := range spec.tablespaceNames {
-
 		specMap, ok := jsonAsMap[symlinkName].(map[string]interface{})
 
 		if !ok {
-
 			return fmt.Errorf("bad json structure. Couldn't find entry for symlink %s", symlinkName)
-
 		}
 
 		location := TablespaceLocation{specMap["loc"].(string), specMap["link"].(string)}
 
 		spec.tablespaceLocationMap[symlinkName] = location
-
 	}
 
 	return nil
-
 }
 
 func (spec *TablespaceSpec) MarshalJSON() ([]byte, error) {
-
 	toMarshal := make(map[string]interface{})
 
 	basePrefix, ok := spec.BasePrefix()
 
 	if !ok {
-
 		return nil, ErrorBasePrefixMissing
-
 	}
 
 	toMarshal[BasePrefix] = basePrefix
@@ -276,23 +213,17 @@ func (spec *TablespaceSpec) MarshalJSON() ([]byte, error) {
 	toMarshal[Tablespaces] = spec.TablespaceNames()
 
 	for symlinkName, location := range spec.tablespaceLocationMap {
-
 		toMarshal[symlinkName] = location
-
 	}
 
 	return json.Marshal(toMarshal)
-
 }
 
 func (spec *TablespaceSpec) EnsureSymlinkExist(location TablespaceLocation) error {
-
 	basePrefix, ok := spec.BasePrefix()
 
 	if !ok {
-
 		return ErrorBasePrefixMissing
-
 	}
 
 	linkpath := path.Join(basePrefix, location.Symlink)
@@ -300,31 +231,22 @@ func (spec *TablespaceSpec) EnsureSymlinkExist(location TablespaceLocation) erro
 	linktarget, err := os.Readlink(linkpath)
 
 	if err != nil {
-
 		// create symlink if not exist
 
 		err = os.Symlink(location.Location, linkpath)
 
 		if err != nil {
-
 			return err
-
 		}
-
 	} else {
-
 		// check symlink exists
 
 		if linktarget != location.Location {
-
 			return errors.Errorf("symlink %v having incorrect target", linkpath)
-
 		}
 
 		tracelog.WarningLogger.Printf("Symlink %v already exists", linkpath)
-
 	}
 
 	return nil
-
 }

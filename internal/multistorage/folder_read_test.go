@@ -16,9 +16,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestReadObject(t *testing.T) {
-
 	t.Run("check folder implementation and provide default name if it is not multistorage", func(t *testing.T) {
-
 		singleStorageFolder := memory.NewFolder("/test", memory.NewKVS())
 
 		_ = singleStorageFolder.PutObject("a/b/c", bytes.NewBufferString("abc"))
@@ -38,11 +36,9 @@ func TestReadObject(t *testing.T) {
 		require.Error(t, err)
 
 		assert.Equal(t, "default", storageName)
-
 	})
 
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.Read = policies.ReadPolicyFirst
@@ -50,11 +46,9 @@ func TestReadObject(t *testing.T) {
 		_, _, err := ReadObject(folder, "kek")
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	t.Run("read from first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Read = policies.ReadPolicyFirst
@@ -82,11 +76,9 @@ func TestReadObject(t *testing.T) {
 		assert.ErrorAs(t, err, &storage.ObjectNotFoundError{})
 
 		assert.Equal(t, "s1", storageName)
-
 	})
 
 	t.Run("read first found object", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.Read = policies.ReadPolicyFoundFirst
@@ -140,7 +132,5 @@ func TestReadObject(t *testing.T) {
 		assert.ErrorAs(t, err, &storage.ObjectNotFoundError{})
 
 		assert.Equal(t, "all", storageName)
-
 	})
-
 }

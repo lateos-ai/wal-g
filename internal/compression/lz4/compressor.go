@@ -17,13 +17,9 @@ const (
 type Compressor struct{}
 
 func (compressor Compressor) NewWriter(writer io.Writer) ioextensions.WriteFlushCloser {
-
 	return lz4.NewWriter(writer)
-
 }
 
 func (compressor Compressor) FileExtension() string {
-
 	return FileExtension
-
 }

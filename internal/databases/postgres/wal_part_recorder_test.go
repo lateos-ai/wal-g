@@ -10,7 +10,6 @@ import (
 )
 
 func TestSavePreviousWalTail(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -36,11 +35,9 @@ func TestSavePreviousWalTail(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, previousWalTail, partFile.WalTails[postgres.GetPositionInDelta(WalFilename)])
-
 }
 
 func TestSaveNextWalHead_MiddleWalFile(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -66,11 +63,9 @@ func TestSaveNextWalHead_MiddleWalFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, nextWalHead, partFile.WalHeads[postgres.GetPositionInDelta(WalFilename)])
-
 }
 
 func TestSaveNextWalHead_LastWalFile(t *testing.T) {
-
 	dataFolder := testtools.NewMockDataFolder()
 
 	manager := postgres.NewDeltaFileManager(dataFolder)
@@ -110,5 +105,4 @@ func TestSaveNextWalHead_LastWalFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, nextWalHead, nextPartFile.PreviousWalHead)
-
 }

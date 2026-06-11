@@ -21,17 +21,14 @@ import (
 // TODO: fix duplicates piece from fetcher_test
 
 func SetupMongoDriverOkMock() *mongoMocks.MongoDriver {
-
 	md := &mongoMocks.MongoDriver{}
 
 	tsInFuture := models.OpTime{TS: models.Timestamp{TS: uint32(time.Now().Add(24 * time.Hour).Unix()), Inc: 1}}
 
 	isMaster := models.IsMaster{
-
 		IsMaster: true,
 
 		LastWrite: models.IsMasterLastWrite{
-
 			OpTime: tsInFuture,
 
 			MajorityOpTime: tsInFuture,
@@ -41,17 +38,13 @@ func SetupMongoDriverOkMock() *mongoMocks.MongoDriver {
 	md.On("IsMaster", mock.Anything).Return(isMaster, nil)
 
 	return md
-
 }
 
 func buildPerfBsonFetcher(b *testing.B, bsonFname string) (stages.Fetcher, io.Closer) {
-
 	bsonFile, err := os.Open(bsonFname)
 
 	if err != nil {
-
 		b.Fatalf("Can not open bson file %s: %v\n", bsonFname, err)
-
 	}
 
 	fetcher := stages.NewCursorMajFetcher(
@@ -64,11 +57,9 @@ func buildPerfBsonFetcher(b *testing.B, bsonFname string) (stages.Fetcher, io.Cl
 	)
 
 	return fetcher, bsonFile
-
 }
 
 func BenchmarkHandleOplogPush(b *testing.B) {
-
 	tests := []struct {
 		name string
 
@@ -82,9 +73,7 @@ func BenchmarkHandleOplogPush(b *testing.B) {
 
 		archiveAfterTime time.Duration
 	}{
-
 		{
-
 			name: "testdata/10_2048_oplog.bson",
 
 			compression: nil,
@@ -98,11 +87,8 @@ func BenchmarkHandleOplogPush(b *testing.B) {
 	}
 
 	for _, tc := range tests {
-
 		b.Run(tc.name, func(b *testing.B) {
-
 			for i := 0; i < b.N; i++ {
-
 				fetcher, fileCloser := buildPerfBsonFetcher(b, tc.name)
 
 				uploader := archive.NewDiscardUploader(tc.compression, tc.readerFrom)
@@ -120,11 +106,7 @@ func BenchmarkHandleOplogPush(b *testing.B) {
 				assert.NotNil(b, err)
 
 				assert.EqualError(b, fmt.Errorf("oplog cursor error: EOF"), err.Error())
-
 			}
-
 		})
-
 	}
-
 }

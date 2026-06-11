@@ -33,49 +33,35 @@ type GenericApplier struct {
 // NewDBApplier builds DBApplier with given args.
 
 func NewGenericApplier(applier oplog.Applier) *GenericApplier {
-
 	return &GenericApplier{applier}
-
 }
 
 // Apply runs working cycle that applies oplog records.
 
 func (dba *GenericApplier) Apply(ctx context.Context, ch chan *models.Oplog) (chan error, error) {
-
 	errc := make(chan error)
 
 	go func() {
-
 		defer close(errc)
 
 		defer func() {
-
 			if err := dba.applier.Close(ctx); err != nil {
-
 				errc <- fmt.Errorf("can not close applier: %w", err)
-
 			}
-
 		}()
 
 		for opr := range ch {
-
 			// we still pass oplog records in generic appliers by value
 
 			if err := dba.applier.Apply(ctx, *opr); err != nil {
-
 				errc <- fmt.Errorf("can not handle op: %w", err)
 
 				return
-
 			}
-
 		}
-
 	}()
 
 	return errc, nil
-
 }
 
 // StorageApplier implements Applier interface for storage.
@@ -111,15 +97,12 @@ func NewStorageApplier(uploader archive.Uploader,
 	resume bool,
 
 ) *StorageApplier {
-
 	return &StorageApplier{uploader, buf, archiveAfterSize, archiveTimeout, statsUpdater, resume}
-
 }
 
 // Apply runs working cycle that sends oplog records to storage.
 
 func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) (chan error, error) {
-
 	archiveTimer := time.NewTimer(sa.timeout)
 
 	var lastKnownTS, batchStartTS models.Timestamp
@@ -133,15 +116,12 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 	errc := make(chan error)
 
 	go func() {
-
 		defer close(errc)
 
 		defer archiveTimer.Stop()
 
 		for oplogc != nil {
-
 			select {
-
 			case <-ctx.Done():
 
 				errc <- fmt.Errorf("stop applying oplog: %w", ctx.Err())
@@ -151,37 +131,29 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 			case op, ok := <-oplogc:
 
 				if !ok {
-
 					oplogc = nil
 
 					break
-
 				}
 
 				if restartBatch {
-
 					batchStartTS = op.TS
 
 					restartBatch = false
 
 					if sa.resume {
-
 						sa.resume = false
 
 						continue
-
 					}
-
 				}
 
 				lastKnownTS = op.TS
 
 				if _, err := sa.buf.Write(op.Data); err != nil {
-
 					errc <- fmt.Errorf("can not write op to buffer: %w", err)
 
 					return
-
 				}
 
 				batchDocs++
@@ -189,9 +161,7 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 				models.PutOplogEntry(op)
 
 				if sa.buf.Len() < sa.size {
-
 					continue
-
 				}
 
 				tracelog.DebugLogger.Println("Initializing archive upload due to archive size")
@@ -199,7 +169,6 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 			case <-archiveTimer.C:
 
 				tracelog.DebugLogger.Println("Initializing archive upload due to timeout expired")
-
 			}
 
 			utility.ResetTimer(archiveTimer, sa.timeout)
@@ -207,19 +176,15 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 			batchSize = sa.buf.Len()
 
 			if batchSize == 0 {
-
 				continue
-
 			}
 
 			bufReader, err := sa.buf.Reader()
 
 			if err != nil {
-
 				errc <- fmt.Errorf("can not get reader from buffer: %w", err)
 
 				return
-
 			}
 
 			// TODO: move upload to the next stage, batch accumulation should not be blocked by upload
@@ -231,35 +196,26 @@ func (sa *StorageApplier) Apply(ctx context.Context, oplogc chan *models.Oplog) 
 			// but consumes less memory
 
 			if err := sa.uploader.UploadOplogArchive(ctx, bufReader, batchStartTS, lastKnownTS); err != nil {
-
 				errc <- fmt.Errorf("can not upload oplog archive: %w", err)
 
 				return
-
 			}
 
 			if sa.statsUpdater != nil {
-
 				sa.statsUpdater.Update(batchDocs, batchSize, lastKnownTS)
-
 			}
 
 			batchDocs = 0
 
 			if err := sa.buf.Reset(); err != nil {
-
 				errc <- fmt.Errorf("can not reset buffer for reuse: %w", err)
 
 				return
-
 			}
 
 			batchStartTS = lastKnownTS
-
 		}
-
 	}()
 
 	return errc, nil
-
 }

@@ -21,13 +21,11 @@ import (
 )
 
 func init() {
-
 	internal.ConfigureSettings("")
 
 	conf.InitConfig()
 
 	conf.Configure()
-
 }
 
 type streamSentinelDto struct {
@@ -35,7 +33,6 @@ type streamSentinelDto struct {
 }
 
 var testBackup = internal.GenericMetadata{
-
 	BackupName: "metadata",
 
 	UncompressedSize: int64(10),
@@ -54,9 +51,7 @@ var testBackup = internal.GenericMetadata{
 }
 
 func convertMetadataFetch(input internal.GenericMetadata) map[string]interface{} {
-
 	metadata := map[string]interface{}{
-
 		"BackupName": input.BackupName,
 
 		"UncompressedSize": input.UncompressedSize,
@@ -75,13 +70,10 @@ func convertMetadataFetch(input internal.GenericMetadata) map[string]interface{}
 	}
 
 	return metadata
-
 }
 
 func emptyMetadata() internal.GenericMetadata {
-
 	metadata := internal.GenericMetadata{
-
 		BackupName: "",
 
 		UncompressedSize: 0,
@@ -100,11 +92,9 @@ func emptyMetadata() internal.GenericMetadata {
 	}
 
 	return metadata
-
 }
 
 func CreateMockFolder(ctrl *gomock.Controller) *mocks.MockFolder {
-
 	mockFolder := mocks.NewMockFolder(ctrl)
 
 	subFolder := mocks.NewMockFolder(ctrl)
@@ -154,11 +144,9 @@ func CreateMockFolder(ctrl *gomock.Controller) *mocks.MockFolder {
 	subFolder.EXPECT().Exists("base_321_backup_stop_sentinel.json").Return(false, nil).AnyTimes()
 
 	return mockFolder
-
 }
 
 func TestGetBackupByName_Latest(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backup, err := internal.GetBackupByName(internal.LatestString, utility.BaseBackupPath, folder)
@@ -168,11 +156,9 @@ func TestGetBackupByName_Latest(t *testing.T) {
 	assert.Equal(t, folder.GetSubFolder(utility.BaseBackupPath), backup.Folder)
 
 	assert.Equal(t, "base_000", backup.Name)
-
 }
 
 func TestGetBackupByName_Latest_WithGomock(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	defer ctrl.Finish()
@@ -186,11 +172,9 @@ func TestGetBackupByName_Latest_WithGomock(t *testing.T) {
 	assert.Equal(t, mockFolder.GetSubFolder(utility.BaseBackupPath), backup.Folder)
 
 	assert.Equal(t, "base_000", backup.Name)
-
 }
 
 func TestGetBackupByName_LatestNoBackups(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	folder.PutObject("folder123/nop", &bytes.Buffer{})
@@ -200,11 +184,9 @@ func TestGetBackupByName_LatestNoBackups(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, internal.NewNoBackupsFoundError(), err)
-
 }
 
 func TestGetBackupByName_LatestNoBackups_WithGomock(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	defer ctrl.Finish()
@@ -222,11 +204,9 @@ func TestGetBackupByName_LatestNoBackups_WithGomock(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, internal.NewNoBackupsFoundError(), err)
-
 }
 
 func TestGetBackupByName_Exists(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	backup, err := internal.GetBackupByName("base_123", utility.BaseBackupPath, folder)
@@ -236,11 +216,9 @@ func TestGetBackupByName_Exists(t *testing.T) {
 	assert.Equal(t, folder.GetSubFolder(utility.BaseBackupPath), backup.Folder)
 
 	assert.Equal(t, "base_123", backup.Name)
-
 }
 
 func TestGetBackupByName_Exists_WithGomock(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	defer ctrl.Finish()
@@ -254,11 +232,9 @@ func TestGetBackupByName_Exists_WithGomock(t *testing.T) {
 	assert.Equal(t, mockFolder.GetSubFolder(utility.BaseBackupPath), backup.Folder)
 
 	assert.Equal(t, "base_123", backup.Name)
-
 }
 
 func TestGetBackupByName_NotExists(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	_, err := internal.GetBackupByName("base_321", utility.BaseBackupPath, folder)
@@ -266,11 +242,9 @@ func TestGetBackupByName_NotExists(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, internal.NewBackupNonExistenceError(""), err)
-
 }
 
 func TestGetBackupByName_NotExists_WithGomock(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 
 	defer ctrl.Finish()
@@ -282,11 +256,9 @@ func TestGetBackupByName_NotExists_WithGomock(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.IsType(t, internal.NewBackupNonExistenceError(""), err)
-
 }
 
 func TestFetchMetadata(t *testing.T) {
-
 	folder := testtools.CreateMockStorageFolder()
 
 	b := path.Join(utility.BaseBackupPath, "base_123", testBackup.BackupName+".json")
@@ -320,11 +292,9 @@ func TestFetchMetadata(t *testing.T) {
 	assert.Equal(t, testBackup.UserData, empMeta.UserData)
 
 	assert.Equal(t, testBackup, empMeta)
-
 }
 
 func TestFetchSentinel(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	const backupName = "base_456"
@@ -348,11 +318,9 @@ func TestFetchSentinel(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expected, actual)
-
 }
 
 func TestFetchSentinel_backupFolderIsEmpty(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	backup := internal.Backup{Name: "base_000", Folder: folder}
@@ -362,11 +330,9 @@ func TestFetchSentinel_backupFolderIsEmpty(t *testing.T) {
 	err := backup.FetchSentinel(&actual)
 
 	assert.Error(t, err)
-
 }
 
 func TestFetchSentinel_invalidJSON(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	const backupName = "base_000"
@@ -384,11 +350,9 @@ func TestFetchSentinel_invalidJSON(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Contains(t, err.Error(), "failed to fetch dto from")
-
 }
 
 func TestFetchSentinel_emptyFile(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	const backupName = "base_000"
@@ -406,11 +370,9 @@ func TestFetchSentinel_emptyFile(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Contains(t, err.Error(), "failed to fetch dto from")
-
 }
 
 func TestFetchSentinel_extraFieldsInJSON(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	const backupName = "base_000"
@@ -418,7 +380,6 @@ func TestFetchSentinel_extraFieldsInJSON(t *testing.T) {
 	expected := streamSentinelDto{StartLocalTime: time.Date(2026, 6, 1, 0, 0, 0, 0, time.UTC)}
 
 	raw := map[string]interface{}{
-
 		"StartLocalTime": expected.StartLocalTime,
 
 		"UnknownField": "ignored",
@@ -441,11 +402,9 @@ func TestFetchSentinel_extraFieldsInJSON(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expected, actual)
-
 }
 
 func TestFetchSentinel_missingFieldsInJSON(t *testing.T) {
-
 	type partialSentinelDto struct {
 		StartTime time.Time
 
@@ -471,11 +430,9 @@ func TestFetchSentinel_missingFieldsInJSON(t *testing.T) {
 	assert.Equal(t, time.Date(2020, 6, 1, 0, 0, 0, 0, time.UTC), actual.StartTime)
 
 	assert.Equal(t, int64(0), actual.Size)
-
 }
 
 func TestFetchSentinel_sentinelNotFoundForWrongName(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	const backupName = "base_000"
@@ -497,11 +454,9 @@ func TestFetchSentinel_sentinelNotFoundForWrongName(t *testing.T) {
 	err = wrongBackup.FetchSentinel(&actual)
 
 	assert.Error(t, err)
-
 }
 
 func TestUploadSentinel(t *testing.T) {
-
 	mockCtrl := gomock.NewController(t)
 
 	folder := mocks.NewMockFolder(mockCtrl)
@@ -519,9 +474,7 @@ func TestUploadSentinel(t *testing.T) {
 	fileName, err := uploaderProv.PushStream(t.Context(), bytes.NewReader(getByteSampleArray(51)))
 
 	if err != nil {
-
 		t.Errorf("Error pushing stream: %v", err)
-
 	}
 
 	folder.EXPECT().PutObject(gomock.Any(), gomock.Any()).Return(nil)
@@ -529,5 +482,4 @@ func TestUploadSentinel(t *testing.T) {
 	uploadDto := internal.UploadSentinel(uploaderProv, &sentinel, fileName)
 
 	assert.NoError(t, uploadDto)
-
 }

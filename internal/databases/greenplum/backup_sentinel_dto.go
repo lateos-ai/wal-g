@@ -42,9 +42,7 @@ type SegmentMetadata struct {
 }
 
 func (c SegmentMetadata) ToSegConfig() cluster.SegConfig {
-
 	return cluster.SegConfig{
-
 		DbID: c.DatabaseID,
 
 		ContentID: c.ContentID,
@@ -57,13 +55,10 @@ func (c SegmentMetadata) ToSegConfig() cluster.SegConfig {
 
 		DataDir: c.DataDir,
 	}
-
 }
 
 func NewSegmentMetadata(backupID string, segCfg cluster.SegConfig, restoreLSN, backupName string) SegmentMetadata {
-
 	return SegmentMetadata{
-
 		DatabaseID: segCfg.DbID,
 
 		ContentID: segCfg.ContentID,
@@ -82,7 +77,6 @@ func NewSegmentMetadata(backupID string, segCfg cluster.SegConfig, restoreLSN, b
 
 		BackupName: backupName,
 	}
-
 }
 
 // PgSegmentSentinelDto is used during the initial fetching of the segment backup metadata
@@ -132,17 +126,13 @@ type BackupSentinelDto struct {
 }
 
 func (s *BackupSentinelDto) String() string {
-
 	b, err := json.Marshal(s)
 
 	if err != nil {
-
 		return "-"
-
 	}
 
 	return string(b)
-
 }
 
 // NewBackupSentinelDto returns new BackupSentinelDto instance
@@ -150,17 +140,13 @@ func (s *BackupSentinelDto) String() string {
 func NewBackupSentinelDto(currBackupInfo *CurrBackupInfo, prevBackupInfo *PrevBackupInfo, restoreLSNs map[int]string, userData interface{},
 
 	isPermanent bool) BackupSentinelDto {
-
 	hostname, err := os.Hostname()
 
 	if err != nil {
-
 		tracelog.WarningLogger.Printf("Failed to fetch the hostname for metadata, leaving empty: %v", err)
-
 	}
 
 	sentinel := BackupSentinelDto{
-
 		RestorePoint: &currBackupInfo.backupName,
 
 		Segments: make([]SegmentMetadata, 0, len(currBackupInfo.segmentBackups)),
@@ -185,61 +171,44 @@ func NewBackupSentinelDto(currBackupInfo *CurrBackupInfo, prevBackupInfo *PrevBa
 	}
 
 	if prevBackupInfo.name != "" {
-
 		sentinel.IncrementCount = &currBackupInfo.incrementCount
 
 		sentinel.IncrementFrom = &prevBackupInfo.name
 
 		if prevBackupInfo.sentinelDto.IsIncremental() {
-
 			sentinel.IncrementFullName = prevBackupInfo.sentinelDto.IncrementFullName
-
 		} else {
-
 			sentinel.IncrementFullName = &prevBackupInfo.name
-
 		}
-
 	}
 
 	for backupID := range currBackupInfo.segmentsMetadata {
-
 		sentinel.CompressedSize += currBackupInfo.segmentsMetadata[backupID].CompressedSize
 
 		sentinel.UncompressedSize += currBackupInfo.segmentsMetadata[backupID].UncompressedSize
 
 		sentinel.DataCatalogSize += currBackupInfo.segmentsMetadata[backupID].DataCatalogSize
-
 	}
 
 	for backupID, cfg := range currBackupInfo.segmentBackups {
-
 		restoreLSN := restoreLSNs[cfg.ContentID]
 
 		backupName := currBackupInfo.segmentsMetadata[backupID].BackupName
 
 		sentinel.Segments = append(sentinel.Segments, NewSegmentMetadata(backupID, *cfg, restoreLSN, backupName))
-
 	}
 
 	return sentinel
-
 }
 
 func (s *BackupSentinelDto) IsIncremental() (isIncremental bool) {
-
 	// If we have increment base, we must have all the rest properties.
 
 	if s.IncrementFrom != nil {
-
 		if s.IncrementFullName == nil || s.IncrementCount == nil {
-
 			panic("Inconsistent BackupSentinelDto")
-
 		}
-
 	}
 
 	return s.IncrementFrom != nil
-
 }

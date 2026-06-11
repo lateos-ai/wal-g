@@ -29,23 +29,17 @@ type Enveloper struct {
 }
 
 func (enveloper *Enveloper) Name() string {
-
 	return "yckms"
-
 }
 
 func (enveloper *Enveloper) ReadEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
-
 	return readEncryptedKey(r)
-
 }
 
 func (enveloper *Enveloper) DecryptKey(encryptedKey *envelope.EncryptedKey) ([]byte, error) {
-
 	ctx := context.Background()
 
 	rsp, err := enveloper.sdk.KMSCrypto().SymmetricCrypto().Decrypt(ctx, &kms.SymmetricDecryptRequest{
-
 		KeyId: enveloper.keyID,
 
 		Ciphertext: encryptedKey.Data,
@@ -54,23 +48,17 @@ func (enveloper *Enveloper) DecryptKey(encryptedKey *envelope.EncryptedKey) ([]b
 	})
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return rsp.Plaintext, nil
-
 }
 
 func (enveloper *Enveloper) SerializeEncryptedKey(encryptedKey *envelope.EncryptedKey) []byte {
-
 	return serializeEncryptedKey(encryptedKey)
-
 }
 
 func serializeEncryptedKey(encryptedKey *envelope.EncryptedKey) []byte {
-
 	/*
 
 		magic value "envelope-yc-kms"
@@ -106,31 +94,23 @@ func serializeEncryptedKey(encryptedKey *envelope.EncryptedKey) []byte {
 	result = append(result, encryptedKeyLen...)
 
 	return append(result, encryptedKey.Data...)
-
 }
 
 func readEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
-
 	magicSchemeBytes := make([]byte, len(magic)+1)
 
 	_, err := io.ReadFull(r, magicSchemeBytes)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	if string(magicSchemeBytes[0:len(magic)]) != magic {
-
 		return nil, errors.New("envelope yc kms: invalid encrypted header format")
-
 	}
 
 	if schemeVersion != magicSchemeBytes[len(magic)] {
-
 		return nil, errors.New("envelope yc kms: scheme version is not supported")
-
 	}
 
 	keyIDLenBytes := make([]byte, sizeofInt32)
@@ -138,9 +118,7 @@ func readEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
 	_, err = io.ReadFull(r, keyIDLenBytes)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	keyIDLen := binary.LittleEndian.Uint32(keyIDLenBytes)
@@ -150,9 +128,7 @@ func readEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
 	_, err = io.ReadFull(r, keyIDBytes)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	keyID := string(keyIDBytes)
@@ -164,9 +140,7 @@ func readEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
 	_, err = io.ReadFull(r, encryptedKeyLenBytes)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	encryptedKeyLen := binary.LittleEndian.Uint32(encryptedKeyLenBytes)
@@ -176,75 +150,56 @@ func readEncryptedKey(r io.Reader) (*envelope.EncryptedKey, error) {
 	_, err = io.ReadFull(r, encryptedKey)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return envelope.NewEncryptedKey(keyID, encryptedKey), nil
-
 }
 
 func getCredentials(saFilePath string) (ycsdk.Credentials, error) {
-
 	var credentials ycsdk.Credentials
 
 	credentials = ycsdk.InstanceServiceAccount()
 
 	if len(saFilePath) > 0 {
-
 		var authorizedKey, keyErr = iamkey.ReadFromJSONFile(saFilePath)
 
 		if keyErr != nil {
-
 			return nil, errors.Wrap(keyErr, "Can't initialize yc sdk")
-
 		}
 
 		var accountCredentials, credErr = ycsdk.ServiceAccountKey(authorizedKey)
 
 		if credErr != nil {
-
 			return nil, errors.Wrap(credErr, "Can't initialize yc sdk")
-
 		}
 
 		credentials = accountCredentials
-
 	}
 
 	return credentials, nil
-
 }
 
 func EnveloperFromKeyIDAndCredential(keyID, saFilePath, endpoint string) (envelope.Enveloper, error) {
-
 	credentials, credErr := getCredentials(saFilePath)
 
 	if credErr != nil {
-
 		return nil, errors.Wrap(credErr, "Can't initialize yc sdk")
-
 	}
 
 	var sdk, sdkErr = ycsdk.Build(context.Background(), ycsdk.Config{
-
 		Credentials: credentials,
 
 		Endpoint: endpoint,
 	})
 
 	if sdkErr != nil {
-
 		return nil, errors.Wrap(sdkErr, "Can't initialize yc sdk")
-
 	}
 
 	return &Enveloper{
-
 		keyID: keyID,
 
 		sdk: sdk,
 	}, nil
-
 }

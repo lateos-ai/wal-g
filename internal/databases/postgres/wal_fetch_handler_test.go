@@ -16,7 +16,6 @@ import (
 )
 
 func TestWallFetchCachesLastDecompressor(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder().GetSubFolder(utility.WalPath)
 
 	type TestData struct {
@@ -28,14 +27,12 @@ func TestWallFetchCachesLastDecompressor(t *testing.T) {
 	}
 
 	testData := []TestData{
-
 		{"00000001000000000000007C", lz4.Decompressor{}, lz4.Compressor{}},
 
 		{"00000001000000000000007F", lzma.Decompressor{}, lzma.Compressor{}},
 	}
 
 	for _, data := range testData {
-
 		walFilename, decompressor, compressor := data.filename, data.decompressor, data.compressor
 
 		data := bytes.Buffer{}
@@ -61,15 +58,11 @@ func TestWallFetchCachesLastDecompressor(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, decompressor, last)
-
 	}
-
 }
 
 func TestSetLastDecompressorWorkWell(t *testing.T) {
-
 	for _, decompressor := range compression.Decompressors {
-
 		_ = internal.SetLastDecompressor(decompressor)
 
 		last, err := internal.GetLastDecompressor()
@@ -77,13 +70,10 @@ func TestSetLastDecompressorWorkWell(t *testing.T) {
 		assert.NoError(t, err)
 
 		assert.Equal(t, last, decompressor)
-
 	}
-
 }
 
 func TestTryDownloadWALFile_Exist(t *testing.T) {
-
 	expectedData := []byte("mock")
 
 	folder := testtools.MakeDefaultInMemoryStorageFolder().GetSubFolder(utility.WalPath)
@@ -101,11 +91,9 @@ func TestTryDownloadWALFile_Exist(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, expectedData, actualData)
-
 }
 
 func TestTryDownloadWALFile_NotExist(t *testing.T) {
-
 	folder := testtools.MakeDefaultInMemoryStorageFolder()
 
 	reader, exist, err := internal.TryDownloadFile(internal.NewFolderReader(folder), WalFilename)
@@ -115,5 +103,4 @@ func TestTryDownloadWALFile_NotExist(t *testing.T) {
 	assert.False(t, exist)
 
 	assert.NoError(t, err)
-
 }

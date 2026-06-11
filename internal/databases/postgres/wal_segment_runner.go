@@ -15,17 +15,12 @@ type WalSegmentNotFoundError struct {
 }
 
 func newWalSegmentNotFoundError(segmentFileName string) WalSegmentNotFoundError {
-
 	return WalSegmentNotFoundError{
-
 		errors.Errorf("Segment file '%s' does not exist in storage.\n", segmentFileName)}
-
 }
 
 func (err WalSegmentNotFoundError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type ReachedStopSegmentError struct {
@@ -33,15 +28,11 @@ type ReachedStopSegmentError struct {
 }
 
 func newReachedStopSegmentError() ReachedStopSegmentError {
-
 	return ReachedStopSegmentError{errors.Errorf("Reached stop segment.\n")}
-
 }
 
 func (err ReachedStopSegmentError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type WalSegmentDescription struct {
@@ -51,23 +42,17 @@ type WalSegmentDescription struct {
 }
 
 func NewWalSegmentDescription(name string) (WalSegmentDescription, error) {
-
 	timeline, segmentNo, err := ParseWALFilename(name)
 
 	if err != nil {
-
 		return WalSegmentDescription{}, err
-
 	}
 
 	return WalSegmentDescription{Timeline: timeline, Number: WalSegmentNo(segmentNo)}, nil
-
 }
 
 func (desc WalSegmentDescription) GetFileName() string {
-
 	return desc.Number.GetFilename(desc.Timeline)
-
 }
 
 // WalSegmentRunner is used for sequential iteration over WAL segments in the storage
@@ -93,9 +78,7 @@ func NewWalSegmentRunner(
 	timelineSwitchMap map[WalSegmentNo]*TimelineHistoryRecord,
 
 ) *WalSegmentRunner {
-
 	return &WalSegmentRunner{
-
 		currentWalSegment: startWalSegment,
 
 		walFolderSegments: segments,
@@ -104,53 +87,41 @@ func NewWalSegmentRunner(
 
 		timelineSwitchMap: timelineSwitchMap,
 	}
-
 }
 
 func (r *WalSegmentRunner) Current() WalSegmentDescription {
-
 	return r.currentWalSegment
-
 }
 
 // Next tries to get the next segment from storage
 
 func (r *WalSegmentRunner) Next() (WalSegmentDescription, error) {
-
 	if r.currentWalSegment.Number <= r.stopSegmentNo {
-
 		return WalSegmentDescription{}, newReachedStopSegmentError()
-
 	}
 
 	nextSegment := r.getNextSegment()
 
 	if _, fileExists := r.walFolderSegments[nextSegment]; !fileExists {
-
 		return WalSegmentDescription{}, newWalSegmentNotFoundError(nextSegment.GetFileName())
-
 	}
 
 	r.currentWalSegment = nextSegment
 
 	return r.currentWalSegment, nil
-
 }
 
 // ForceMoveNext do a force-switch to the next segment without accessing storage
 
 func (r *WalSegmentRunner) ForceMoveNext() {
-
 	nextSegment := r.getNextSegment()
 
 	r.currentWalSegment = nextSegment
-
 }
 
 // getNextSegment calculates the next segment
 
 func (r *WalSegmentRunner) getNextSegment() WalSegmentDescription {
-
 	nextTimeline := r.currentWalSegment.Timeline
 
 	nextSegmentNo := r.currentWalSegment.Number.previous()
@@ -158,7 +129,6 @@ func (r *WalSegmentRunner) getNextSegment() WalSegmentDescription {
 	nextSegment := WalSegmentDescription{Timeline: nextTimeline, Number: nextSegmentNo}
 
 	if record, ok := r.timelineSwitchMap[r.currentWalSegment.Number]; ok {
-
 		tracelog.DebugLogger.Printf("found timeline switch at LSN %s\n", record.lsn.String())
 
 		// Sometimes there are records in .history that are not actually present in cluster history
@@ -168,69 +138,53 @@ func (r *WalSegmentRunner) getNextSegment() WalSegmentDescription {
 		// We will skip such records
 
 		if _, fileExists := r.walFolderSegments[nextSegment]; fileExists {
-
 			tracelog.WarningLogger.Printf("timeline switch at LSN %s is not from our history. Skipping it\n", record.lsn.String())
 
 			return nextSegment
-
 		}
 
 		// switch timeline if current WAL segment number found in .history record
 
 		nextSegment.Timeline = record.timeline
-
 	}
 
 	return nextSegment
-
 }
 
 // getFolderFilenames returns a set of filenames in provided storage folder
 
 func getFolderFilenames(folder storage.Folder) ([]string, error) {
-
 	objects, _, err := folder.ListFolder()
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	filenames := make([]string, 0, len(objects))
 
 	for _, object := range objects {
-
 		filenames = append(filenames, object.GetName())
-
 	}
 
 	return filenames, nil
-
 }
 
 func getSegmentsFromFiles(filenames []string) map[WalSegmentDescription]bool {
-
 	walSegments := make(map[WalSegmentDescription]bool)
 
 	for _, filename := range filenames {
-
 		baseName := utility.TrimFileExtension(filename)
 
 		segment, err := NewWalSegmentDescription(baseName)
 
 		if _, ok := err.(NotWalFilenameError); ok {
-
 			// non-wal segment file, skip it
 
 			continue
-
 		}
 
 		walSegments[segment] = true
-
 	}
 
 	return walSegments
-
 }

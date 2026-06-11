@@ -15,7 +15,6 @@ import (
 )
 
 func HandleLogPush(dbnames []string, norecovery bool) {
-
 	ctx, cancel := context.WithCancel(context.Background())
 
 	signalHandler := utility.NewSignalHandler(ctx, cancel, []os.Signal{syscall.SIGINT, syscall.SIGTERM})
@@ -47,27 +46,21 @@ func HandleLogPush(dbnames []string, norecovery bool) {
 	logBackupName := generateLogBackupName()
 
 	err = runParallel(func(i int) error {
-
 		return backupSingleLog(ctx, db, logBackupName, dbnames[i], builtinCompression, norecovery)
-
 	}, len(dbnames), getDBConcurrency())
 
 	tracelog.ErrorLogger.FatalfOnError("overall log backup failed: %v", err)
 
 	tracelog.InfoLogger.Printf("log backup finished")
-
 }
 
 func backupSingleLog(ctx context.Context, db *sql.DB, backupName string, dbname string, builtinCompression bool, noRecovery bool) error {
-
 	baseURL := getLogBackupURL(backupName, dbname)
 
 	size, blobCount, err := estimateLogSize(db, dbname)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf("database [%s] log size is %d, required blob count %d", dbname, size, blobCount)
@@ -79,15 +72,11 @@ func backupSingleLog(ctx context.Context, db *sql.DB, backupName string, dbname 
 	sql += fmt.Sprintf(" WITH FORMAT, MAXTRANSFERSIZE=%d", MaxTransferSize)
 
 	if builtinCompression {
-
 		sql += ", COMPRESSION"
-
 	}
 
 	if noRecovery {
-
 		sql += ", NORECOVERY"
-
 	}
 
 	tracelog.InfoLogger.Printf("starting backup database [%s] log to %s", dbname, urls)
@@ -97,15 +86,10 @@ func backupSingleLog(ctx context.Context, db *sql.DB, backupName string, dbname 
 	_, err = db.ExecContext(ctx, sql)
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("database [%s] log backup failed: %#v", dbname, err)
-
 	} else {
-
 		tracelog.InfoLogger.Printf("database [%s] log backup successfully finished", dbname)
-
 	}
 
 	return err
-
 }

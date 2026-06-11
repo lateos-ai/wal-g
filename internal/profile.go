@@ -15,11 +15,8 @@ type ProfileStopper interface {
 }
 
 func Profile() (ProfileStopper, error) {
-
 	if !viper.IsSet(conf.ProfileSamplingRatio) {
-
 		return nil, nil
-
 	}
 
 	samplingRatio := viper.GetFloat64(conf.ProfileSamplingRatio)
@@ -29,9 +26,7 @@ func Profile() (ProfileStopper, error) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	if r.Float64() >= samplingRatio {
-
 		return nil, nil
-
 	}
 
 	var opts []func(*profile.Profile)
@@ -39,7 +34,6 @@ func Profile() (ProfileStopper, error) {
 	profileMode := viper.GetString(conf.ProfileMode)
 
 	switch profileMode {
-
 	case "cpu":
 
 		opts = append(opts, profile.CPUProfile)
@@ -67,19 +61,15 @@ func Profile() (ProfileStopper, error) {
 	case "goroutine":
 
 		opts = append(opts, profile.GoroutineProfile)
-
 	}
 
 	profilePath := viper.GetString(conf.ProfilePath)
 
 	if profilePath != "" {
-
 		opts = append(opts, profile.ProfilePath(profilePath))
-
 	}
 
 	p := profile.Start(opts...)
 
 	return p, nil
-
 }

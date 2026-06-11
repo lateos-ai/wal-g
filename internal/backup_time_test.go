@@ -10,9 +10,7 @@ import (
 )
 
 func TestBackupTime_PrintableFields(t *testing.T) {
-
 	bt := BackupTime{
-
 		BackupName: "my first backup",
 
 		Time: time.Unix(1692883732, 0).UTC(),
@@ -27,9 +25,7 @@ func TestBackupTime_PrintableFields(t *testing.T) {
 	prettyTime := "Thursday, 24-Aug-23 13:28:52 UTC"
 
 	want := []printlist.TableField{
-
 		{
-
 			Name: "backup_name",
 
 			PrettyName: "Backup name",
@@ -40,7 +36,6 @@ func TestBackupTime_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "modified",
 
 			PrettyName: "Modified",
@@ -51,7 +46,6 @@ func TestBackupTime_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "wal_file_name",
 
 			PrettyName: "WAL file name",
@@ -62,7 +56,6 @@ func TestBackupTime_PrintableFields(t *testing.T) {
 		},
 
 		{
-
 			Name: "storage_name",
 
 			PrettyName: "Storage name",
@@ -74,5 +67,4 @@ func TestBackupTime_PrintableFields(t *testing.T) {
 	}
 
 	assert.Equal(t, want, got)
-
 }

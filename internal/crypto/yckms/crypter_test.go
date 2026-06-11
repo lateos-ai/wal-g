@@ -21,79 +21,58 @@ type mockedSymmetricKey struct {
 }
 
 func (m *mockedSymmetricKey) GetKey() []byte {
-
 	return m.key
-
 }
 
 func (m *mockedSymmetricKey) Decrypt() error {
-
 	m.key = make([]byte, 32)
 
 	for i := range m.key {
-
 		m.key[i] = 0xbb
-
 	}
 
 	return nil
-
 }
 
 func (m *mockedSymmetricKey) GetEncryptedKey() []byte {
-
 	return m.encryptedKey
-
 }
 
 func (m *mockedSymmetricKey) ReadEncryptedKey(r io.Reader) error {
-
 	m.encryptedKey = make([]byte, 64)
 
 	_, err := r.Read(m.encryptedKey)
 
 	return err
-
 }
 
 func (m *mockedSymmetricKey) CreateKey() error {
-
 	m.encryptedKey = make([]byte, 64)
 
 	for i := range m.encryptedKey {
-
 		m.encryptedKey[i] = 0xaa
-
 	}
 
 	m.key = make([]byte, 32)
 
 	for i := range m.key {
-
 		m.key[i] = 0xbb
-
 	}
 
 	return nil
-
 }
 
 func MockedYcCrypter() crypto.Crypter {
-
 	return &YcCrypter{
-
 		symmetricKey: &mockedSymmetricKey{
-
 			key: nil,
 
 			encryptedKey: nil,
 		},
 	}
-
 }
 
 func TestYcCrypterEncryptionCycle(t *testing.T) {
-
 	crypter := MockedYcCrypter()
 
 	buffer := new(bytes.Buffer)
@@ -119,5 +98,4 @@ func TestYcCrypterEncryptionCycle(t *testing.T) {
 	assert.NoErrorf(t, err, "YcCryptor reading decrypted data error: %v", err)
 
 	assert.Equal(t, testSecretString, string(decryptedData), "Decrypted text not equal to plain text")
-
 }

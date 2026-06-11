@@ -9,7 +9,6 @@ import (
 )
 
 func TestFSP(t *testing.T) {
-
 	// 0 page of file-per-table file:
 
 	var hexFile = `
@@ -61,7 +60,6 @@ func TestFSP(t *testing.T) {
 	// frag_n_used=58,
 
 	assert.Equal(t, FileSpaceHeader{
-
 		SpaceID: 11,
 
 		HighestPageNumberInFile: 23040,
@@ -76,5 +74,4 @@ func TestFSP(t *testing.T) {
 	assert.Equal(t, uint16(0), header.Flags.compressedPageSize())
 
 	assert.Equal(t, false, header.Flags.isDataDir())
-
 }

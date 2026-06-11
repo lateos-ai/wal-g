@@ -24,7 +24,6 @@ type StreamSentinelDto struct {
 // HandleBackupPush starts backup procedure.
 
 func HandleBackupPush(ctx context.Context, uploader internal.Uploader, backupCmd *exec.Cmd, permanent bool, userDataRaw string) {
-
 	timeStart := utility.TimeNowCrossPlatformLocal()
 
 	stdout, stderr, err := utility.StartCommandWithStdoutStderr(backupCmd)
@@ -38,11 +37,9 @@ func HandleBackupPush(ctx context.Context, uploader internal.Uploader, backupCmd
 	err = backupCmd.Wait()
 
 	if err != nil {
-
 		tracelog.ErrorLogger.Printf("Backup command output:\n%s", stderr.String())
 
 		tracelog.ErrorLogger.Fatalf("backup create command failed: %v", err)
-
 	}
 
 	userData, err := internal.UnmarshalSentinelUserData(userDataRaw)
@@ -54,7 +51,6 @@ func HandleBackupPush(ctx context.Context, uploader internal.Uploader, backupCmd
 	tracelog.ErrorLogger.FatalfOnError("can not get backup size: %+v", err)
 
 	sentinel := StreamSentinelDto{
-
 		StartLocalTime: timeStart,
 
 		IsPermanent: permanent,
@@ -67,5 +63,4 @@ func HandleBackupPush(ctx context.Context, uploader internal.Uploader, backupCmd
 	err = internal.UploadSentinel(uploader, &sentinel, fileName)
 
 	tracelog.ErrorLogger.FatalOnError(err)
-
 }

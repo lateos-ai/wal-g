@@ -15,9 +15,7 @@ import (
 // TODO: Unit tests: check Folder.statsCollector.ReportOperationResult calls
 
 func TestPutObject(t *testing.T) {
-
 	t.Run("require at least one storage for first storage policy", func(t *testing.T) {
-
 		folder := newTestFolder(t)
 
 		folder.policies.Put = policies.PutPolicyFirst
@@ -25,11 +23,9 @@ func TestPutObject(t *testing.T) {
 		err := folder.PutObject("a/b/c/file", bytes.NewBufferString("abc"))
 
 		assert.ErrorIs(t, err, ErrNoUsedStorages)
-
 	})
 
 	t.Run("put to first storage", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Put = policies.PutPolicyFirst
@@ -49,11 +45,9 @@ func TestPutObject(t *testing.T) {
 		_, err = folder.usedFolders[1].ReadObject("a/b/c/file")
 
 		assert.ErrorAs(t, err, &storage.ObjectNotFoundError{})
-
 	})
 
 	t.Run("update first found object", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.Put = policies.PutPolicyUpdateFirstFound
@@ -85,20 +79,16 @@ func TestPutObject(t *testing.T) {
 		content, _ = io.ReadAll(reader)
 
 		assert.Equal(t, "old_content", string(content))
-
 	})
 
 	t.Run("put to first storage if no existing objects are found", func(t *testing.T) {
-
 		pols := []policies.PutPolicy{
-
 			policies.PutPolicyUpdateFirstFound,
 
 			policies.PutPolicyUpdateAllFound,
 		}
 
 		for _, pol := range pols {
-
 			folder := newTestFolder(t, "s1", "s2")
 
 			folder.policies.Put = pol
@@ -118,13 +108,10 @@ func TestPutObject(t *testing.T) {
 			_, err = folder.usedFolders[1].ReadObject("a/b/c/file")
 
 			assert.ErrorAs(t, err, &storage.ObjectNotFoundError{})
-
 		}
-
 	})
 
 	t.Run("put to all storages", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2")
 
 		folder.policies.Put = policies.PutPolicyAll
@@ -134,7 +121,6 @@ func TestPutObject(t *testing.T) {
 		require.NoError(t, err)
 
 		for i := 0; i < 2; i++ {
-
 			reader, err := folder.usedFolders[i].ReadObject("a/b/c/file")
 
 			require.NoError(t, err)
@@ -142,13 +128,10 @@ func TestPutObject(t *testing.T) {
 			content, _ := io.ReadAll(reader)
 
 			assert.Equal(t, "abc", string(content))
-
 		}
-
 	})
 
 	t.Run("update all found objects", func(t *testing.T) {
-
 		folder := newTestFolder(t, "s1", "s2", "s3")
 
 		folder.policies.Put = policies.PutPolicyUpdateAllFound
@@ -180,7 +163,5 @@ func TestPutObject(t *testing.T) {
 		content, _ = io.ReadAll(reader)
 
 		assert.Equal(t, "new_content", string(content))
-
 	})
-
 }

@@ -12,7 +12,6 @@ import (
 // Tests building start backup query
 
 func TestBuildStartBackup(t *testing.T) {
-
 	queryBuilder := &postgres.PgQueryRunner{Version: 0}
 
 	_, err := queryBuilder.BuildStartBackup()
@@ -48,13 +47,11 @@ func TestBuildStartBackup(t *testing.T) {
 	queryString, err = queryBuilder.BuildStartBackup()
 
 	assert.Equal(t, "SELECT case when pg_catalog.pg_is_in_recovery() then '' else (pg_catalog.pg_walfile_name_offset(lsn)).file_name end, lsn::text, pg_catalog.pg_is_in_recovery() FROM pg_catalog.pg_backup_start($1, true) lsn", queryString)
-
 }
 
 // Tests building stop backup query
 
 func TestBuildStopBackup(t *testing.T) {
-
 	queryBuilder := &postgres.PgQueryRunner{Version: 0}
 
 	_, err := queryBuilder.BuildStopBackup()
@@ -90,17 +87,14 @@ func TestBuildStopBackup(t *testing.T) {
 	queryString, err = queryBuilder.BuildStopBackup()
 
 	assert.Equal(t, "SELECT labelfile, spcmapfile, lsn FROM pg_catalog.pg_backup_stop()", queryString)
-
 }
 
 func TestIsTablespaceMapExists(t *testing.T) {
-
 	testCases := []struct {
 		version int
 
 		expected bool
 	}{
-
 		{0, false},
 
 		{90600, true},
@@ -109,23 +103,17 @@ func TestIsTablespaceMapExists(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		t.Run(fmt.Sprintf("TestIsTablespaceMapExists_PgVersion_%d", tc.version), func(t *testing.T) {
-
 			queryBuilder := &postgres.PgQueryRunner{Version: tc.version}
 
 			isTablespaceMapExists := queryBuilder.IsTablespaceMapExists()
 
 			assert.Equal(t, isTablespaceMapExists, tc.expected)
-
 		})
-
 	}
-
 }
 
 func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
-
 	testCases := []struct {
 		name string
 
@@ -133,9 +121,7 @@ func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
 
 		expected uint64
 	}{
-
 		{
-
 			name: "negative_from_pg_control_system_after_y2k38",
 
 			input: -9223371710917873611,
@@ -144,7 +130,6 @@ func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
 		},
 
 		{
-
 			name: "regular_positive_value",
 
 			input: 9223371710917873611,
@@ -153,7 +138,6 @@ func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
 		},
 
 		{
-
 			name: "minus_one_becomes_max_uint64",
 
 			input: -1,
@@ -162,7 +146,6 @@ func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
 		},
 
 		{
-
 			name: "min_int64_becomes_1_shift_63",
 
 			input: -1 << 63,
@@ -172,15 +155,10 @@ func TestSystemIdentifierToUint64Y2K38(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		t.Run(tc.name, func(t *testing.T) {
-
 			actual := uint64(tc.input)
 
 			assert.Equal(t, tc.expected, actual)
-
 		})
-
 	}
-
 }

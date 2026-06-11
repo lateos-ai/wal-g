@@ -41,25 +41,19 @@ type WalMetadataUploader struct {
 }
 
 func NewWalMetadataUploader(walMetadataSetting string) (*WalMetadataUploader, error) {
-
 	if err := checkWalMetadataLevel(walMetadataSetting); err != nil {
-
 		return nil, err
-
 	}
 
 	walMetadataUploader := &WalMetadataUploader{}
 
 	if walMetadataSetting == WalBulkMetadataLevel {
-
 		walMetadataUploader.useBulkMetadataUpload = true
 
 		walMetadataUploader.walMetadataFolder = fs.NewFolder(internal.GetRelativeArchiveDataFolderPath(), "")
-
 	}
 
 	return walMetadataUploader, nil
-
 }
 
 func (u *WalMetadataUploader) UploadWalMetadata(
@@ -73,7 +67,6 @@ func (u *WalMetadataUploader) UploadWalMetadata(
 	uploader internal.Uploader,
 
 ) error {
-
 	var walMetadata WalMetadataDescription
 
 	walMetadataMap := make(map[string]WalMetadataDescription)
@@ -89,35 +82,25 @@ func (u *WalMetadataUploader) UploadWalMetadata(
 	dtoBody, err := json.Marshal(walMetadataMap)
 
 	if err != nil {
-
 		return errors.Wrapf(err, "Unable to marshal walmetadata")
-
 	}
 
 	if u.useBulkMetadataUpload {
-
 		err = u.walMetadataFolder.PutObject(walMetadataName, bytes.NewReader(dtoBody))
 
 		if err != nil {
-
 			return errors.Wrapf(err, "upload: could not Upload metadata'%s'\n", walFileName)
-
 		}
 
 		err = u.uploadBulkMetadataFile(ctx, walFileName, uploader)
-
 	} else {
-
 		err = uploader.Upload(ctx, walMetadataName, bytes.NewReader(dtoBody))
-
 	}
 
 	return errors.Wrapf(err, "upload: could not Upload metadata'%s'\n", walFileName)
-
 }
 
 func (u *WalMetadataUploader) uploadBulkMetadataFile(ctx context.Context, walFileName string, uploader internal.Uploader) error {
-
 	// Creating consolidated wal metadata only for bulk option
 
 	// Checking if the walfile name ends with "F" (last file in the series) and consolidating all
@@ -133,9 +116,7 @@ func (u *WalMetadataUploader) uploadBulkMetadataFile(ctx context.Context, walFil
 	// Parameter isSourceWalPush will identify if the source of the file is from wal-push or from wal-receive.
 
 	if walFileName[len(walFileName)-1:] != "F" {
-
 		return nil
-
 	}
 
 	walSearchString := walFileName[0 : len(walFileName)-1]
@@ -143,9 +124,7 @@ func (u *WalMetadataUploader) uploadBulkMetadataFile(ctx context.Context, walFil
 	walMetadataFiles, err := filepath.Glob(u.walMetadataFolder.GetFilePath("") + "/" + walSearchString + "*.json")
 
 	if err != nil {
-
 		return err
-
 	}
 
 	walMetadata := make(map[string]WalMetadataDescription)
@@ -153,7 +132,6 @@ func (u *WalMetadataUploader) uploadBulkMetadataFile(ctx context.Context, walFil
 	walMetadataArray := make(map[string]WalMetadataDescription)
 
 	for _, walMetadataFile := range walMetadataFiles {
-
 		// If a metadata file is corrupted after its corresponding WAL file is pushed,
 
 		// returning the error causes failure in pushing *F WAL file.
@@ -163,109 +141,78 @@ func (u *WalMetadataUploader) uploadBulkMetadataFile(ctx context.Context, walFil
 		file, err := os.ReadFile(walMetadataFile)
 
 		if err != nil {
-
 			tracelog.ErrorLogger.Printf("Unable to read walmetadata file %s", walMetadataFile)
 
 			continue
-
 		}
 
 		if err = json.Unmarshal(file, &walMetadata); err != nil {
-
 			tracelog.ErrorLogger.Printf("Unable to unmarshal walmetadata file %s into json", walMetadataFile)
 
 			continue
-
 		}
 
 		for k := range walMetadata {
-
 			walMetadataArray[k] = walMetadata[k]
-
 		}
-
 	}
 
 	dtoBody, err := json.Marshal(walMetadataArray)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if err = uploader.Upload(ctx, walSearchString+".json", bytes.NewReader(dtoBody)); err != nil {
-
 		return err
-
 	}
 
 	//Deleting the temporary metadata files created
 
 	for _, walMetadataFile := range walMetadataFiles {
-
 		if err = os.Remove(walMetadataFile); err != nil {
-
 			tracelog.InfoLogger.Printf("Unable to remove walmetadata file %s", walMetadataFile)
-
 		}
-
 	}
 
 	return errors.Wrapf(err, "Unable to upload bulk wal metadata %s", walFileName)
-
 }
 
 func checkWalMetadataLevel(walMetadataLevel string) error {
-
 	isCorrect := false
 
 	for _, level := range WalMetadataLevels {
-
 		if walMetadataLevel == level {
-
 			isCorrect = true
-
 		}
-
 	}
 
 	if !isCorrect {
-
 		return errors.Errorf("got incorrect Wal metadata  level: '%s', expected one of: '%v'",
 
 			walMetadataLevel, WalMetadataLevels)
-
 	}
 
 	return nil
-
 }
 
 func uploadLocalWalMetadata(ctx context.Context, walFilePath string, uploader internal.Uploader) error {
-
 	walMetadataSetting := viper.GetString(conf.UploadWalMetadata)
 
 	if walMetadataSetting == WalNoMetadataLevel {
-
 		return nil
-
 	}
 
 	walMetadataUploader, err := NewWalMetadataUploader(walMetadataSetting)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	fileStat, err := os.Stat(walFilePath)
 
 	if err != nil {
-
 		return errors.Wrapf(err, "upload: could not stat wal file'%s'\n", walFilePath)
-
 	}
 
 	createdTime := fileStat.ModTime().UTC()
@@ -273,25 +220,19 @@ func uploadLocalWalMetadata(ctx context.Context, walFilePath string, uploader in
 	walFileName := path.Base(walFilePath)
 
 	return walMetadataUploader.UploadWalMetadata(ctx, walFileName, createdTime, uploader)
-
 }
 
 func uploadRemoteWalMetadata(ctx context.Context, walFileName string, uploader internal.Uploader) error {
-
 	walMetadataSetting := viper.GetString(conf.UploadWalMetadata)
 
 	if walMetadataSetting == WalNoMetadataLevel {
-
 		return nil
-
 	}
 
 	walMetadataUploader, err := NewWalMetadataUploader(walMetadataSetting)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	//Identifying timestamp of the WAL file generated will be bit different as wal-receive can run from any remote
@@ -301,5 +242,4 @@ func uploadRemoteWalMetadata(ctx context.Context, walFileName string, uploader i
 	createdTime := time.Now().UTC()
 
 	return walMetadataUploader.UploadWalMetadata(ctx, walFileName, createdTime, uploader)
-
 }

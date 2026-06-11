@@ -18,7 +18,6 @@ import (
 // TODO: switch buf from MemoryBuffer to io.Reader
 
 func TestStorageApplier_Apply(t *testing.T) {
-
 	type fields struct {
 		uploader *archiveMocks.Uploader
 
@@ -46,15 +45,11 @@ func TestStorageApplier_Apply(t *testing.T) {
 
 		wantErr error
 	}{
-
 		{
-
 			name: "3_docs_closed_input_channel_initiates_upload",
 
 			fields: fields{
-
 				uploader: func() *archiveMocks.Uploader {
-
 					upl := archiveMocks.Uploader{}
 
 					buf27 := NewMemoryBuffer()
@@ -75,7 +70,6 @@ func TestStorageApplier_Apply(t *testing.T) {
 						Return(nil).Once()
 
 					return &upl
-
 				}(),
 
 				size: 256,
@@ -84,30 +78,25 @@ func TestStorageApplier_Apply(t *testing.T) {
 			},
 
 			args: args{
-
 				ctx: t.Context(),
 
 				oplogc: make(chan *models.Oplog),
 			},
 
 			ops: []*models.Oplog{
-
 				{
-
 					TS: models.Timestamp{TS: 1579002001, Inc: 1},
 
 					Data: make([]byte, 8),
 				},
 
 				{
-
 					TS: models.Timestamp{TS: 1579002002, Inc: 1},
 
 					Data: make([]byte, 9),
 				},
 
 				{
-
 					TS: models.Timestamp{TS: 1579002003, Inc: 1},
 
 					Data: make([]byte, 10),
@@ -120,13 +109,10 @@ func TestStorageApplier_Apply(t *testing.T) {
 		},
 
 		{
-
 			name: "3_docs_batch_size_initiates_upload",
 
 			fields: fields{
-
 				uploader: func() *archiveMocks.Uploader {
-
 					upl := archiveMocks.Uploader{}
 
 					buf17 := NewMemoryBuffer()
@@ -163,7 +149,6 @@ func TestStorageApplier_Apply(t *testing.T) {
 						Return(nil).Once()
 
 					return &upl
-
 				}(),
 
 				size: 16,
@@ -172,30 +157,25 @@ func TestStorageApplier_Apply(t *testing.T) {
 			},
 
 			args: args{
-
 				ctx: t.Context(),
 
 				oplogc: make(chan *models.Oplog),
 			},
 
 			ops: []*models.Oplog{
-
 				{
-
 					TS: models.Timestamp{TS: 1579002001, Inc: 1},
 
 					Data: make([]byte, 8),
 				},
 
 				{
-
 					TS: models.Timestamp{TS: 1579002002, Inc: 1},
 
 					Data: make([]byte, 9),
 				},
 
 				{
-
 					TS: models.Timestamp{TS: 1579002009, Inc: 1},
 
 					Data: make([]byte, 16),
@@ -208,13 +188,10 @@ func TestStorageApplier_Apply(t *testing.T) {
 		},
 
 		{
-
 			name: "1_doc_upload_error",
 
 			fields: fields{
-
 				uploader: func() *archiveMocks.Uploader {
-
 					upl := archiveMocks.Uploader{}
 
 					buf8 := NewMemoryBuffer()
@@ -235,7 +212,6 @@ func TestStorageApplier_Apply(t *testing.T) {
 						Return(fmt.Errorf("error while uploading stream: X")).Once()
 
 					return &upl
-
 				}(),
 
 				size: 16,
@@ -244,16 +220,13 @@ func TestStorageApplier_Apply(t *testing.T) {
 			},
 
 			args: args{
-
 				ctx: t.Context(),
 
 				oplogc: make(chan *models.Oplog),
 			},
 
 			ops: []*models.Oplog{
-
 				{
-
 					TS: models.Timestamp{TS: 1579002001, Inc: 1},
 
 					Data: make([]byte, 8),
@@ -267,11 +240,8 @@ func TestStorageApplier_Apply(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-
 		t.Run(tt.name, func(t *testing.T) {
-
 			sa := &StorageApplier{
-
 				uploader: tt.fields.uploader,
 
 				buf: NewMemoryBuffer(),
@@ -286,9 +256,7 @@ func TestStorageApplier_Apply(t *testing.T) {
 			assert.Nil(t, err)
 
 			for _, op := range tt.ops {
-
 				tt.args.oplogc <- op
-
 			}
 
 			close(tt.args.oplogc)
@@ -296,13 +264,9 @@ func TestStorageApplier_Apply(t *testing.T) {
 			err = <-errc
 
 			if tt.wantErr != nil {
-
 				assert.EqualError(t, err, tt.wantErr.Error())
-
 			} else {
-
 				assert.Nil(t, err)
-
 			}
 
 			// check if error chan is closed
@@ -312,9 +276,6 @@ func TestStorageApplier_Apply(t *testing.T) {
 			assert.False(t, ok)
 
 			tt.fields.uploader.AssertExpectations(t)
-
 		})
-
 	}
-
 }

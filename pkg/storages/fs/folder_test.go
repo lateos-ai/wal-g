@@ -13,7 +13,6 @@ import (
 )
 
 func TestFSFolder(t *testing.T) {
-
 	tmpDir := setupTmpDir(t)
 
 	defer os.RemoveAll(tmpDir)
@@ -23,11 +22,9 @@ func TestFSFolder(t *testing.T) {
 	assert.NoError(t, err)
 
 	storage.RunFolderTest(st.RootFolder(), t)
-
 }
 
 func TestDeleteObjectsRemovesEmptyDirs(t *testing.T) {
-
 	tmpDir := setupTmpDir(t)
 
 	defer os.RemoveAll(tmpDir)
@@ -61,7 +58,6 @@ func TestDeleteObjectsRemovesEmptyDirs(t *testing.T) {
 	// Delete sentinel + all data files, same as DeleteBackups does.
 
 	err = root.DeleteObjects([]storage.Object{
-
 		storage.NewLocalObject("backup_001.json.lz4", time.Time{}, 0),
 
 		storage.NewLocalObject("backup_001/pg_data/global/pg_control", time.Time{}, 0),
@@ -74,7 +70,6 @@ func TestDeleteObjectsRemovesEmptyDirs(t *testing.T) {
 	// The backup directory itself and all nested dirs must be gone.
 
 	for _, dir := range []string{
-
 		"backup_001/pg_data/global",
 
 		"backup_001/pg_data/base/1",
@@ -85,17 +80,13 @@ func TestDeleteObjectsRemovesEmptyDirs(t *testing.T) {
 
 		"backup_001",
 	} {
-
 		_, statErr := os.Stat(filepath.Join(tmpDir, dir))
 
 		assert.True(t, os.IsNotExist(statErr), "expected directory to be removed: %s", dir)
-
 	}
-
 }
 
 func TestDeleteObjectsKeepsNonEmptyDirs(t *testing.T) {
-
 	tmpDir := setupTmpDir(t)
 
 	defer os.RemoveAll(tmpDir)
@@ -119,7 +110,6 @@ func TestDeleteObjectsKeepsNonEmptyDirs(t *testing.T) {
 	// Delete only backup_001's file.
 
 	err = root.DeleteObjects([]storage.Object{
-
 		storage.NewLocalObject("backup_001/pg_data/file_a", time.Time{}, 0),
 	})
 
@@ -128,11 +118,9 @@ func TestDeleteObjectsKeepsNonEmptyDirs(t *testing.T) {
 	// backup_001 subtree must be gone.
 
 	for _, dir := range []string{"backup_001/pg_data", "backup_001"} {
-
 		_, statErr := os.Stat(filepath.Join(tmpDir, dir))
 
 		assert.True(t, os.IsNotExist(statErr), "expected directory to be removed: %s", dir)
-
 	}
 
 	// backup_002 subtree must still be intact.
@@ -140,17 +128,13 @@ func TestDeleteObjectsKeepsNonEmptyDirs(t *testing.T) {
 	_, statErr := os.Stat(filepath.Join(tmpDir, "backup_002/pg_data"))
 
 	assert.NoError(t, statErr, "backup_002/pg_data should still exist")
-
 }
 
 func setupTmpDir(t *testing.T) string {
-
 	cwd, err := filepath.Abs("./")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	// Create temp directory.
@@ -158,19 +142,14 @@ func setupTmpDir(t *testing.T) string {
 	tmpDir, err := os.MkdirTemp(cwd, "data")
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	err = os.Chmod(tmpDir, 0755)
 
 	if err != nil {
-
 		t.Log(err)
-
 	}
 
 	return tmpDir
-
 }

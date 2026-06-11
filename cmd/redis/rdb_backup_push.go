@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/databases/redis"
 	"github.com/lateos-ai/wal-g/internal/databases/redis/archive"
 	client "github.com/lateos-ai/wal-g/internal/databases/redis/client"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 )
 
 var (
@@ -20,31 +21,44 @@ var (
 
 const (
 	backupPushShortDescription = "Makes rdb backup and uploads it to storage"
-	PermanentFlag              = "permanent"
-	PermanentShorthand         = "p"
+
+	PermanentFlag = "permanent"
+
+	PermanentShorthand = "p"
 )
 
 // backupPushCmd represents the backupPush command
+
 var backupPushCmd = &cobra.Command{
-	Use:   "backup-push",
+	Use: "backup-push",
+
 	Short: backupPushShortDescription,
-	Args:  cobra.NoArgs,
+
+	Args: cobra.NoArgs,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		internal.ConfigureLimiters()
+
 		ctx := cmd.Context()
 
 		uploader, err := internal.ConfigureUploader()
+
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		// Configure folder
+
 		uploader.ChangeDirectory(utility.BaseBackupPath)
 
 		var cmdArgs []string
+
 		backupCmd, err := internal.GetCommandSettingContext(ctx, conf.NameStreamCreateCmd, cmdArgs...)
+
 		tracelog.ErrorLogger.FatalOnError(err)
 
 		redisPassword, ok := conf.GetSetting(conf.RedisPassword)
+
 		if ok && redisPassword != "" { // special hack for redis-cli
+
 			backupCmd.Env = append(backupCmd.Env, fmt.Sprintf("REDISCLI_AUTH=%s", redisPassword))
 		}
 
@@ -55,34 +69,51 @@ var backupPushCmd = &cobra.Command{
 		backupCmd.Stderr = os.Stderr
 
 		pushArgs := redis.RDBBackupPushArgs{
-			BackupCmd:       backupCmd,
-			Sharded:         sharded,
-			Uploader:        uploader,
+			BackupCmd: backupCmd,
+
+			Sharded: sharded,
+
+			Uploader: uploader,
+
 			MetaConstructor: metaConstructor,
 		}
+
 		err = redis.HandleRDBBackupPush(pushArgs)
+
 		tracelog.ErrorLogger.FatalfOnError("Redis backup creation failed: %v", err)
 	},
+
 	PreRun: func(cmd *cobra.Command, args []string) {
 		conf.RequiredSettings[conf.NameStreamCreateCmd] = true
+
 		err := internal.AssertRequiredSettingsSet()
+
 		tracelog.ErrorLogger.FatalOnError(err)
 	},
 }
 
 func init() {
 	backupPushCmd.Flags().BoolVarP(&permanent, PermanentFlag, PermanentShorthand, false, "Pushes rdb backup with 'permanent' flag")
+
 	backupPushCmd.Flags().BoolVarP(&sharded, shardedFlag, shardedShorthand, false, "Pushes sharded backup")
+
 	cmd.AddCommand(backupPushCmd)
 
 	rdbBackupPushCmd := &cobra.Command{
-		Use:    "rdb-backup-push",
-		Short:  backupPushCmd.Short,
-		Args:   backupPushCmd.Args,
-		Run:    backupPushCmd.Run,
+		Use: "rdb-backup-push",
+
+		Short: backupPushCmd.Short,
+
+		Args: backupPushCmd.Args,
+
+		Run: backupPushCmd.Run,
+
 		PreRun: backupPushCmd.PreRun,
 	}
+
 	rdbBackupPushCmd.Flags().BoolVarP(&permanent, PermanentFlag, PermanentShorthand, false, "Pushes rdb backup with 'permanent' flag")
+
 	rdbBackupPushCmd.Flags().BoolVarP(&sharded, shardedFlag, shardedShorthand, false, "Pushes sharded backup")
+
 	cmd.AddCommand(rdbBackupPushCmd)
 }

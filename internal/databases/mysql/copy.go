@@ -15,15 +15,12 @@ import (
 // HandleCopyBackup copy specific backups from one storage to another
 
 func HandleCopyBackup(fromConfigFile, toConfigFile, backupName, prefix string) {
-
 	var from, fromError = internal.StorageFromConfig(fromConfigFile)
 
 	var to, toError = internal.StorageFromConfig(toConfigFile)
 
 	if fromError != nil || toError != nil {
-
 		return
-
 	}
 
 	infos, err := backupCopyingInfo(backupName, prefix, from.RootFolder(), to.RootFolder())
@@ -31,37 +28,29 @@ func HandleCopyBackup(fromConfigFile, toConfigFile, backupName, prefix string) {
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	tracelog.DebugLogger.Printf("copying files %s\n", strings.Join(func() []string {
-
 		ret := make([]string, 0)
 
 		for _, e := range infos {
-
 			ret = append(ret, e.SrcObj.GetName())
-
 		}
 
 		return ret
-
 	}(), ","))
 
 	tracelog.ErrorLogger.FatalOnError(copy.Infos(infos))
 
 	tracelog.InfoLogger.Printf("Success copyed backup %s.\n", backupName)
-
 }
 
 // HandleCopyBackup copy  all backups from one storage to another
 
 func HandleCopyAll(fromConfigFile string, toConfigFile string) {
-
 	var from, fromError = internal.StorageFromConfig(fromConfigFile)
 
 	var to, toError = internal.StorageFromConfig(toConfigFile)
 
 	if fromError != nil || toError != nil {
-
 		return
-
 	}
 
 	infos, err := WildcardInfo(from.RootFolder(), to.RootFolder())
@@ -73,19 +62,15 @@ func HandleCopyAll(fromConfigFile string, toConfigFile string) {
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	tracelog.InfoLogger.Printf("Success copyed all backups\n")
-
 }
 
 func backupCopyingInfo(backupName, prefix string, from storage.Folder, to storage.Folder) ([]copy.InfoProvider, error) {
-
 	tracelog.InfoLogger.Printf("Handle backupname '%s'.", backupName)
 
 	backup, err := internal.GetBackupByName(backupName, utility.BaseBackupPath, from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	tracelog.InfoLogger.Print("Collecting backup files...")
@@ -95,9 +80,7 @@ func backupCopyingInfo(backupName, prefix string, from storage.Folder, to storag
 	objects, err := storage.ListFolderRecursively(from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	var hasBackupPrefix = func(object storage.Object) bool { return strings.HasPrefix(object.GetName(), backupPrefix) }
@@ -113,24 +96,18 @@ func backupCopyingInfo(backupName, prefix string, from storage.Folder, to storag
 		hasBackupPrefix,
 
 		func(object storage.Object) string {
-
 			return strings.Replace(object.GetName(), backup.Name, prefix+backup.Name, 1)
-
 		},
 
 		copy.NoopSourceTransformer,
 	), nil
-
 }
 
 func WildcardInfo(from storage.Folder, to storage.Folder) ([]copy.InfoProvider, error) {
-
 	objects, err := storage.ListFolderRecursively(from)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return copy.BuildCopyingInfos(
@@ -147,5 +124,4 @@ func WildcardInfo(from storage.Folder, to storage.Folder) ([]copy.InfoProvider, 
 
 		copy.NoopSourceTransformer,
 	), nil
-
 }

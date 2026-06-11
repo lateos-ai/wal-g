@@ -21,15 +21,11 @@ type SentinelMarshallingError struct {
 }
 
 func NewSentinelMarshallingError(sentinelName string, err error) SentinelMarshallingError {
-
 	return SentinelMarshallingError{errors.Wrapf(err, "Failed to marshall sentinel file: '%s'", sentinelName)}
-
 }
 
 func (err SentinelMarshallingError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 //endregion
@@ -73,143 +69,105 @@ type Backup struct {
 }
 
 func NewBackup(folder storage.Folder, name string) (Backup, error) {
-
 	err := multistorage.EnsureSingleStorageIsUsed(folder)
 
 	if err != nil {
-
 		return Backup{}, fmt.Errorf("create backup %s: %w", name, err)
-
 	}
 
 	return Backup{
-
 		Name: name,
 
 		Folder: folder,
 	}, nil
-
 }
 
 func NewBackupInStorage(folder storage.Folder, name, storage string) (Backup, error) {
-
 	folder, err := multistorage.UseSpecificStorage(storage, folder)
 
 	if err != nil {
-
 		return Backup{}, fmt.Errorf("create backup %s in storage %s: %w", name, storage, err)
-
 	}
 
 	return Backup{
-
 		Name: name,
 
 		Folder: folder,
 	}, nil
-
 }
 
 // getStopSentinelPath returns sentinel path.
 
 func (backup *Backup) getStopSentinelPath() string {
-
 	return SentinelNameFromBackup(backup.Name)
-
 }
 
 func (backup *Backup) getMetadataPath() string {
-
 	return backup.Name + "/" + utility.MetadataFileName
-
 }
 
 func (backup *Backup) GetTarPartitionFolder() storage.Folder {
-
 	return backup.Folder.GetSubFolder(backup.Name + TarPartitionFolderName)
-
 }
 
 // SentinelExists checks that the sentinel file of the specified backup exists.
 
 func (backup *Backup) SentinelExists() (bool, error) {
-
 	return backup.Folder.Exists(backup.getStopSentinelPath())
-
 }
 
 func (backup *Backup) FetchSentinel(sentinelDto interface{}) error {
-
 	return FetchDto(backup.Folder, sentinelDto, backup.getStopSentinelPath())
-
 }
 
 func (backup *Backup) FetchMetadata(metadataDto interface{}) error {
-
 	return FetchDto(backup.Folder, metadataDto, backup.getMetadataPath())
-
 }
 
 func (backup *Backup) UploadMetadata(metadataDto interface{}) error {
-
 	return UploadDto(backup.Folder, metadataDto, backup.getMetadataPath())
-
 }
 
 func (backup *Backup) UploadSentinel(sentinelDto interface{}) error {
-
 	return UploadDto(backup.Folder, sentinelDto, backup.getStopSentinelPath())
-
 }
 
 // FetchDto gets data from path and de-serializes it to given object
 
 func FetchDto(folder storage.Folder, dto interface{}, path string) error {
-
 	backupReaderMaker := NewStorageReaderMaker(folder, path)
 
 	reader, err := backupReaderMaker.Reader()
 
 	if err != nil {
-
 		return err
-
 	}
 
 	defer utility.LoggedClose(reader, fmt.Sprintf("failed to close reader for %s", path))
 
 	return errors.Wrap(jsonv2.UnmarshalRead(reader, dto, json.DefaultOptionsV1()), fmt.Sprintf("failed to fetch dto from %s", path))
-
 }
 
 // UploadDto serializes given object to JSON and puts it to path
 
 func UploadDto(folder storage.Folder, dto interface{}, path string) error {
-
 	r, w := io.Pipe()
 
 	go func() {
-
 		_ = w.CloseWithError(jsonv2.MarshalWrite(w, dto, json.DefaultOptionsV1()))
-
 	}()
 
 	return folder.PutObject(path, r)
-
 }
 
 func (backup *Backup) CheckExistence() (bool, error) {
-
 	exists, err := backup.SentinelExists()
 
 	if err != nil {
-
 		return false, errors.Wrap(err, "failed to check if backup sentinel exists")
-
 	}
 
 	return exists, nil
-
 }
 
 // AssureExists is similar to CheckExistence, but returns
@@ -221,45 +179,33 @@ func (backup *Backup) CheckExistence() (bool, error) {
 // 2. Failed to check if backup exist
 
 func (backup *Backup) AssureExists() error {
-
 	exists, err := backup.CheckExistence()
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if !exists {
-
 		return NewBackupNonExistenceError(backup.Name)
-
 	}
 
 	return nil
-
 }
 
 func (backup *Backup) GetStorageName() string {
-
 	return multistorage.UsedStorages(backup.Folder)[0]
-
 }
 
 func UploadMetadata(uploader Uploader, metadataDto interface{}, backupName string) error {
-
 	metadataName := MetadataNameFromBackup(backupName)
 
 	return UploadDto(uploader.Folder(), metadataDto, metadataName)
-
 }
 
 func UploadSentinel(uploader Uploader, sentinelDto interface{}, backupName string) error {
-
 	sentinelName := SentinelNameFromBackup(backupName)
 
 	return UploadDto(uploader.Folder(), sentinelDto, sentinelName)
-
 }
 
 type ErrWaiter interface {

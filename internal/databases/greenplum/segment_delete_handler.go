@@ -38,7 +38,6 @@ type SegDeleteBeforeHandler struct {
 func NewSegDeleteHandler(rootFolder storage.Folder, contentID int, args DeleteArgs, delType SegDeleteType,
 
 ) (SegDeleteHandler, error) {
-
 	segFolder := rootFolder.GetSubFolder(FormatSegmentStoragePrefix(contentID))
 
 	permanentBackups, permanentWals := GetPermanentBackupsAndWals(rootFolder, contentID)
@@ -46,17 +45,13 @@ func NewSegDeleteHandler(rootFolder storage.Folder, contentID int, args DeleteAr
 	segDeleteHandler, err := postgres.NewDeleteHandler(segFolder, permanentBackups, permanentWals, false)
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	switch delType {
-
 	case SegDeleteBefore:
 
 		return &SegDeleteBeforeHandler{
-
 			DeleteHandler: segDeleteHandler,
 
 			contentID: contentID,
@@ -67,7 +62,6 @@ func NewSegDeleteHandler(rootFolder storage.Folder, contentID int, args DeleteAr
 	case SegDeleteTarget:
 
 		return &SegDeleteTargetHandler{
-
 			DeleteHandler: segDeleteHandler,
 
 			contentID: contentID,
@@ -78,19 +72,14 @@ func NewSegDeleteHandler(rootFolder storage.Folder, contentID int, args DeleteAr
 	default:
 
 		return nil, fmt.Errorf("unknown segment delete handler type")
-
 	}
-
 }
 
 func (h SegDeleteBeforeHandler) Delete(segBackup SegBackup) error {
-
 	segTarget, err := h.FindTargetByName(segBackup.Name)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf("Running delete before target %s on segment %d\n",
@@ -100,7 +89,6 @@ func (h SegDeleteBeforeHandler) Delete(segBackup SegBackup) error {
 	filterFunc := func(object storage.Object) bool { return true }
 
 	folderFilter := func(folderPath string) bool {
-
 		aoSegFolderPrefix := path.Join(utility.BaseBackupPath, AoStoragePath)
 
 		paxFolderPrefix := path.Join(utility.BaseBackupPath, pax.StoragePath)
@@ -108,25 +96,19 @@ func (h SegDeleteBeforeHandler) Delete(segBackup SegBackup) error {
 		return !strings.HasPrefix(folderPath, aoSegFolderPrefix) &&
 
 			!strings.HasPrefix(folderPath, paxFolderPrefix)
-
 	}
 
 	err = h.DeleteBeforeTargetWhere(segTarget, h.args.Confirmed, filterFunc, folderFilter)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if err := cleanupAOSegments(segTarget, h.Folder, h.args.Confirmed); err != nil {
-
 		return err
-
 	}
 
 	return cleanupPaxFiles(segTarget, h.Folder, h.args.Confirmed)
-
 }
 
 type SegDeleteTargetHandler struct {
@@ -138,13 +120,10 @@ type SegDeleteTargetHandler struct {
 }
 
 func (h SegDeleteTargetHandler) Delete(segBackup SegBackup) error {
-
 	segTarget, err := h.FindTargetByName(segBackup.Name)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	tracelog.InfoLogger.Printf("Running delete target %s on segment %d\n",
@@ -152,49 +131,37 @@ func (h SegDeleteTargetHandler) Delete(segBackup SegBackup) error {
 		segTarget.GetBackupName(), h.contentID)
 
 	folderFilter := func(folderPath string) bool {
-
 		return !strings.HasPrefix(folderPath, AoStoragePath) &&
 
 			!strings.HasPrefix(folderPath, pax.StoragePath)
-
 	}
 
 	err = h.DeleteTarget(segTarget, h.args.Confirmed, h.args.FindFull, folderFilter)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if err := cleanupAOSegments(segTarget, h.Folder, h.args.Confirmed); err != nil {
-
 		return err
-
 	}
 
 	return cleanupPaxFiles(segTarget, h.Folder, h.args.Confirmed)
-
 }
 
 // TODO: unit tests
 
 func cleanupAOSegments(target internal.BackupObject, segFolder storage.Folder, confirmed bool) error {
-
 	aoSegFolder := segFolder.GetSubFolder(utility.BaseBackupPath).GetSubFolder(AoStoragePath)
 
 	aoSegmentsToRetain, err := LoadStorageAoFiles(segFolder.GetSubFolder(utility.BaseBackupPath))
 
 	if err != nil {
-
 		return err
-
 	}
 
 	for segPath := range aoSegmentsToRetain {
-
 		tracelog.DebugLogger.Printf("%s is still used, retaining...\n", segPath)
-
 	}
 
 	tracelog.InfoLogger.Printf("Cleaning up the AO segment objects")
@@ -202,25 +169,19 @@ func cleanupAOSegments(target internal.BackupObject, segFolder storage.Folder, c
 	aoSegmentsToDelete, err := findAoSegmentsToDelete(target, aoSegmentsToRetain, aoSegFolder)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if !confirmed {
-
 		return nil
-
 	}
 
 	return aoSegFolder.DeleteObjects(aoSegmentsToDelete)
-
 }
 
 func GetPermanentBackupsAndWals(rootFolder storage.Folder, contentID int) (map[postgres.PermanentObject]bool,
 
 	map[postgres.PermanentObject]bool) {
-
 	tracelog.InfoLogger.Println("retrieving permanent objects")
 
 	folder := rootFolder.GetSubFolder(FormatSegmentStoragePrefix(contentID))
@@ -228,21 +189,17 @@ func GetPermanentBackupsAndWals(rootFolder storage.Folder, contentID int) (map[p
 	backupTimes, err := internal.GetBackups(folder.GetSubFolder(utility.BaseBackupPath))
 
 	if err != nil {
-
 		tracelog.WarningLogger.Println("Error while fetching backups")
 
 		return map[postgres.PermanentObject]bool{}, map[postgres.PermanentObject]bool{}
-
 	}
 
 	restorePointMetas, err := FetchAllRestorePoints(rootFolder)
 
 	if err != nil {
-
 		tracelog.WarningLogger.Println("Error while fetching restore points")
 
 		return map[postgres.PermanentObject]bool{}, map[postgres.PermanentObject]bool{}
-
 	}
 
 	backupsFolder := folder.GetSubFolder(utility.BaseBackupPath)
@@ -252,59 +209,47 @@ func GetPermanentBackupsAndWals(rootFolder storage.Folder, contentID int) (map[p
 	permanentWals := map[postgres.PermanentObject]bool{}
 
 	for _, backupTime := range backupTimes {
-
 		backup, err := postgres.NewBackupInStorage(backupsFolder, backupTime.BackupName, backupTime.StorageName)
 
 		if err != nil {
-
 			internal.FatalOnUnrecoverableMetadataError(backupTime, err)
 
 			continue
-
 		}
 
 		meta, err := backup.FetchMeta()
 
 		if err != nil {
-
 			internal.FatalOnUnrecoverableMetadataError(backupTime, err)
 
 			continue
-
 		}
 
 		restorePoint, err := FindRestorePointWithTS(meta.StartTime.Format(time.RFC3339), restorePointMetas)
 
 		if err != nil {
-
 			internal.FatalOnUnrecoverableMetadataError(backupTime, err)
 
 			continue
-
 		}
 
 		restorePointMeta, err := FetchRestorePointMetadata(rootFolder, restorePoint)
 
 		if err != nil {
-
 			internal.FatalOnUnrecoverableMetadataError(backupTime, err)
 
 			continue
-
 		}
 
 		if meta.IsPermanent {
-
 			timelineID, err := postgres.ParseTimelineFromBackupName(backup.Name)
 
 			if err != nil {
-
 				tracelog.ErrorLogger.Printf("failed to parse backup timeline for backup %s with error %s, ignoring...",
 
 					backupTime.BackupName, err.Error())
 
 				continue
-
 			}
 
 			startWalSegmentNo := postgres.NewWalSegmentNo(meta.StartLsn - 1)
@@ -312,11 +257,9 @@ func GetPermanentBackupsAndWals(rootFolder storage.Folder, contentID int) (map[p
 			lsn, err := postgres.ParseLSN(restorePointMeta.LsnBySegment[contentID])
 
 			if err != nil {
-
 				tracelog.ErrorLogger.Printf("failed to parse lsn  %v\n", err)
 
 				continue
-
 			}
 
 			endWalSegmentNo := postgres.NewWalSegmentNo(lsn)
@@ -326,61 +269,47 @@ func GetPermanentBackupsAndWals(rootFolder storage.Folder, contentID int) (map[p
 				startWalSegmentNo.GetFilename(timelineID), endWalSegmentNo.GetFilename(timelineID))
 
 			for walSegmentNo := startWalSegmentNo; walSegmentNo <= endWalSegmentNo; walSegmentNo = walSegmentNo.Next() {
-
 				walObj := postgres.PermanentObject{
-
 					Name: walSegmentNo.GetFilename(timelineID),
 
 					StorageName: backupTime.StorageName,
 				}
 
 				permanentWals[walObj] = true
-
 			}
 
 			backupObj := postgres.PermanentObject{
-
 				Name: backupTime.BackupName,
 
 				StorageName: backupTime.StorageName,
 			}
 
 			permanentBackups[backupObj] = true
-
 		}
-
 	}
 
 	if len(permanentBackups) > 0 {
-
 		tracelog.InfoLogger.Printf("Found permanent objects: backups=%v, wals=%v\n",
 
 			permanentBackups, permanentWals)
-
 	}
 
 	return permanentBackups, permanentWals
-
 }
 
 // TODO: unit tests
 
 func cleanupPaxFiles(target internal.BackupObject, segFolder storage.Folder, confirmed bool) error {
-
 	paxFolder := segFolder.GetSubFolder(utility.BaseBackupPath).GetSubFolder(pax.StoragePath)
 
 	paxFilesToRetain, err := pax.LoadStoragePaxFiles(segFolder.GetSubFolder(utility.BaseBackupPath))
 
 	if err != nil {
-
 		return err
-
 	}
 
 	for paxPath := range paxFilesToRetain {
-
 		tracelog.DebugLogger.Printf("%s is still used, retaining...\n", paxPath)
-
 	}
 
 	tracelog.InfoLogger.Printf("Cleaning up the PAX file objects")
@@ -388,19 +317,14 @@ func cleanupPaxFiles(target internal.BackupObject, segFolder storage.Folder, con
 	paxFilesToDelete, err := findPaxFilesToDelete(target, paxFilesToRetain, paxFolder)
 
 	if err != nil {
-
 		return err
-
 	}
 
 	if !confirmed {
-
 		return nil
-
 	}
 
 	return paxFolder.DeleteObjects(paxFilesToDelete)
-
 }
 
 // TODO: unit tests
@@ -408,45 +332,35 @@ func cleanupPaxFiles(target internal.BackupObject, segFolder storage.Folder, con
 func findPaxFilesToDelete(target internal.BackupObject,
 
 	paxFilesToRetain map[string]struct{}, paxFolder storage.Folder) ([]storage.Object, error) {
-
 	paxObjects, _, err := paxFolder.ListFolder()
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	paxFilesToDelete := make([]storage.Object, 0)
 
 	for _, obj := range paxObjects {
-
 		if !strings.HasSuffix(obj.GetName(), pax.KeySuffix) && obj.GetLastModified().After(target.GetLastModified()) {
-
 			tracelog.DebugLogger.Println(
 
 				"\tis not a PAX file, will not delete (modify time is too recent): " + obj.GetName())
 
 			continue
-
 		}
 
 		if _, ok := paxFilesToRetain[obj.GetName()]; ok {
-
 			tracelog.DebugLogger.Println("\tis still referenced by some backups, will not delete: " + obj.GetName())
 
 			continue
-
 		}
 
 		tracelog.InfoLogger.Println("\twill be deleted: " + obj.GetName())
 
 		paxFilesToDelete = append(paxFilesToDelete, obj)
-
 	}
 
 	return paxFilesToDelete, nil
-
 }
 
 // TODO: unit tests
@@ -454,45 +368,35 @@ func findPaxFilesToDelete(target internal.BackupObject,
 func findAoSegmentsToDelete(target internal.BackupObject,
 
 	aoSegmentsToRetain map[string]struct{}, aoSegFolder storage.Folder) ([]storage.Object, error) {
-
 	aoObjects, _, err := aoSegFolder.ListFolder()
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	aoSegmentsToDelete := make([]storage.Object, 0)
 
 	for _, obj := range aoObjects {
-
 		if !strings.HasSuffix(obj.GetName(), AoSegSuffix) && obj.GetLastModified().After(target.GetLastModified()) {
-
 			tracelog.DebugLogger.Println(
 
 				"\tis not an AO segment file, will not delete (modify time is too recent): " + obj.GetName())
 
 			continue
-
 		}
 
 		if _, ok := aoSegmentsToRetain[obj.GetName()]; ok {
-
 			// this AO segment file is still referenced by some backup, skip it
 
 			tracelog.DebugLogger.Println("\tis still referenced by some backups, will not delete: " + obj.GetName())
 
 			continue
-
 		}
 
 		tracelog.InfoLogger.Println("\twill be deleted: " + obj.GetName())
 
 		aoSegmentsToDelete = append(aoSegmentsToDelete, obj)
-
 	}
 
 	return aoSegmentsToDelete, nil
-
 }

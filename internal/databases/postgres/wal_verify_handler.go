@@ -21,15 +21,11 @@ const (
 )
 
 func (checkType WalVerifyCheckType) String() string {
-
 	return [...]string{"", "integrity", "timeline"}[checkType]
-
 }
 
 func (checkType WalVerifyCheckType) MarshalText() (text []byte, err error) {
-
 	return utility.MarshalEnumToString(checkType)
-
 }
 
 type UnknownWalVerifyCheckError struct {
@@ -37,15 +33,11 @@ type UnknownWalVerifyCheckError struct {
 }
 
 func NewUnknownWalVerifyCheckError(checkType WalVerifyCheckType) UnknownWalVerifyCheckError {
-
 	return UnknownWalVerifyCheckError{errors.Errorf("Unknown wal verify check: %s", checkType)}
-
 }
 
 func (err UnknownWalVerifyCheckError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type WalVerifyCheckStatus int
@@ -59,17 +51,13 @@ const (
 )
 
 func (status WalVerifyCheckStatus) String() string {
-
 	return [...]string{"", "OK", "WARNING", "FAILURE"}[status]
-
 }
 
 // MarshalText marshals the WalVerifyCheckStatus enum as a string
 
 func (status WalVerifyCheckStatus) MarshalText() ([]byte, error) {
-
 	return utility.MarshalEnumToString(status)
-
 }
 
 // WalVerifyCheckRunner performs the check of WAL storage
@@ -90,7 +78,6 @@ type WalVerifyCheckResult struct {
 
 type WalVerifyCheckDetails interface {
 	NewPlainTextReader() (io.Reader, error) // used in plaintext output
-
 }
 
 type NoCorrectBackupFoundError struct {
@@ -98,15 +85,11 @@ type NoCorrectBackupFoundError struct {
 }
 
 func newNoCorrectBackupFoundError() NoCorrectBackupFoundError {
-
 	return NoCorrectBackupFoundError{errors.Errorf("Could not find any correct backup in storage")}
-
 }
 
 func (err NoCorrectBackupFoundError) Error() string {
-
 	return fmt.Sprintf(tracelog.GetErrorFormatter(), err.error)
-
 }
 
 type BackupSearchParams struct {
@@ -118,7 +101,6 @@ type BackupSearchParams struct {
 // QueryCurrentWalSegment() gets start WAL segment from Postgres cluster
 
 func QueryCurrentWalSegment() WalSegmentDescription {
-
 	// No request ctx plumbed to this entry point yet; revisit when callers thread ctx.
 
 	ctx := context.Background()
@@ -148,7 +130,6 @@ func QueryCurrentWalSegment() WalSegmentDescription {
 	// currentSegment is the current WAL segment of the cluster
 
 	return WalSegmentDescription{Timeline: currentTimeline, Number: currentSegmentNo}
-
 }
 
 func BuildWalVerifyCheckRunner(
@@ -164,13 +145,11 @@ func BuildWalVerifyCheckRunner(
 	backupSearchParams BackupSearchParams,
 
 ) (WalVerifyCheckRunner, error) {
-
 	var checkRunner WalVerifyCheckRunner
 
 	var err error
 
 	switch checkType {
-
 	case WalVerifyTimelineCheck:
 
 		checkRunner, err = NewTimelineCheckRunner(walFolderFilenames, currentWalSegment)
@@ -182,17 +161,13 @@ func BuildWalVerifyCheckRunner(
 	default:
 
 		return nil, NewUnknownWalVerifyCheckError(checkType)
-
 	}
 
 	if err != nil {
-
 		return nil, err
-
 	}
 
 	return checkRunner, nil
-
 }
 
 // HandleWalVerify builds a check runner for each check type
@@ -212,7 +187,6 @@ func HandleWalVerify(
 	outputWriter WalVerifyOutputWriter,
 
 ) {
-
 	checkResults := make(map[WalVerifyCheckType]WalVerifyCheckResult, len(checkTypes))
 
 	// pre-fetch WAL folder filenames to reduce storage load
@@ -222,7 +196,6 @@ func HandleWalVerify(
 	tracelog.ErrorLogger.FatalfOnError("Failed to fetch WAL folder filenames: %v", err)
 
 	for _, checkType := range checkTypes {
-
 		tracelog.InfoLogger.Printf("Building check runner: %s\n", checkType)
 
 		runner, err := BuildWalVerifyCheckRunner(checkType, rootFolder, walFolderFilenames, currentWalSegment, backupSearchParams)
@@ -240,35 +213,27 @@ func HandleWalVerify(
 			fmt.Sprintf("Failed to run the check %s:", checkType), err)
 
 		checkResults[runner.Type()] = result
-
 	}
 
 	err = outputWriter.Write(checkResults)
 
 	tracelog.ErrorLogger.FatalOnError(err)
-
 }
 
 // get the current wal segment number of the cluster
 
 func getCurrentWalSegmentNo(ctx context.Context, queryRunner *PgQueryRunner) (WalSegmentNo, error) {
-
 	lsnStr, err := queryRunner.getCurrentLsn(ctx)
 
 	if err != nil {
-
 		return 0, err
-
 	}
 
 	lsn, err := ParseLSN(lsnStr)
 
 	if err != nil {
-
 		return 0, err
-
 	}
 
 	return NewWalSegmentNo(lsn - 1), nil
-
 }

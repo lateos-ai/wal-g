@@ -17,7 +17,6 @@ type TimelineCheckDetails struct {
 }
 
 func (details TimelineCheckDetails) NewPlainTextReader() (io.Reader, error) {
-
 	var outputBuffer bytes.Buffer
 
 	fmt.Fprintf(&outputBuffer, "Highest timeline found in storage: %d\n",
@@ -29,7 +28,6 @@ func (details TimelineCheckDetails) NewPlainTextReader() (io.Reader, error) {
 		details.CurrentTimelineID)
 
 	return &outputBuffer, nil
-
 }
 
 // TimelineCheckRunner is used to verify that the current timeline
@@ -43,31 +41,23 @@ type TimelineCheckRunner struct {
 }
 
 func (check TimelineCheckRunner) Name() string {
-
 	return "TimelineCheck"
-
 }
 
 func NewTimelineCheckRunner(walFolderFilenames []string,
 
 	currentSegment WalSegmentDescription) (TimelineCheckRunner, error) {
-
 	return TimelineCheckRunner{currentTimeline: currentSegment.Timeline, walFolderFilenames: walFolderFilenames}, nil
-
 }
 
 func (check TimelineCheckRunner) Run() (WalVerifyCheckResult, error) {
-
 	highestTimeline := tryFindHighestTimelineID(check.walFolderFilenames)
 
 	return newTimelineCheckResult(check.currentTimeline, highestTimeline), nil
-
 }
 
 func (check TimelineCheckRunner) Type() WalVerifyCheckType {
-
 	return WalVerifyTimelineCheck
-
 }
 
 // newTimelineCheckResult check produces the WalVerifyCheckResult with status:
@@ -79,13 +69,10 @@ func (check TimelineCheckRunner) Type() WalVerifyCheckType {
 // StatusFailure if current timeline is not equal to the highest timeline id found in storage
 
 func newTimelineCheckResult(currentTimeline, highestTimeline uint32) WalVerifyCheckResult {
-
 	result := WalVerifyCheckResult{
-
 		Status: StatusWarning,
 
 		Details: TimelineCheckDetails{
-
 			CurrentTimelineID: currentTimeline,
 
 			HighestStorageTimelineID: highestTimeline,
@@ -93,31 +80,21 @@ func newTimelineCheckResult(currentTimeline, highestTimeline uint32) WalVerifyCh
 	}
 
 	if highestTimeline > 0 {
-
 		if currentTimeline == highestTimeline {
-
 			result.Status = StatusOk
-
 		} else {
-
 			result.Status = StatusFailure
-
 		}
-
 	}
 
 	return result
-
 }
 
 func tryFindHighestTimelineID(filenames []string) (highestTimelineID uint32) {
-
 	for _, name := range filenames {
-
 		fileTimeline, ok := tryParseTimelineID(name)
 
 		if !ok {
-
 			tracelog.WarningLogger.Printf(
 
 				"Could not parse the timeline Id from %s. Skipping...",
@@ -125,19 +102,15 @@ func tryFindHighestTimelineID(filenames []string) (highestTimelineID uint32) {
 				name)
 
 			continue
-
 		}
 
 		highestTimelineID = max(highestTimelineID, fileTimeline)
-
 	}
 
 	return highestTimelineID
-
 }
 
 func tryParseTimelineID(fileName string) (timelineID uint32, success bool) {
-
 	// try to parse timeline id from WAL segment file
 
 	baseName := utility.TrimFileExtension(fileName)
@@ -145,9 +118,7 @@ func tryParseTimelineID(fileName string) (timelineID uint32, success bool) {
 	fileTimeline, _, err := ParseWALFilename(baseName)
 
 	if err == nil {
-
 		return fileTimeline, true
-
 	}
 
 	// try to parse timeline id from .history file
@@ -155,13 +126,10 @@ func tryParseTimelineID(fileName string) (timelineID uint32, success bool) {
 	matchResult := timelineHistoryFileRegexp.FindStringSubmatch(baseName)
 
 	if len(matchResult) < 2 {
-
 		return 0, false
-
 	}
 
 	fileTimeline, err = ParseTimelineFromString(matchResult[1])
 
 	return fileTimeline, err == nil
-
 }

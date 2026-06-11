@@ -13,15 +13,12 @@ import (
 )
 
 func TestGetMaxConcurrency_InvalidKey(t *testing.T) {
-
 	_, err := config.GetMaxConcurrency("INVALID_KEY")
 
 	assert.Error(t, err)
-
 }
 
 func TestGetMaxConcurrency_ValidKey(t *testing.T) {
-
 	viper.Set(config.UploadConcurrencySetting, "100")
 
 	actual, err := config.GetMaxConcurrency(config.UploadConcurrencySetting)
@@ -31,11 +28,9 @@ func TestGetMaxConcurrency_ValidKey(t *testing.T) {
 	assert.Equal(t, 100, actual)
 
 	resetToDefaults()
-
 }
 
 func TestGetMaxConcurrency_ValidKeyAndNegativeValue(t *testing.T) {
-
 	viper.Set(config.UploadConcurrencySetting, "-5")
 
 	_, err := config.GetMaxConcurrency(config.UploadConcurrencySetting)
@@ -43,11 +38,9 @@ func TestGetMaxConcurrency_ValidKeyAndNegativeValue(t *testing.T) {
 	assert.Error(t, err)
 
 	resetToDefaults()
-
 }
 
 func TestGetMaxConcurrency_ValidKeyAndInvalidValue(t *testing.T) {
-
 	viper.Set(config.UploadConcurrencySetting, "invalid")
 
 	_, err := config.GetMaxConcurrency(config.UploadConcurrencySetting)
@@ -55,17 +48,13 @@ func TestGetMaxConcurrency_ValidKeyAndInvalidValue(t *testing.T) {
 	assert.Error(t, err)
 
 	resetToDefaults()
-
 }
 
 func TestConfigureLogging_WhenLogLevelSettingIsNotSet(t *testing.T) {
-
 	assert.NoError(t, config.ConfigureLogging())
-
 }
 
 func TestConfigureLogging_WhenLogLevelSettingIsSet(t *testing.T) {
-
 	viper.Set(config.LogLevelSetting, "someOtherLevel")
 
 	err := config.ConfigureLogging()
@@ -75,11 +64,9 @@ func TestConfigureLogging_WhenLogLevelSettingIsSet(t *testing.T) {
 	assert.Error(t, tracelog.Setup(os.Stderr, viper.GetString(config.LogLevelSetting)))
 
 	resetToDefaults()
-
 }
 
 func TestConfigureLogging_WhenLogDestinationSettingIsSet(t *testing.T) {
-
 	viper.Set(config.LogLevelSetting, "/some/nonexistent/file")
 
 	err := config.ConfigureLogging()
@@ -87,19 +74,15 @@ func TestConfigureLogging_WhenLogDestinationSettingIsSet(t *testing.T) {
 	assert.Error(t, err)
 
 	resetToDefaults()
-
 }
 
 func TestInitConfigSetsConfigFilePath(t *testing.T) {
-
 	beforeCfgFile := config.CfgFile
 
 	t.Cleanup(func() {
-
 		config.CfgFile = beforeCfgFile
 
 		_ = os.Unsetenv(config.ConfigPathEnvVar)
-
 	})
 
 	config.CfgFile = ""
@@ -115,11 +98,9 @@ func TestInitConfigSetsConfigFilePath(t *testing.T) {
 	config.InitConfig()
 
 	assert.Equal(t, "/tmp/from-flag.json", config.CfgFile)
-
 }
 
 func resetToDefaults() {
-
 	viper.Reset()
 
 	internal.ConfigureSettings(config.PG)
@@ -127,5 +108,4 @@ func resetToDefaults() {
 	config.InitConfig()
 
 	config.Configure()
-
 }

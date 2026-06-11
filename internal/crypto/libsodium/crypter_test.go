@@ -14,38 +14,28 @@ import (
 )
 
 func TestMockCrypterFromKey_ShouldReturnErrorOnEmptyKey(t *testing.T) {
-
 	tests := map[string]struct {
 		key string
 	}{
-
 		"empty": {key: ""},
 
 		"short": {key: "short_key"},
 	}
 
 	for name, test := range tests {
-
 		t.Run(name, func(t *testing.T) {
-
 			err := CrypterFromKey(test.key, KeyTransformNone).(*Crypter).setup()
 
 			assert.Error(t, err, "no error on short key")
-
 		})
-
 	}
-
 }
 
 func TestMockCrypterFromKeyPath_ShouldReturnErrorOnNonExistentFile(t *testing.T) {
-
 	assert.Error(t, CrypterFromKeyPath("", KeyTransformNone).(*Crypter).setup(), "no error on non-existent key path")
-
 }
 
 func TestMockCrypterFromKeyPath_ShouldErrorIfTransformFails(t *testing.T) {
-
 	type TestCase struct {
 		key string
 
@@ -53,7 +43,6 @@ func TestMockCrypterFromKeyPath_ShouldErrorIfTransformFails(t *testing.T) {
 	}
 
 	testcases := []TestCase{
-
 		// valid hex, invalid length
 
 		{key: "2e4af6d03c7f73f4a80b0594dee2b4bcd11300bafb8a", transform: KeyTransformHex},
@@ -68,15 +57,11 @@ func TestMockCrypterFromKeyPath_ShouldErrorIfTransformFails(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-
 		assert.Error(t, CrypterFromKey(tc.key, tc.transform).(*Crypter).setup(), "no error on invalid encoding")
-
 	}
-
 }
 
 func EncryptionCycle(t *testing.T, crypter crypto.Crypter) {
-
 	secret := strings.Repeat(" so very secret thing ", 1000)
 
 	reader, writer := io.Pipe()
@@ -90,11 +75,9 @@ func EncryptionCycle(t *testing.T, crypter crypto.Crypter) {
 	assert.NoErrorf(t, err, "decryption error: %v", err)
 
 	go func() {
-
 		encrypt.Write([]byte(secret))
 
 		encrypt.Close()
-
 	}()
 
 	decrypted, err := io.ReadAll(decrypt)
@@ -112,11 +95,9 @@ func EncryptionCycle(t *testing.T, crypter crypto.Crypter) {
 	assert.Equal(t, n, 0, "decryptor should not read any more data after ReadAll")
 
 	assert.Error(t, io.EOF, "decryptor should keep returning EOF error")
-
 }
 
 func TestEncryptionCycleFromKey(t *testing.T) {
-
 	type TestCase struct {
 		keyInline string
 
@@ -124,7 +105,6 @@ func TestEncryptionCycleFromKey(t *testing.T) {
 	}
 
 	var testcases = []TestCase{
-
 		{keyInline: "TEST_LIBSODIUM_KEY_______", keyTransform: KeyTransformNone},
 
 		{keyInline: "4c0829fdfe7ae1987918edc585b1a90556d901eaea963c7625bb5734576dfb59", keyTransform: KeyTransformHex},
@@ -133,17 +113,13 @@ func TestEncryptionCycleFromKey(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-
 		crypter := CrypterFromKey(tc.keyInline, tc.keyTransform).(*Crypter)
 
 		EncryptionCycle(t, crypter)
-
 	}
-
 }
 
 func TestEncryptionCycleFromKeyPath(t *testing.T) {
-
 	type TestCase struct {
 		keyPath string
 
@@ -151,7 +127,6 @@ func TestEncryptionCycleFromKeyPath(t *testing.T) {
 	}
 
 	var testcases = []TestCase{
-
 		{keyPath: "./testdata/testKey", keyTransform: KeyTransformNone},
 
 		{keyPath: "./testdata/testKeyHex", keyTransform: KeyTransformHex},
@@ -160,11 +135,8 @@ func TestEncryptionCycleFromKeyPath(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-
 		crypter := CrypterFromKeyPath(tc.keyPath, tc.keyTransform).(*Crypter)
 
 		EncryptionCycle(t, crypter)
-
 	}
-
 }
