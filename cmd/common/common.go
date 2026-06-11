@@ -222,19 +222,11 @@ func initHelp(cmd *cobra.Command) {
 // hide global config flags from all subcommands except the "flags" subcommand
 
 func hideGlobalConfigFlags(cmd *cobra.Command) {
-
 	if cmd != FlagsCmd {
-
 		cmd.Root().PersistentFlags().VisitAll(func(f *pflag.Flag) {
-
 			if _, ok := f.Annotations[hiddenConfigFlagAnnotation]; ok {
-
 				f.Hidden = true
-
 			}
-
 		})
-
 	}
-
 }
