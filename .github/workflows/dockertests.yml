@@ -123,11 +123,9 @@ jobs:
             ${{ env.CACHE_FILE_SWIFT }}
           key: ${{ env.IMAGES_CACHE_KEY }}
 
-      - name: Fail if no cached images
+      - name: Build images if cache miss
         if: steps.cache-images.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to fetch cached docker images. Will now exit..."
-          exit 1
+        run: make pg_save_image
 
       - name: Run test
         run: ${{ matrix.command }}
