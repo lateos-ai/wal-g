@@ -369,7 +369,8 @@ gp_integration_test: pull_external_images load_docker_common
 	docker compose build gp_tests
 	docker compose up --pull never --exit-code-from gp_tests gp_tests
 
-cloudberry_build: gp_build
+cloudberry_build:
+	$(MAKE) gp_build USE_LIBSODIUM=
 
 cloudberry_clean: gp_clean
 
