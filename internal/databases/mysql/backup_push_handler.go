@@ -267,9 +267,7 @@ func handleXtrabackupBackup(
 
 	tmpDirRoot := "/tmp" // There is no Percona XtraBackup for Windows (c) @PeterZaitsev
 
-	xtrabackupExtraDirectory, err := prepareTemporaryDirectory(tmpDirRoot)
-
-	tracelog.ErrorLogger.FatalfOnError("failed to prepare tmp directory for diff-backup: %v", err)
+	xtrabackupExtraDirectory := prepareTemporaryDirectory(tmpDirRoot)
 
 	enrichBackupArgs(backupCmd, xtrabackupExtraDirectory, isFullBackup, prevBackupInfo)
 
