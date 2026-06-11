@@ -21,9 +21,9 @@ type Reader struct {
 
 func NewReader(ctx context.Context, reader io.Reader, limiter *rate.Limiter) *Reader {
 	return &Reader{
-		reader: reader,
+		reader:  reader,
 		limiter: limiter,
-		ctx: ctx,
+		ctx:     ctx,
 	}
 }
 

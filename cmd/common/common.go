@@ -124,7 +124,6 @@ Use "{{.CommandPath}} [command] --help" for more information about a command.{{e
 const hiddenConfigFlagAnnotation = "walg_annotation_hidden_config_flag"
 
 func Init(cmd *cobra.Command, dbName string) {
-
 	internal.ConfigureSettings(dbName)
 
 	cobra.OnInitialize(conf.InitConfig, conf.Configure)
@@ -134,90 +133,61 @@ func Init(cmd *cobra.Command, dbName string) {
 	conf.AddConfigFlags(cmd, hiddenConfigFlagAnnotation)
 
 	cmd.PersistentFlags().StringVar(
-
 		&conf.CfgFile,
-
 		"config",
-
 		"",
-
 		"config file (default is $HOME/.walg.json, can also be set via WALG_CONFIG_PATH env var)",
 	)
 
 	initHelp(cmd)
 
 	// Add flags subcommand
-
 	cmd.AddCommand(FlagsCmd)
 
 	// Add completion subcommand
-
 	cmd.AddCommand(CompletionCmd)
 
 	// Add storage tools
-
 	cmd.AddCommand(st.StorageToolsCmd)
 
 	// profiler
-
 	persistentPreRun := cmd.PersistentPreRun
-
 	persistentPostRun := cmd.PersistentPostRun
-
 	var p internal.ProfileStopper
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
-
 		if persistentPreRun != nil {
-
 			persistentPreRun(cmd, args)
-
 		}
 
 		var err error
-
 		p, err = internal.Profile()
-
 		tracelog.ErrorLogger.FatalOnError(err)
-
 	}
 
 	cmd.PersistentPostRun = func(cmd *cobra.Command, args []string) {
-
 		if persistentPostRun != nil {
-
 			persistentPostRun(cmd, args)
-
 		}
 
 		// metrics hook
-
 		statistics.PushMetrics()
 
 		if p != nil {
-
 			p.Stop()
-
 		}
-
 	}
 
 	// Don't run PersistentPreRun when shell autocompleting
-
 	preRun := cmd.PersistentPreRun
 
 	cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
-
 		if strings.Index(cmd.Use, cobra.ShellCompRequestCmd) == 0 {
-
 			return
-
 		}
 
 		preRun(cmd, args)
-
 	}
-
 }
 
 // setup init and usage functionality
