@@ -284,7 +284,6 @@ func SplitPurgingBackups(backups []TimedBackup,
 		}
 
 		if retainCount != nil && retainedCount < *retainCount { // TODO: fix condition, use func args
-
 			retainedCount++
 
 			tracelog.DebugLogger.Printf("Preserving backup due to retain count policy [%d/%d]: %s",
@@ -297,7 +296,6 @@ func SplitPurgingBackups(backups []TimedBackup,
 		}
 
 		if retainAfter != nil && backup.StartTime().After(*retainAfter) { // TODO: fix condition, use func args
-
 			tracelog.DebugLogger.Printf("Preserving backup due to retain time policy: %s", backup.Name())
 
 			retain[backup.Name()] = true

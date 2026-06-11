@@ -190,7 +190,6 @@ func (pageReader *incrementalPageReader) DeltaBitmapInitialize(deltaBitmap *roar
 		blockNo := it.Next()
 
 		if pageReader.FileSize >= int64(blockNo+1)*pageSize { // whole block fits into file
-
 			pageReader.Blocks = append(pageReader.Blocks, blockNo)
 		} else {
 			break
