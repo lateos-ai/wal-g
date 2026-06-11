@@ -19,6 +19,7 @@ var (
 const (
 	aofBackupPushCommandName = "aof-backup-push"
 
+	//nolint:unused
 	shardedShortDescription = "Turns on collecting slots info (use for sharded restore of sharded cluster only)"
 
 	shardedFlag = "sharded"
