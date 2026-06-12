@@ -1,5 +1,4 @@
 export GOEXPERIMENT=jsonv2
-export PKG_CONFIG_PATH := $(CURDIR)/tmp/libsodium/lib/pkgconfig
 
 MAIN_PG_PATH := main/pg
 MAIN_MYSQL_PATH := main/mysql
