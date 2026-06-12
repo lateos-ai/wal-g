@@ -429,7 +429,7 @@ unittest:
 	  printf "#include <sodium.h>\nint main(void){ return sodium_init(); }\n" > /tmp/test_sodium.c; \
 	  gcc $$CGO_CFLAGS -c /tmp/test_sodium.c -o /tmp/test_sodium.o 2>&1 && echo "C compile with sodium.h: OK" || echo "C compile with sodium.h: FAILED"; \
 	  echo "=== explicit cgo package build (forces full cgo processing) ==="; \
-	  go test -mod=vendor -c -tags "$(BUILD_TAGS)" -o /dev/null ./internal/crypto/libsodium 2>&1 | tail -10 || echo "(build test completed, see errors above if any)"; \
+	  (cd internal/crypto/libsodium && go test -c -mod=vendor -tags "$(BUILD_TAGS)" -o /dev/null . ) 2>&1 | tail -10 || echo "(build test completed, see errors above if any)"; \
 	  echo "=== END CGO DEBUG ===" ' || true
 	$(SODIUM_CGO) go vet -mod=vendor -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/... 2>/dev/null | grep -v '/libsodium' || true)
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./internal/... 2>/dev/null | grep -v '/libsodium' || true )
