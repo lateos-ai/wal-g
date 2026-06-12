@@ -10,8 +10,9 @@ readonly LIBSODIUM_VERSION=${LIBSODIUM_VERSION:-1.0.21}
 # When a system libsodium-dev (or equivalent) package is installed,
 # populate tmp/libsodium/ from it. This lets builds using the libsodium
 # build tag find the headers and static library even under -mod=vendor.
-# (Go >= 1.21 sanitizes #cgo CFLAGS/LDFLAGS directives; we rely on
-# CGO_CFLAGS/CGO_LDFLAGS from the Makefile + this tree.)
+# (Go >= 1.21 sanitizes #cgo CFLAGS/LDFLAGS directives; we avoid path
+# directives in source and rely on CGO_ENABLED + CGO_CFLAGS/CGO_LDFLAGS
+# from the Makefile + this tree.)
 if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libsodium 2>/dev/null; then
 	echo "info: system libsodium found via pkg-config"
 	INCDIR=$(pkg-config --variable=includedir libsodium 2>/dev/null)

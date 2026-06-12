@@ -3,13 +3,13 @@
 
 package libsodium
 
-// #cgo CFLAGS: -I../../../tmp/libsodium/include
-// #cgo LDFLAGS: -L../../../tmp/libsodium/lib -lsodium
-//
-// NOTE: When building with -mod=vendor (Go 1.21+), these #cgo directives
-// are sanitized for security. The Makefile exports CGO_CFLAGS/CGO_LDFLAGS
-// (pointing at the tree populated by link_libsodium.sh) so that the actual
-// include/library paths are honored.
+// NOTE: When building with -mod=vendor (Go 1.21+), #cgo path directives are
+// sanitized for security. We do not use them here. The Makefile exports (and
+// recipes prefix) CGO_ENABLED=1 CGO_CFLAGS/CGO_LDFLAGS pointing at the tree
+// populated by link_libsodium.sh so that the actual include/library paths are
+// honored. For manual builds outside of make, set CGO_ENABLED=1 plus the
+// appropriate CGO_CFLAGS/CGO_LDFLAGS before running go build/test with
+// -tags libsodium (after link_libsodium.sh or equivalent).
 
 // #include <sodium.h>
 
