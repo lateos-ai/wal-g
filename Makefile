@@ -51,8 +51,11 @@ endif
 ifdef USE_LIBSODIUM
 	# Provide CGo flags via environment variables. This bypasses Go's
 	# sanitization of #cgo CFLAGS/LDFLAGS under -mod=vendor (Go 1.21+).
-	LIBSODIUM_CFLAGS := $(shell pkg-config --cflags libsodium 2>/dev/null || echo '-I$(CURDIR)/tmp/libsodium/include')
-	LIBSODIUM_LDFLAGS := $(shell pkg-config --libs libsodium 2>/dev/null || echo '-L$(CURDIR)/tmp/libsodium/lib -lsodium')
+	# We always point at the tmp/libsodium tree that link_libsodium.sh
+	# populates (copy from system pkg or build from source) so the paths
+	# are reliably supplied via trusted CGO_* env vars.
+	LIBSODIUM_CFLAGS := -I$(CURDIR)/tmp/libsodium/include
+	LIBSODIUM_LDFLAGS := -L$(CURDIR)/tmp/libsodium/lib -lsodium
 	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
 	export CGO_LDFLAGS += $(LIBSODIUM_LDFLAGS)
 endif
