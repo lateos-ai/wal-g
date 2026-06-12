@@ -7,92 +7,51 @@ readonly OS=$(uname)
 readonly ARCH=$(uname -m)
 readonly LIBSODIUM_VERSION=${LIBSODIUM_VERSION:-1.0.21}
 
-# When system libsodium-dev is installed, copy headers/libs to tmp/libsodium/
-# so the CGo directive in crypter.go resolves correctly.
-echo "=== libsodium diagnostics ==="
-echo "gcc: $(which gcc 2>/dev/null || echo 'NOT FOUND')"
-echo "gcc version: $(gcc --version 2>&1 | head -1 || echo 'N/A')"
-echo "go version: $(go version 2>&1 || echo 'N/A')"
-echo "CGO_ENABLED: $(go env CGO_ENABLED 2>/dev/null || echo 'N/A')"
-echo "CC: $(go env CC 2>/dev/null || echo 'N/A')"
-echo "pkg-config: $(which pkg-config 2>/dev/null || echo 'NOT FOUND')"
+# When a system libsodium-dev (or equivalent) package is installed,
+# populate tmp/libsodium/ from it. This lets builds using the libsodium
+# build tag find the headers and static library even under -mod=vendor.
+# (Go >= 1.21 sanitizes #cgo CFLAGS/LDFLAGS directives; we rely on
+# CGO_CFLAGS/CGO_LDFLAGS from the Makefile + this tree.)
+if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libsodium 2>/dev/null; then
+	echo "info: system libsodium found via pkg-config"
+	INCDIR=$(pkg-config --variable=includedir libsodium 2>/dev/null)
+	LIBDIR=$(pkg-config --variable=libdir libsodium 2>/dev/null)
 
-if command -v pkg-config &>/dev/null && pkg-config --exists libsodium 2>/dev/null; then
-  echo "info: system libsodium found via pkg-config"
-  echo "pkg-config version: $(pkg-config --modversion libsodium 2>&1)"
-  echo "pkg-config cflags: $(pkg-config --cflags libsodium 2>&1)"
-  echo "pkg-config libs: $(pkg-config --libs libsodium 2>&1)"
+	mkdir -p tmp/libsodium/include tmp/libsodium/lib
 
-  INCDIR=$(pkg-config --variable=includedir libsodium 2>/dev/null)
-  LIBDIR=$(pkg-config --variable=libdir libsodium 2>/dev/null)
-  echo "INCDIR: $INCDIR"
-  echo "LIBDIR: $LIBDIR"
+	if [ -n "$INCDIR" ] && [ -d "$INCDIR" ]; then
+		[ -f "$INCDIR/sodium.h" ] && cp -f "$INCDIR/sodium.h" tmp/libsodium/include/
+		[ -d "$INCDIR/sodium" ] && cp -rf "$INCDIR/sodium" tmp/libsodium/include/
+	fi
 
-  if [ -n "$INCDIR" ]; then
-    echo "  sodium.h exists: $(test -f "$INCDIR/sodium.h" && echo YES || echo NO)"
-    echo "  sodium/ subdir: $(test -d "$INCDIR/sodium" && echo YES || echo NO)"
-  fi
+	# Fallback search for common system locations
+	if [ ! -f tmp/libsodium/include/sodium.h ]; then
+		for d in /usr/include /usr/local/include; do
+			if [ -f "$d/sodium.h" ]; then
+				cp -f "$d/sodium.h" tmp/libsodium/include/
+				[ -d "$d/sodium" ] && cp -rf "$d/sodium" tmp/libsodium/include/
+				break
+			fi
+		done
+	fi
 
-  echo "=== testing gcc preprocessor ==="
-  echo '#include <sodium.h>' | gcc -E -xc - -o /dev/null 2>&1 && echo "gcc -E: OK" || echo "gcc -E: FAILED"
-  echo "=== checking sodium_init in preprocessor output ==="
-  echo '#include <sodium.h>' | gcc -E -xc - 2>/dev/null | grep -n 'sodium_init' && echo "sodium_init found in preprocessed output" || echo "sodium_init NOT found in preprocessed output"
-  echo "=== testing CGo with libsodium (minimal program) ==="
-  CGOTEST=$(mktemp -d)
-  cat > "$CGOTEST/main.go" << 'GOEOF'
-package main
+	if [ -n "$LIBDIR" ] && [ -d "$LIBDIR" ]; then
+		cp -f "$LIBDIR"/libsodium* tmp/libsodium/lib/ 2>/dev/null || true
+	fi
+	if [ ! -f tmp/libsodium/lib/libsodium.a ]; then
+		for d in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/local/lib; do
+			if [ -f "$d/libsodium.a" ]; then
+				cp -f "$d"/libsodium* tmp/libsodium/lib/ 2>/dev/null || true
+				break
+			fi
+		done
+	fi
 
-// #include <sodium.h>
-import "C"
-
-func main() {
-    C.sodium_init()
-}
-GOEOF
-  cd "$CGOTEST" && go mod init cgotest 2>&1
-  echo "--- build without -mod vendor ---"
-  go build . 2>&1 && echo "CGo (no vendor): SUCCESS" || echo "CGo (no vendor): FAILED"
-  echo "--- build with -mod vendor ---"
-  go mod vendor 2>&1
-  go build -mod vendor . 2>&1 && echo "CGo (with vendor): SUCCESS" || echo "CGo (with vendor): FAILED"
-  echo "--- build with -mod vendor and CGO_CFLAGS ---"
-  CGO_CFLAGS="-I$CWD/tmp/libsodium/include" CGO_LDFLAGS="-L$CWD/tmp/libsodium/lib -lsodium" go build -mod vendor . 2>&1 && echo "CGo (vendor+flags): SUCCESS" || echo "CGo (vendor+flags): FAILED"
-  cd "$CWD"
-  rm -rf "$CGOTEST"
-
-  echo "=== populating tmp/libsodium/ from system ==="
-  test -d tmp/libsodium/include || mkdir -p tmp/libsodium/include
-  test -d tmp/libsodium/lib || mkdir -p tmp/libsodium/lib
-  if [ -n "$INCDIR" ] && [ -d "$INCDIR" ]; then
-    [ -f "$INCDIR/sodium.h" ] && cp -v "$INCDIR/sodium.h" tmp/libsodium/include/ 2>&1
-    [ -d "$INCDIR/sodium" ] && cp -v -r "$INCDIR/sodium" tmp/libsodium/include/ 2>&1
-  fi
-  # Fallback: search common include paths
-  if [ ! -f tmp/libsodium/include/sodium.h ]; then
-    for dir in /usr/include /usr/local/include; do
-      [ -f "$dir/sodium.h" ] && cp -v "$dir/sodium.h" tmp/libsodium/include/ && cp -v -r "$dir/sodium" tmp/libsodium/include/ 2>&1 && break
-    done
-  fi
-  if [ -n "$LIBDIR" ] && [ -d "$LIBDIR" ]; then
-    echo "  libsodium files in $LIBDIR:"
-    ls -la "$LIBDIR/libsodium"* 2>&1 || echo "    (none found)"
-    cp -v -f "$LIBDIR/libsodium"* tmp/libsodium/lib/ 2>&1 || true
-  fi
-  # Fallback: search common lib paths
-  if [ ! -f tmp/libsodium/lib/libsodium.a ]; then
-    for dir in /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/local/lib; do
-      [ -f "$dir/libsodium.a" ] && cp -v -f "$dir/libsodium"* tmp/libsodium/lib/ 2>&1 && break
-    done
-  fi
-
-  echo "=== tmp/libsodium content ==="
-  find tmp/libsodium -type f -o -type d 2>/dev/null | sort
-  echo "=== end diagnostics ==="
-  cd ${CWD}
-  exit 0
+	cd "$CWD"
+	exit 0
 fi
 
-echo "System libsodium not found, building from source"
+echo "info: no system libsodium, building from source"
 
 test -d tmp/libsodium || mkdir -p tmp/libsodium
 

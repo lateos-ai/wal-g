@@ -48,6 +48,15 @@ ifdef USE_LZO
 	BUILD_TAGS:=$(BUILD_TAGS) lzo
 endif
 
+ifdef USE_LIBSODIUM
+	# Provide CGo flags via environment variables. This bypasses Go's
+	# sanitization of #cgo CFLAGS/LDFLAGS under -mod=vendor (Go 1.21+).
+	LIBSODIUM_CFLAGS := $(shell pkg-config --cflags libsodium 2>/dev/null || echo '-I$(CURDIR)/tmp/libsodium/include')
+	LIBSODIUM_LDFLAGS := $(shell pkg-config --libs libsodium 2>/dev/null || echo '-L$(CURDIR)/tmp/libsodium/lib -lsodium')
+	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
+	export CGO_LDFLAGS += $(LIBSODIUM_LDFLAGS)
+endif
+
 BUILD_GCFLAGS := 
 
 ifdef ENABLE_DEBUG
