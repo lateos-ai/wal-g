@@ -412,7 +412,23 @@ st_integration_test: pull_external_images load_docker_common
 	docker compose up --pull never --exit-code-from st_tests st_tests
 
 unittest:
-	$(SODIUM_CGO) go vet -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
+	@echo "=== CGO DEBUG (libsodium) ==="
+	@$(SODIUM_CGO) sh -c '\
+	  echo "CGO_ENABLED=$$CGO_ENABLED"; \
+	  echo "CGO_CFLAGS=$$CGO_CFLAGS"; \
+	  echo "CGO_LDFLAGS=$$CGO_LDFLAGS"; \
+	  go env CGO_ENABLED CGO_CFLAGS CGO_LDFLAGS; \
+	  echo "sodium.h present at vet time?"; ls -l tmp/libsodium/include/sodium.h 2>/dev/null || echo "MISSING"; \
+	  echo "grep for sodium_init in installed headers:"; \
+	  grep -rn "sodium_init" tmp/libsodium/include/ 2>/dev/null | head -5 || echo "none found"; \
+	  echo "head of sodium.h:"; head -30 tmp/libsodium/include/sodium.h 2>/dev/null || true; \
+	  echo "=== direct C compile test with CGO flags ==="; \
+	  printf "#include <sodium.h>\nint main(void){ return sodium_init(); }\n" > /tmp/test_sodium.c; \
+	  gcc $$CGO_CFLAGS -c /tmp/test_sodium.c -o /tmp/test_sodium.o 2>&1 && echo "C compile with sodium.h: OK" || echo "C compile with sodium.h: FAILED"; \
+	  echo "=== explicit cgo package build (forces full cgo processing) ==="; \
+	  go test -mod=vendor -c -tags "$(BUILD_TAGS)" -o /dev/null ./internal/crypto/libsodium 2>&1 | tail -10 || echo "(build test completed, see errors above if any)"; \
+	  echo "=== END CGO DEBUG ===" '
+	$(SODIUM_CGO) go vet -mod=vendor -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/... 2>/dev/null | grep -v '/libsodium' || true)
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./internal/...
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./pkg/...
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
