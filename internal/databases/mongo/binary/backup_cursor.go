@@ -144,7 +144,6 @@ func (backupCursor *BackupCursor) LoadExtendedBackupCursorFiles() (backupFiles [
 
 func (backupCursor *BackupCursor) Close() {
 	if backupCursor.keepAliveStopFunction != nil { // If we start keep live
-
 		backupCursor.keepAliveStopFunction()
 	}
 
@@ -207,7 +206,6 @@ func (backupCursor *BackupCursor) createBackupFileMeta(backupFile *BackupCursorF
 	}
 
 	if backupFileMeta.FileSize <= 0 { // backupFile.FileSize contains 0 for extended backup cursor
-
 		backupFileMeta.FileSize = backupFileInfo.Size()
 	}
 

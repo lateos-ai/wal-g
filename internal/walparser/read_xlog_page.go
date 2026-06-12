@@ -59,7 +59,6 @@ func tryReadXLogRecordData(alignedReader *AlignedReader) (data []byte, whole boo
 
 	if readCount < XLogRecordHeaderSize {
 		if readCount > 0 && allZero(headerData[:readCount]) { // end of last non zero page of .partial file
-
 			return nil, false, NewZeroRecordHeaderError()
 		}
 

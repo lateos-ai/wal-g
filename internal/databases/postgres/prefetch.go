@@ -222,7 +222,6 @@ func (bundle *Bundle) prefaultFile(path string, info os.FileInfo, fileInfoHeader
 		bitmap, err := bundle.getDeltaBitmapFor(path)
 
 		if _, ok := err.(NoBitmapFoundError); !ok { // this file has changed after the start of backup, so just skip it
-
 			if err != nil {
 				return errors.Wrapf(err, "packFileIntoTar: failed to find corresponding bitmap '%s'\n", path)
 			}

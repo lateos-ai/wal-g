@@ -147,11 +147,9 @@ func (pageReader *IncrementalPageReader) DeltaBitmapInitialize(deltaBitmap *roar
 	it := deltaBitmap.Iterator()
 
 	for it.HasNext() { // TODO : do something with file truncation during reading
-
 		blockNo := it.Next()
 
 		if pageReader.FileSize >= int64(blockNo+1)*DatabasePageSize { // whole block fits into file
-
 			pageReader.Blocks = append(pageReader.Blocks, blockNo)
 		} else {
 			break
@@ -204,7 +202,6 @@ func (pageReader *IncrementalPageReader) SelectNewValidPage(pageBytes []byte, bl
 
 	if !valid {
 		if pageHeader.isNew() { // vacuumed page
-
 			isNew = true
 
 			valid = true

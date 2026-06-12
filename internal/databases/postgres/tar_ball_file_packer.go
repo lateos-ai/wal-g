@@ -167,7 +167,6 @@ func (p *TarBallFilePackerImpl) createFileReadCloser(cfi *internal.ComposeFileIn
 		bitmap, err := p.getDeltaBitmapFor(cfi.Path)
 
 		if _, ok := err.(NoBitmapFoundError); ok { // this file has changed after the start of backup, so just skip it
-
 			return nil, newSkippedFileError(cfi.Path)
 		} else if err != nil {
 			return nil, errors.Wrapf(err, "PackFileIntoTar: failed to find corresponding bitmap '%s'\n", cfi.Path)

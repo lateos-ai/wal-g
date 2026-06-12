@@ -116,7 +116,6 @@ func HandleBackupsPurge(backupTimes []internal.BackupTime,
 
 	opts PurgeSettings) (purge, retain []*models.Backup, err error) {
 	if len(backupTimes) == 0 { // TODO: refactor && support oplog purge even if backups do not exist
-
 		tracelog.InfoLogger.Println("No backups found")
 
 		return nil, nil, nil

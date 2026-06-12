@@ -45,7 +45,6 @@ func (desc RestoreDesc) IsSkipped(database, tableFile uint32) bool {
 	}
 
 	if db, ok := desc[database]; ok { // database should always exist, so this check is just in case
-
 		_, found := db[tableFile]
 
 		return !found

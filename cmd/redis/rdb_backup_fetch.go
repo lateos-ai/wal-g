@@ -51,7 +51,6 @@ var backupFetchCmd = &cobra.Command{
 		redisPassword, ok := conf.GetSetting(conf.RedisPassword)
 
 		if ok && redisPassword != "" { // special hack for redis-cli
-
 			restoreCmd.Env = append(restoreCmd.Env, fmt.Sprintf("REDISCLI_AUTH=%s", redisPassword))
 		}
 

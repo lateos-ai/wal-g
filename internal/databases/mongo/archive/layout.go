@@ -227,7 +227,6 @@ func OldestBackupAfterTime(backups []*models.Backup, after time.Time) (*models.B
 	fromRetain := oldestBackup.FinishLocalTime.Unix() - retainAfterTS
 
 	if fromRetain < 0 { // retain point is in future
-
 		return nil, fmt.Errorf("no backups newer than retain point")
 	}
 
@@ -269,7 +268,6 @@ func SelectPurgingOplogArchives(archives []models.Archive,
 		// retain if arch is in pitr period
 
 		if retainAfterTS != nil && models.LessTS(*retainAfterTS, arch.End) { // TODO: check ts is set
-
 			tracelog.DebugLogger.Printf(
 
 				"Keeping oplog archive due to retain timestamp (%+v): %s", retainAfterTS, arch.Filename())

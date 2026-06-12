@@ -58,7 +58,6 @@ var backupPushCmd = &cobra.Command{
 		redisPassword, ok := conf.GetSetting(conf.RedisPassword)
 
 		if ok && redisPassword != "" { // special hack for redis-cli
-
 			backupCmd.Env = append(backupCmd.Env, fmt.Sprintf("REDISCLI_AUTH=%s", redisPassword))
 		}
 

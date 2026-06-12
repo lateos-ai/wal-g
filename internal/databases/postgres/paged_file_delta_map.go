@@ -154,14 +154,12 @@ func GetRelFileNodeFrom(filePath string) (*walparser.RelFileNode, error) {
 	}
 
 	if folderPathParts[len(folderPathParts)-2] == DefaultTablespace { // base
-
 		return &walparser.RelFileNode{SpcNode: DefaultSpcNode,
 
 			DBNode: walparser.Oid(dbNode),
 
 			RelNode: walparser.Oid(relNode)}, nil
 	} else if strings.Contains(filePath, NonDefaultTablespace) { // pg_tblspc
-
 		spcNode, err := strconv.Atoi(folderPathParts[len(folderPathParts)-3])
 
 		if err != nil {
