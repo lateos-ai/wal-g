@@ -57,42 +57,28 @@ func TestHandleDefaultBackupList(t *testing.T) {
 		captured, _ := io.ReadAll(r)
 
 		want := `[
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:40Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default"
     },
-
     {
         "backup_name": "base_222",
-
         "time": "2023-07-22T04:26:41Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default"
     },
-
     {
         "backup_name": "base_333",
-
         "time": "2023-07-22T04:26:42Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default"
     }
-
 ]
-
 `
-
-		assert.Equal(t, want, string(captured))
+ 
+ 		assert.Equal(t, want, string(captured))
 	})
 
 	t.Run("print backups from different storages", func(t *testing.T) {
@@ -141,32 +127,22 @@ func TestHandleDefaultBackupList(t *testing.T) {
 		captured, _ := io.ReadAll(r)
 
 		want := `[
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:40Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "storage_1"
     },
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:40Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "storage_2"
     }
-
 ]
-
 `
-
-		assert.Equal(t, want, string(captured))
+ 
+ 		assert.Equal(t, want, string(captured))
 	})
 
 	t.Run("handle error with no backups", func(t *testing.T) {

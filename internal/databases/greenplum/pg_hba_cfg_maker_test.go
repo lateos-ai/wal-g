@@ -55,17 +55,11 @@ func TestGeneratePgHbaConf(t *testing.T) {
 	}
 
 	expectedOutput := greenplum.PgHbaTemplate + `
-
 host    all             all             mdw              trust
-
 host    all             gpadmin         sdw1              trust
-
 host    all             gpadmin         sdw2              trust
-
 host    replication     gpadmin         samehost                trust
-
 host    replication     gpadmin         sdw1              trust
-
 host    replication     gpadmin         sdw2              trust`
 
 	pgHbaMaker := greenplum.NewPgHbaMaker(segments)
@@ -123,17 +117,11 @@ func TestGeneratePgHbaConf_IP(t *testing.T) {
 	}
 
 	expectedOutput := greenplum.PgHbaTemplate + `
-
 host    all             all             192.168.1.1/32              trust
-
 host    all             gpadmin         192.168.1.2/32              trust
-
 host    all             gpadmin         192.168.1.3/32              trust
-
 host    replication     gpadmin         samehost                trust
-
 host    replication     gpadmin         192.168.1.2/32              trust
-
 host    replication     gpadmin         192.168.1.3/32              trust`
 
 	pgHbaMaker := greenplum.NewPgHbaMaker(segments)

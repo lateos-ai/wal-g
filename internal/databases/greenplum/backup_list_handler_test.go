@@ -60,98 +60,67 @@ func TestBackupListCorrectDetailedJsonOutput(t *testing.T) {
 
 func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
 	const expectedString = `[
-
     {
         "Name": "backup_20221212T151258Z",
-
         "restore_point": "backup_20221212T151258Z",
-
         "user_data": {
             "backup_id": "some_id1"
         },
-
         "start_time": "2022-12-12T12:12:58.287495Z",
-
         "finish_time": "2022-12-12T12:18:58.826198Z",
-
         "date_fmt": "%Y-%m-%dT%H:%M:%S.%fZ",
-
         "hostname": "some.host.name",
-
         "gp_version": "6.19.3",
-
         "gp_flavor": "greenplum",
-
         "is_permanent": false,
-
         "uncompressed_size": 2139586909,
-
         "compressed_size": 91217782,
-
         "data_catalog_size": 20161814071
     },
-
     {
         "Name": "backup_20221213T011727Z_D_20221212T151258Z",
-
         "restore_point": "backup_20221213T011727Z_D_20221212T151258Z",
-
         "user_data": {
             "backup_id": "some_id2"
         },
-
         "start_time": "2022-12-12T22:17:27.196163Z",
-
         "finish_time": "2022-12-12T22:18:27.803675Z",
-
         "date_fmt": "%Y-%m-%dT%H:%M:%S.%fZ",
-
         "hostname": "some.host.name",
-
         "gp_version": "6.19.3",
-
         "gp_flavor": "greenplum",
-
         "is_permanent": false,
-
         "uncompressed_size": 36283663,
-
         "compressed_size": 2532570,
-
         "data_catalog_size": 20161790703,
-
         "increment_from": "backup_20221212T151258Z",
-
         "increment_full_name": "backup_20221212T151258Z",
-
         "increment_count": 1
     }
-
 ]
-
 `
-
-	folder := CreateMockStorageFolder(t)
-
-	backups, err := greenplum.ListStorageBackups(folder)
-
-	assert.NoError(t, err)
-
-	details := greenplum.MakeBackupDetails(backups)
-
-	buf := new(bytes.Buffer)
-
-	printableEntities := make([]printlist.Entity, len(details))
-
-	for i := range backups {
-		printableEntities[i] = &details[i]
-	}
-
-	err = printlist.List(printableEntities, buf, true, true)
-
-	assert.NoError(t, err)
-
-	require.Equal(t, expectedString, buf.String())
+ 
+ 	folder := CreateMockStorageFolder(t)
+ 
+ 	backups, err := greenplum.ListStorageBackups(folder)
+ 
+ 	assert.NoError(t, err)
+ 
+ 	details := greenplum.MakeBackupDetails(backups)
+ 
+ 	buf := new(bytes.Buffer)
+ 
+ 	printableEntities := make([]printlist.Entity, len(details))
+ 
+ 	for i := range backups {
+ 		printableEntities[i] = &details[i]
+ 	}
+ 
+ 	err = printlist.List(printableEntities, buf, true, true)
+ 
+ 	assert.NoError(t, err)
+ 
+ 	require.Equal(t, expectedString, buf.String())
 
 	var unmarshaledDetails []greenplum.BackupDetail
 
@@ -163,33 +132,20 @@ func TestBackupListCorrectPrettyJsonOutput(t *testing.T) {
 }
 
 func TestHandleDetailedBackupListTableOutput_NonJSON(t *testing.T) {
-	const (
-		nonPrettyOutput = `
-
-name                                       restore_point                              start_time           finish_time          hostname       gp_version is_permanent
-
+ 	const (
+ 		nonPrettyOutput = `name                                       restore_point                              start_time           finish_time          hostname       gp_version is_permanent
 backup_20221212T151258Z                    backup_20221212T151258Z                    2022-12-12T12:12:58Z 2022-12-12T12:18:58Z some.host.name 6.19.3     false
-
 backup_20221213T011727Z_D_20221212T151258Z backup_20221213T011727Z_D_20221212T151258Z 2022-12-12T22:17:27Z 2022-12-12T22:18:27Z some.host.name 6.19.3     false
-
 `
-
-		prettyOutput = `
-
-+---+--------------------------------------------+--------------------------------------------+--------------------------------+--------------------------------+----------------+------------+-----------+
-
+ 
+ 		prettyOutput = `+---+--------------------------------------------+--------------------------------------------+--------------------------------+--------------------------------+----------------+------------+-----------+
 | # | NAME                                       | RESTORE POINT                              | START TIME                     | FINISH TIME                    | HOSTNAME       | GP VERSION | PERMANENT |
-
 +---+--------------------------------------------+--------------------------------------------+--------------------------------+--------------------------------+----------------+------------+-----------+
-
 | 0 | backup_20221212T151258Z                    | backup_20221212T151258Z                    | Monday, 12-Dec-22 12:12:58 UTC | Monday, 12-Dec-22 12:18:58 UTC | some.host.name | 6.19.3     | false     |
-
 | 1 | backup_20221213T011727Z_D_20221212T151258Z | backup_20221213T011727Z_D_20221212T151258Z | Monday, 12-Dec-22 22:17:27 UTC | Monday, 12-Dec-22 22:18:27 UTC | some.host.name | 6.19.3     | false     |
-
 +---+--------------------------------------------+--------------------------------------------+--------------------------------+--------------------------------+----------------+------------+-----------+
-
 `
-	)
+ 	)
 
 	rescueStdout := os.Stdout
 
