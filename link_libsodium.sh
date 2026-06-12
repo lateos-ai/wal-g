@@ -35,6 +35,30 @@ if command -v pkg-config &>/dev/null && pkg-config --exists libsodium 2>/dev/nul
 
   echo "=== testing gcc preprocessor ==="
   echo '#include <sodium.h>' | gcc -E -xc - -o /dev/null 2>&1 && echo "gcc -E: OK" || echo "gcc -E: FAILED"
+  echo "=== checking sodium_init in preprocessor output ==="
+  echo '#include <sodium.h>' | gcc -E -xc - 2>/dev/null | grep -n 'sodium_init' && echo "sodium_init found in preprocessed output" || echo "sodium_init NOT found in preprocessed output"
+  echo "=== testing CGo with libsodium (minimal program) ==="
+  CGOTEST=$(mktemp -d)
+  cat > "$CGOTEST/main.go" << 'GOEOF'
+package main
+
+// #include <sodium.h>
+import "C"
+
+func main() {
+    C.sodium_init()
+}
+GOEOF
+  cd "$CGOTEST" && go mod init cgotest 2>&1
+  echo "--- build without -mod vendor ---"
+  go build . 2>&1 && echo "CGo (no vendor): SUCCESS" || echo "CGo (no vendor): FAILED"
+  echo "--- build with -mod vendor ---"
+  go mod vendor 2>&1
+  go build -mod vendor . 2>&1 && echo "CGo (with vendor): SUCCESS" || echo "CGo (with vendor): FAILED"
+  echo "--- build with -mod vendor and CGO_CFLAGS ---"
+  CGO_CFLAGS="-I$CWD/tmp/libsodium/include" CGO_LDFLAGS="-L$CWD/tmp/libsodium/lib -lsodium" go build -mod vendor . 2>&1 && echo "CGo (vendor+flags): SUCCESS" || echo "CGo (vendor+flags): FAILED"
+  cd "$CWD"
+  rm -rf "$CGOTEST"
 
   echo "=== populating tmp/libsodium/ from system ==="
   test -d tmp/libsodium/include || mkdir -p tmp/libsodium/include
