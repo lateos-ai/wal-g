@@ -7,16 +7,10 @@ readonly OS=$(uname)
 readonly ARCH=$(uname -m)
 readonly LIBSODIUM_VERSION=${LIBSODIUM_VERSION:-1.0.21}
 
-# Prefer system-installed libsodium via pkg-config when available.
-# This avoids CGo linking issues with source-built static libraries.
+# When system libsodium-dev is installed, pkg-config finds it via default
+# paths and the CGo directive in crypter.go uses it directly — nothing to do.
 if command -v pkg-config &>/dev/null && pkg-config --exists libsodium 2>/dev/null; then
-  echo "info: system libsodium found via pkg-config, using it"
-  test -d tmp/libsodium/include || mkdir -p tmp/libsodium/include
-  test -d tmp/libsodium/lib || mkdir -p tmp/libsodium/lib
-  INCDIR=$(pkg-config --variable=includedir libsodium 2>/dev/null || pkg-config --cflags-only-I libsodium 2>/dev/null | sed 's/-I//')
-  LIBDIR=$(pkg-config --variable=libdir libsodium 2>/dev/null || pkg-config --libs-only-L libsodium 2>/dev/null | sed 's/-L//')
-  [ -n "$INCDIR" ] && [ -d "$INCDIR" ] && cp -r "$INCDIR"/sodium.h "$INCDIR"/sodium tmp/libsodium/include/ 2>/dev/null || true
-  [ -n "$LIBDIR" ] && [ -d "$LIBDIR" ] && cp -f "$LIBDIR"/libsodium* tmp/libsodium/lib/ 2>/dev/null || true
+  echo "info: system libsodium found via pkg-config, skipping source build"
   cd ${CWD}
   exit 0
 fi

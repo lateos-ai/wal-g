@@ -3,9 +3,7 @@
 
 package libsodium
 
-// #cgo CFLAGS: -I../../../tmp/libsodium/include
-
-// #cgo LDFLAGS: -L../../../tmp/libsodium/lib -lsodium
+// #cgo pkg-config: libsodium
 
 // #include <sodium.h>
 
