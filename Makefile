@@ -56,15 +56,18 @@ ifdef USE_LIBSODIUM
 	# We always point at the tmp/libsodium tree that link_libsodium.sh
 	# populates (copy from system pkg or build from source) so the paths
 	# are reliably supplied via trusted CGO_* env vars.
+	# CGO_ENABLED=1 is forced so that cgo processing (for go vet/build/test
+	# under the libsodium tag) reliably uses the provided flags.
 	LIBSODIUM_CFLAGS := -I$(CURDIR)/tmp/libsodium/include
 	LIBSODIUM_LDFLAGS := -L$(CURDIR)/tmp/libsodium/lib -lsodium
+	export CGO_ENABLED=1
 	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
 	export CGO_LDFLAGS += $(LIBSODIUM_LDFLAGS)
 	# Capture for explicit prefixing right before the 'go' command.
 	# Recipes use the form "cd $(DIR) && $(SODIUM_CGO) go build ..." so that
 	# the env var assignments are valid shell syntax (avoids "VAR=val (cd ...)"
 	# which /bin/sh rejects).
-	SODIUM_CGO := CGO_CFLAGS="$(CGO_CFLAGS)" CGO_LDFLAGS="$(CGO_LDFLAGS)"
+	SODIUM_CGO := CGO_ENABLED=1 CGO_CFLAGS="$(CGO_CFLAGS)" CGO_LDFLAGS="$(CGO_LDFLAGS)"
 endif
 
 BUILD_GCFLAGS := 
@@ -409,7 +412,7 @@ st_integration_test: pull_external_images load_docker_common
 	docker compose up --pull never --exit-code-from st_tests st_tests
 
 unittest:
-	$(SODIUM_CGO) go vet -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
+	$(SODIUM_CGO) go vet -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./internal/...
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./pkg/...
 	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
@@ -457,6 +460,9 @@ link_libsodium:
 	@if [ ! -z "${USE_LIBSODIUM}" ]; then\
 		./link_libsodium.sh;\
 		echo "info: libsodium tree after link_libsodium:"; ls -lR tmp/libsodium 2>/dev/null || true;\
+		echo "info: sodium.h present?"; ls -l tmp/libsodium/include/sodium.h 2>/dev/null || echo "MISSING sodium.h";\
+		echo "info: libsodium.a present?"; ls -l tmp/libsodium/lib/libsodium.a 2>/dev/null || echo "MISSING libsodium.a";\
+		echo "info: include/ top level:"; ls tmp/libsodium/include/ 2>/dev/null | head -10 || true;\
 	fi
 
 unlink_brotli:
