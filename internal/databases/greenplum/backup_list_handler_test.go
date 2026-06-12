@@ -206,77 +206,45 @@ func TestHandleDetailedBackupListTableOutput_JSON(t *testing.T) {
 	// NOTE: non-pretty json output is just a non-indented pretty json
 
 	const prettyJSONOutput = `
-
 [
-
     {
         "Name": "backup_20221212T151258Z",
-
         "restore_point": "backup_20221212T151258Z",
-
         "user_data": {
             "backup_id": "some_id1"
         },
-
         "start_time": "2022-12-12T12:12:58.287495Z",
-
         "finish_time": "2022-12-12T12:18:58.826198Z",
-
         "date_fmt": "%Y-%m-%dT%H:%M:%S.%fZ",
-
         "hostname": "some.host.name",
-
         "gp_version": "6.19.3",
-
         "gp_flavor": "greenplum",
-
         "is_permanent": false,
-
         "uncompressed_size": 2139586909,
-
         "compressed_size": 91217782,
-
         "data_catalog_size": 20161814071
     },
-
     {
         "Name": "backup_20221213T011727Z_D_20221212T151258Z",
-
         "restore_point": "backup_20221213T011727Z_D_20221212T151258Z",
-
         "user_data": {
             "backup_id": "some_id2"
         },
-
         "start_time": "2022-12-12T22:17:27.196163Z",
-
         "finish_time": "2022-12-12T22:18:27.803675Z",
-
         "date_fmt": "%Y-%m-%dT%H:%M:%S.%fZ",
-
         "hostname": "some.host.name",
-
         "gp_version": "6.19.3",
-
         "gp_flavor": "greenplum",
-
         "is_permanent": false,
-
         "uncompressed_size": 36283663,
-
         "compressed_size": 2532570,
-
         "data_catalog_size": 20161790703,
-
         "increment_from": "backup_20221212T151258Z",
-
         "increment_full_name": "backup_20221212T151258Z",
-
         "increment_count": 1
     }
-
 ]
-
 `
 
 	rescueStdout := os.Stdout

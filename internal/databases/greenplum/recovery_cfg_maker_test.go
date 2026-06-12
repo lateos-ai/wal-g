@@ -22,9 +22,7 @@ func TestGenerateRecoveryConf(t *testing.T) {
 	contentID := -1
 
 	expectedCfg := `restore_command = '/usr/bin/wal-g seg wal-fetch "%f" "%p" --content-id=-1 --config /etc/wal-g/wal-g.yaml'
-
 recovery_target_name = 'some_backup'
-
 recovery_target_timeline = latest`
 
 	actualCfg := recCfgMaker.Make(contentID, 90400)
@@ -38,11 +36,8 @@ func TestGenerateRecoveryConfWithShutdown(t *testing.T) {
 	contentID := -1
 
 	expectedCfg := `restore_command = '/usr/bin/wal-g seg wal-fetch "%f" "%p" --content-id=-1 --config /etc/wal-g/wal-g.yaml'
-
 recovery_target_name = 'some_backup'
-
 recovery_target_timeline = latest
-
 recovery_target_action = 'shutdown'`
 
 	actualCfg := recCfgMaker.Make(contentID, 120000)

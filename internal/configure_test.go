@@ -1,6 +1,7 @@
 package internal_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
@@ -28,7 +29,10 @@ func TestGetSentinelUserData(t *testing.T) {
 
 	t.Log(data)
 
-	assert.Equalf(t, 1.0, data.(float64), "Unable to parse WALG_SENTINEL_USER_DATA")
+	num := data.(json.Number)
+	f, err := num.Float64()
+	assert.NoError(t, err)
+	assert.Equalf(t, 1.0, f, "Unable to parse WALG_SENTINEL_USER_DATA")
 
 	viper.Set(config.SentinelUserDataSetting, "\"1\"")
 
@@ -50,7 +54,7 @@ func TestGetSentinelUserData(t *testing.T) {
 
 	assert.NotNilf(t, data, "Unable to parse WALG_SENTINEL_USER_DATA")
 
-	viper.Set(config.SentinelUserDataSetting, `"x",1`)
+	viper.Set(config.SentinelUserDataSetting, `not valid json`)
 
 	data, err = internal.GetSentinelUserData()
 

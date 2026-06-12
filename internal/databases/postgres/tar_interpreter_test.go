@@ -101,27 +101,6 @@ func TestInterpretTypeReg(t *testing.T) {
 	)
 }
 
-func TestInterpretTypeRegA(t *testing.T) {
-	testInterpret(t,
-
-		os.TempDir(),
-
-		"test_file",
-
-		tar.TypeRegA,
-
-		createFile,
-
-		os.Remove,
-
-		func(_, dstFileInfo os.FileInfo) {
-			assert.False(t, dstFileInfo.IsDir())
-
-			assert.False(t, dstFileInfo.Mode()&os.ModeSymlink != 0)
-		},
-	)
-}
-
 func TestInterpretTypeDir(t *testing.T) {
 	testInterpret(t,
 

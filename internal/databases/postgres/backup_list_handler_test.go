@@ -62,111 +62,61 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		captured, _ := io.ReadAll(r)
 
 		want := `[
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:40Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default",
-
         "start_time": "0001-01-01T00:00:00Z",
-
         "finish_time": "0001-01-01T00:00:00Z",
-
         "date_fmt": "",
-
         "hostname": "",
-
         "data_dir": "",
-
         "pg_version": 0,
-
         "start_lsn": 0,
-
         "finish_lsn": 0,
-
         "is_permanent": false,
-
         "system_identifier": null,
-
         "uncompressed_size": 0,
-
         "compressed_size": 0
     },
-
     {
         "backup_name": "base_222",
-
         "time": "2023-07-22T04:26:41Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default",
-
         "start_time": "0001-01-01T00:00:00Z",
-
         "finish_time": "0001-01-01T00:00:00Z",
-
         "date_fmt": "",
-
         "hostname": "",
-
         "data_dir": "",
-
         "pg_version": 0,
-
         "start_lsn": 0,
-
         "finish_lsn": 0,
-
         "is_permanent": false,
-
         "system_identifier": null,
-
         "uncompressed_size": 0,
-
         "compressed_size": 0
     },
-
     {
         "backup_name": "base_333",
-
         "time": "2023-07-22T04:26:42Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "default",
-
         "start_time": "0001-01-01T00:00:00Z",
-
         "finish_time": "0001-01-01T00:00:00Z",
-
         "date_fmt": "",
-
         "hostname": "",
-
         "data_dir": "",
-
         "pg_version": 0,
-
         "start_lsn": 0,
-
         "finish_lsn": 0,
-
         "is_permanent": false,
-
         "system_identifier": null,
-
         "uncompressed_size": 0,
-
         "compressed_size": 0
     }
-
 ]
-
 `
 
 		assert.Equal(t, want, string(captured))
@@ -228,77 +178,43 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		captured, _ := io.ReadAll(r)
 
 		want := `[
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:40Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "storage_1",
-
         "start_time": "0001-01-01T00:00:00Z",
-
         "finish_time": "0001-01-01T00:00:00Z",
-
         "date_fmt": "",
-
         "hostname": "",
-
         "data_dir": "",
-
         "pg_version": 0,
-
         "start_lsn": 0,
-
         "finish_lsn": 0,
-
         "is_permanent": false,
-
         "system_identifier": null,
-
         "uncompressed_size": 0,
-
         "compressed_size": 0
     },
-
     {
         "backup_name": "base_111",
-
         "time": "2023-07-22T04:26:41Z",
-
         "wal_file_name": "ZZZZZZZZZZZZZZZZZZZZZZZZ",
-
         "storage_name": "storage_2",
-
         "start_time": "0001-01-01T00:00:00Z",
-
         "finish_time": "0001-01-01T00:00:00Z",
-
         "date_fmt": "",
-
         "hostname": "",
-
         "data_dir": "",
-
         "pg_version": 0,
-
         "start_lsn": 0,
-
         "finish_lsn": 0,
-
         "is_permanent": false,
-
         "system_identifier": null,
-
         "uncompressed_size": 0,
-
         "compressed_size": 0
     }
-
 ]
-
 `
 
 		assert.Equal(t, want, string(captured))
