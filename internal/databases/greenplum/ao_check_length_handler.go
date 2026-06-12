@@ -85,7 +85,6 @@ func (checker *AOLengthCheckHandler) CheckAOTableLength(ctx context.Context) {
 		})
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		if command.Error != nil {
 			tracelog.ErrorLogger.Printf("error (segment %d):\n%v\n%s\n", command.Content, command.Error, command.Stderr)
 		}

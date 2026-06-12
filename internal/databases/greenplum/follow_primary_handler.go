@@ -160,7 +160,6 @@ func (fh *FollowPrimaryHandler) applyXLogInCluster() {
 	})
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		tracelog.DebugLogger.Printf("WAL-G output (segment %d):\n%s\n", command.Content, command.Stderr)
 	}
 }
@@ -205,7 +204,6 @@ func (fh *FollowPrimaryHandler) updateRecoveryConfigs() {
 	})
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		tracelog.DebugLogger.Printf("Update recovery.conf output (segment %d):\n%s\n", command.Content, command.Stderr)
 	}
 }

@@ -259,7 +259,6 @@ func (bh *BackupHandler) HandleBackupPush() {
 	}, true)
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		if command.Stderr != "" {
 			tracelog.ErrorLogger.Printf("stderr (segment %d):\n%s\n", command.Content, command.Stderr)
 		}
@@ -442,7 +441,6 @@ func extractBackupPids(output *cluster.RemoteOutput) (map[int]int, error) {
 	var resErr error
 
 	for _, command := range output.Commands { //nolint:gocritic // rangeValCopy
-
 		pid, err := strconv.Atoi(strings.TrimSpace(command.Stdout))
 
 		if err != nil {
@@ -479,7 +477,6 @@ func (bh *BackupHandler) pollSegmentStates() (map[int]SegCmdState, error) {
 	}, true)
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		logger := tracelog.DebugLogger
 
 		if command.Stderr != "" {
@@ -498,7 +495,6 @@ func (bh *BackupHandler) pollSegmentStates() (map[int]SegCmdState, error) {
 	}
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		backupState := SegCmdState{}
 
 		err := json.Unmarshal([]byte(command.Stdout), &backupState)
@@ -951,7 +947,6 @@ func (bh *BackupHandler) terminateWalgProcesses() error {
 	}, true)
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		if command.Stderr == "" {
 			continue
 		}

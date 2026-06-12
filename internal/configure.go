@@ -536,7 +536,6 @@ func GetCommandSettingContext(ctx context.Context, variableName string, args ...
 	}
 
 	if args != nil { //trick to add args to command
-
 		dataStr = fmt.Sprintf("%s %s", dataStr, strings.Join(args, " "))
 	}
 

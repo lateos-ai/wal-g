@@ -65,7 +65,6 @@ func (fh *ActionHandler) UpdateAction(action string) {
 	})
 
 	for _, command := range remoteOutput.Commands { //nolint:gocritic // rangeValCopy
-
 		tracelog.DebugLogger.Printf("Update recovery.conf output (segment %d):\n%s\n", command.Content, command.Stderr)
 	}
 }
