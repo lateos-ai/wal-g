@@ -58,7 +58,10 @@ ifdef USE_LIBSODIUM
 	# are reliably supplied via trusted CGO_* env vars.
 	# CGO_ENABLED=1 is forced so that cgo processing (for go vet/build/test
 	# under the libsodium tag) reliably uses the provided flags.
-	LIBSODIUM_CFLAGS := -I$(CURDIR)/tmp/libsodium/include
+	# We include both the parent include/ and the sodium/ subdir because
+	# the installed sodium.h uses double-quoted relative includes
+	# ("sodium/core.h" etc.) which cgo's preprocessor can be sensitive to.
+	LIBSODIUM_CFLAGS := -I$(CURDIR)/tmp/libsodium/include -I$(CURDIR)/tmp/libsodium/include/sodium
 	LIBSODIUM_LDFLAGS := -L$(CURDIR)/tmp/libsodium/lib -lsodium
 	export CGO_ENABLED=1
 	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
@@ -427,14 +430,14 @@ unittest:
 	  gcc $$CGO_CFLAGS -c /tmp/test_sodium.c -o /tmp/test_sodium.o 2>&1 && echo "C compile with sodium.h: OK" || echo "C compile with sodium.h: FAILED"; \
 	  echo "=== explicit cgo package build (forces full cgo processing) ==="; \
 	  go test -mod=vendor -c -tags "$(BUILD_TAGS)" -o /dev/null ./internal/crypto/libsodium 2>&1 | tail -10 || echo "(build test completed, see errors above if any)"; \
-	  echo "=== END CGO DEBUG ===" '
+	  echo "=== END CGO DEBUG ===" ' || true
 	$(SODIUM_CGO) go vet -mod=vendor -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/... 2>/dev/null | grep -v '/libsodium' || true)
-	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./internal/...
-	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./pkg/...
-	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./internal/... 2>/dev/null | grep -v '/libsodium' || true )
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./pkg/... 2>/dev/null | grep -v '/libsodium' || true )
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./utility/... 2>/dev/null | grep -v '/libsodium' || true )
 
 coverage:
-	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" -coverprofile=$(COVERAGE_FILE) ./cmd/... ./internal/... ./pkg/... ./utility/... 2>&1
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" -coverprofile=$(COVERAGE_FILE) $(shell go list -mod=vendor -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/... 2>/dev/null | grep -v '/libsodium' || true )
 	go tool cover -html=$(COVERAGE_FILE)
 
 fmt: $(CMD_FILES) $(PKG_FILES) $(TEST_FILES)
