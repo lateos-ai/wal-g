@@ -58,6 +58,8 @@ ifdef USE_LIBSODIUM
 	LIBSODIUM_LDFLAGS := -L$(CURDIR)/tmp/libsodium/lib -lsodium
 	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
 	export CGO_LDFLAGS += $(LIBSODIUM_LDFLAGS)
+	# Capture for explicit prefixing in build recipes (most reliable for subshells/CI)
+	SODIUM_CGO := CGO_CFLAGS="$(CGO_CFLAGS)" CGO_LDFLAGS="$(CGO_LDFLAGS)"
 endif
 
 BUILD_GCFLAGS := 
@@ -104,7 +106,7 @@ test: deps unittest pg_build mysql_build redis_build mongo_build gp_build cloudb
 pg_test: deps pg_build unlink_brotli pg_integration_test
 
 pg_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_PG_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/pg.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/pg.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/pg.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_PG_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/pg.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/pg.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/pg.walgVersion=$(WALG_VERSION)")
 
 install_and_build_pg: deps pg_build
 
@@ -231,10 +233,10 @@ mysql_base: deps mysql_build unlink_brotli
 mysql_test: deps mysql_build unlink_brotli mysql_integration_test
 
 mysql_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_MYSQL_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/mysql.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/mysql.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/mysql.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_MYSQL_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/mysql.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/mysql.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/mysql.walgVersion=$(WALG_VERSION)")
 
 sqlserver_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_SQLSERVER_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/sqlserver.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/sqlserver.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/sqlserver.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_SQLSERVER_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/sqlserver.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/sqlserver.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/sqlserver.walgVersion=$(WALG_VERSION)")
 
 load_docker_common:
 	@if [ "x" = "${CACHE_FOLDER}x" ]; then\
@@ -284,7 +286,7 @@ mariadb_integration_test: unlink_brotli pull_external_images load_docker_common
 mongo_test: deps mongo_build unlink_brotli
 
 mongo_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_MONGO_PATH) && go build $(BUILD_ARGS) -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/mongo.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/mongo.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/mongo.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_MONGO_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/mongo.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/mongo.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/mongo.walgVersion=$(WALG_VERSION)")
 
 mongo_install: mongo_build
 	mv $(MAIN_MONGO_PATH)/wal-g $(GOBIN)/wal-g
@@ -311,7 +313,7 @@ clean_mongo_features:
 	cd tests_func/ && MONGO_VERSION=$(MONGO_VERSION) MONGO_PACKAGE=$(MONGO_PACKAGE) MONGO_REPO=$(MONGO_REPO) go test -v -count=1  -timeout 5m --tf.test=false --tf.debug=false --tf.clean=true --tf.stop=true --tf.database=mongodb
 
 fdb_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_FDB_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w")
+	$(SODIUM_CGO) (cd $(MAIN_FDB_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w")
 
 fdb_install: fdb_build
 	mv $(MAIN_FDB_PATH)/wal-g $(GOBIN)/wal-g
@@ -324,7 +326,7 @@ fdb_integration_test: pull_external_images load_docker_common
 redis_test: deps redis_build unlink_brotli redis_integration_test
 
 redis_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_REDIS_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/redis.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/redis.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/redis.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_REDIS_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/redis.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/redis.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/redis.walgVersion=$(WALG_VERSION)")
 
 redis_integration_test: pull_external_images load_docker_common
 	docker compose build redis && docker compose build redis_tests
@@ -349,7 +351,7 @@ clean_redis_features:
 etcd_test: deps etcd_build unlink_brotli etcd_integration_test
 
 etcd_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_ETCD_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/etcd.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/etcd.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/etcd.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_ETCD_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/etcd.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/etcd.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/etcd.walgVersion=$(WALG_VERSION)")
 
 etcd_install: etcd_build
 	mv $(MAIN_ETCD_PATH)/wal-g $(GOBIN)/wal-g
@@ -365,7 +367,7 @@ etcd_integration_test: pull_external_images load_docker_common
 	docker compose up --pull never --exit-code-from etcd_tests etcd_tests
 
 gp_build: $(CMD_FILES) $(PKG_FILES)
-	(cd $(MAIN_GP_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/gp.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/gp.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/gp.walgVersion=$(WALG_VERSION)")
+	$(SODIUM_CGO) (cd $(MAIN_GP_PATH) && go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/gp.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/gp.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/gp.walgVersion=$(WALG_VERSION)")
 
 gp_clean:
 	(cd $(MAIN_GP_PATH) && go clean)
@@ -402,13 +404,13 @@ st_integration_test: pull_external_images load_docker_common
 	docker compose up --pull never --exit-code-from st_tests st_tests
 
 unittest:
-	go vet -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
-	go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./internal/...
-	go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./pkg/...
-	go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
+	$(SODIUM_CGO) go vet -tags "$(BUILD_TAGS)" ./cmd/... ./internal/... ./pkg/... ./utility/...
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./internal/...
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./pkg/...
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" ./utility/...
 
 coverage:
-	go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" -coverprofile=$(COVERAGE_FILE) ./cmd/... ./internal/... ./pkg/... ./utility/... 2>&1
+	$(SODIUM_CGO) go test -mod vendor -v $(TEST_MODIFIER) -tags "$(BUILD_TAGS)" -coverprofile=$(COVERAGE_FILE) ./cmd/... ./internal/... ./pkg/... ./utility/... 2>&1
 	go tool cover -html=$(COVERAGE_FILE)
 
 fmt: $(CMD_FILES) $(PKG_FILES) $(TEST_FILES)
@@ -449,6 +451,7 @@ link_brotli:
 link_libsodium:
 	@if [ ! -z "${USE_LIBSODIUM}" ]; then\
 		./link_libsodium.sh;\
+		echo "info: libsodium tree after link_libsodium:"; ls -lR tmp/libsodium 2>/dev/null || true;\
 	fi
 
 unlink_brotli:

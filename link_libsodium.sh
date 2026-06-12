@@ -35,6 +35,34 @@ if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libsodium 2>/dev
 		done
 	fi
 
+	# Extra broad search (covers cases where sodium.h lives in unexpected subdirs)
+	if [ ! -f tmp/libsodium/include/sodium.h ]; then
+		for candidate in $(find /usr -name sodium.h -type f 2>/dev/null | head -20); do
+			# Prefer a top-level sodium.h (not the one inside a sodium/ subdir) for #include <sodium.h>
+			if [ -f "$candidate" ] && [[ "$candidate" != */sodium/sodium.h ]]; then
+				cp -f "$candidate" tmp/libsodium/include/sodium.h
+				break
+			fi
+		done
+	fi
+
+	# Always ensure the sodium/ subdir with detailed headers is present (internal includes use "sodium/...")
+	for sdir in "$INCDIR/sodium" /usr/include/sodium /usr/local/include/sodium; do
+		if [ -d "$sdir" ]; then
+			mkdir -p tmp/libsodium/include
+			cp -rf "$sdir" tmp/libsodium/include/ 2>/dev/null || true
+			break
+		fi
+	done
+
+	# Last-resort redirect wrapper so #include <sodium.h> works even if only subdir was found
+	if [ ! -f tmp/libsodium/include/sodium.h ] && [ -d tmp/libsodium/include/sodium ]; then
+		cat > tmp/libsodium/include/sodium.h << 'EOT'
+/* Auto-generated redirect for wal-g libsodium builds (system package layout) */
+#include "sodium/sodium.h"
+EOT
+	fi
+
 	if [ -n "$LIBDIR" ] && [ -d "$LIBDIR" ]; then
 		cp -f "$LIBDIR"/libsodium* tmp/libsodium/lib/ 2>/dev/null || true
 	fi
@@ -45,6 +73,20 @@ if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libsodium 2>/dev
 				break
 			fi
 		done
+	fi
+
+	# Diagnostics + hard verification (prevents silent "info printed, later cgo failure")
+	echo "info: pkg-config INCDIR=$INCDIR LIBDIR=$LIBDIR"
+	echo "info: libsodium tree after population:"
+	ls -lR tmp/libsodium || true
+	if [ ! -f tmp/libsodium/include/sodium.h ]; then
+		echo "ERROR: failed to populate tmp/libsodium/include/sodium.h"
+		echo "Searched candidates:"
+		find /usr -name 'sodium.h' 2>/dev/null | head -10 || true
+		exit 1
+	fi
+	if [ ! -f tmp/libsodium/lib/libsodium.a ] && [ ! -f tmp/libsodium/lib/libsodium.so ] && [ ! -f tmp/libsodium/lib/libsodium.dylib ]; then
+		echo "WARNING: no libsodium static/shared lib found in tmp/libsodium/lib; link step may fail"
 	fi
 
 	cd "$CWD"
@@ -78,3 +120,14 @@ make && make check && make install
 rm -f lib/*.so lib/*.so.* lib/*.dylib
 
 cd ${CWD}
+
+# Verification for the source-build case (should have correct layout from configure --prefix)
+echo "info: libsodium tree after source build:"
+ls -lR tmp/libsodium || true
+if [ ! -f tmp/libsodium/include/sodium.h ]; then
+	echo "ERROR: source build did not produce tmp/libsodium/include/sodium.h"
+	exit 1
+fi
+if [ ! -f tmp/libsodium/lib/libsodium.a ]; then
+	echo "WARNING: source build did not produce tmp/libsodium/lib/libsodium.a"
+fi
