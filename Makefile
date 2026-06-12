@@ -55,26 +55,24 @@ BUILD_TAGS := $(strip $(BUILD_TAGS))
 LIBTAGS := $(filter-out libsodium,$(BUILD_TAGS))
 
 ifdef USE_LIBSODIUM
-	# Provide CGo flags via environment variables. This bypasses Go's
-	# sanitization of #cgo CFLAGS/LDFLAGS under -mod=vendor (Go 1.21+).
-	# We always point at the tmp/libsodium tree that link_libsodium.sh
-	# populates (copy from system pkg or build from source) so the paths
-	# are reliably supplied via trusted CGO_* env vars.
-	# CGO_ENABLED=1 is forced so that cgo processing (for go vet/build/test
-	# under the libsodium tag) reliably uses the provided flags.
-	# We include both the parent include/ and the sodium/ subdir because
-	# the installed sodium.h uses double-quoted relative includes
-	# ("sodium/core.h" etc.) which cgo's preprocessor can be sensitive to.
+	# Provide CGo flags via environment variables and pkg-config.
+	# The source files use #cgo pkg-config: libsodium which calls
+	# pkg-config --cflags --libs libsodium. We make this resolve to
+	# the tmp/libsodium/ tree by exporting PKG_CONFIG_PATH and by
+	# having link_libsodium.sh generate a libsodium.pc there.
+	# CGO_CFLAGS/CGO_LDFLAGS are kept as fallback for systems that
+	# lack pkg-config (they are concatenated with pkg-config results).
 	LIBSODIUM_CFLAGS := -I$(CURDIR)/tmp/libsodium/include -I$(CURDIR)/tmp/libsodium/include/sodium
 	LIBSODIUM_LDFLAGS := -L$(CURDIR)/tmp/libsodium/lib -lsodium
 	export CGO_ENABLED=1
 	export CGO_CFLAGS += $(LIBSODIUM_CFLAGS)
 	export CGO_LDFLAGS += $(LIBSODIUM_LDFLAGS)
+	export PKG_CONFIG_PATH := $(CURDIR)/tmp/libsodium/lib/pkgconfig$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
 	# Capture for explicit prefixing right before the 'go' command.
 	# Recipes use the form "cd $(DIR) && $(SODIUM_CGO) go build ..." so that
 	# the env var assignments are valid shell syntax (avoids "VAR=val (cd ...)"
 	# which /bin/sh rejects).
-	SODIUM_CGO := CGO_ENABLED=1 CGO_CFLAGS="$(CGO_CFLAGS)" CGO_LDFLAGS="$(CGO_LDFLAGS)"
+	SODIUM_CGO := CGO_ENABLED=1 CGO_CFLAGS="$(CGO_CFLAGS)" CGO_LDFLAGS="$(CGO_LDFLAGS)" PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)"
 endif
 
 BUILD_GCFLAGS := 

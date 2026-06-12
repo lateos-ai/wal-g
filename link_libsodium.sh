@@ -90,6 +90,21 @@ EOT
 		echo "WARNING: no libsodium static/shared lib found in tmp/libsodium/lib; link step may fail"
 	fi
 
+	# Generate a .pc file so #cgo pkg-config: libsodium resolves through
+	# PKG_CONFIG_PATH even when using the tmp/ copy rather than system install.
+	mkdir -p tmp/libsodium/lib/pkgconfig
+	cat > tmp/libsodium/lib/pkgconfig/libsodium.pc <<- EOT
+prefix=$(cd tmp/libsodium && pwd)
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
+
+Name: libsodium
+Version: ${LIBSODIUM_VERSION}
+Description: libsodium
+Libs: -L\${libdir} -lsodium
+Cflags: -I\${includedir}
+EOT
+
 	cd "$CWD"
 	exit 0
 fi

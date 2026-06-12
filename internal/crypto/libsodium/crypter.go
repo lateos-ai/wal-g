@@ -3,16 +3,13 @@
 
 package libsodium
 
-// NOTE: #cgo uses ${SRCDIR} (absolute path to this package's directory) to
-// reference the tmp/libsodium/ tree in the repository root. The resulting
-// absolute -I/-L paths are trusted by Go 1.21+'s -mod=vendor security checks
-// (which only sanitize relative paths). The Makefile also exports
-// CGO_ENABLED=1 CGO_CFLAGS/CGO_LDFLAGS for manual builds outside of make.
-// Before building, run link_libsodium.sh (or equivalent) to populate
-// tmp/libsodium/ with headers and the static library.
+// NOTE: #cgo uses pkg-config to discover libsodium include/library paths.
+// The Makefile exports PKG_CONFIG_PATH (pointing at tmp/libsodium/lib/pkgconfig)
+// and link_libsodium.sh generates a libsodium.pc there. The Makefile
+// also exports CGO_ENABLED=1 CGO_CFLAGS/CGO_LDFLAGS for manual builds where
+// pkg-config is unavailable.
 
-// #cgo CFLAGS: -I${SRCDIR}/../../../tmp/libsodium/include -I${SRCDIR}/../../../tmp/libsodium/include/sodium
-// #cgo LDFLAGS: -L${SRCDIR}/../../../tmp/libsodium/lib -lsodium
+// #cgo pkg-config: libsodium
 // #include <sodium.h>
 
 import "C"
