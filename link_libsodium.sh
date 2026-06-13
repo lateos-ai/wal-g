@@ -58,18 +58,9 @@ typedef struct { unsigned char d[${sz}]; } walg_secretstream_state;
 #define crypto_secretstream_xchacha20poly1305_HEADERBYTES ${hbytes}U
 #define crypto_secretstream_xchacha20poly1305_TAG_FINAL ${tagf}U
 
-/* Forward declarations of libsodium types and functions used by walg_init.c.
-   These avoid #include <sodium.h> in files processed by cgo's DWARF analyzer
-   (Go 1.25 + -mod=vendor chokes on __attribute__((warn_unused_result))). */
-struct crypto_secretstream_xchacha20poly1305_state;
-typedef struct crypto_secretstream_xchacha20poly1305_state crypto_secretstream_xchacha20poly1305_state;
-int sodium_init(void);
-int crypto_secretstream_xchacha20poly1305_init_push(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, const unsigned char *);
-int crypto_secretstream_xchacha20poly1305_init_pull(struct crypto_secretstream_xchacha20poly1305_state *, const unsigned char *, const unsigned char *);
-int crypto_secretstream_xchacha20poly1305_push(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, unsigned long long *, const unsigned char *, unsigned long long, const unsigned char *, unsigned long long, unsigned char);
-int crypto_secretstream_xchacha20poly1305_pull(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, unsigned long long *, unsigned char *, const unsigned char *, unsigned long long, const unsigned char *, unsigned long long);
-
-/* Wrapper function declarations */
+/* Wrapper function declarations (walg_init.c is compiled separately by
+   link_libsodium.sh and baked into libsodium.a; only wrappers are needed
+   here for cgo preamble analysis). */
 int walg_sodium_init(void);
 int walg_secretstream_init_push(walg_secretstream_state *, unsigned char *, const unsigned char *);
 int walg_secretstream_init_pull(walg_secretstream_state *, const unsigned char *, const unsigned char *);
@@ -79,6 +70,48 @@ int walg_secretstream_pull(walg_secretstream_state *, unsigned char *, unsigned 
 #endif
 WALGEOF
 	echo "info: generated tmp/libsodium/include/walg_config.h"
+}
+
+# Compile and embed walg_init.c into libsodium.a, removing the .c file
+# from cgo's purview (Go 1.25 + -mod=vendor does DWARF analysis on .c files
+# and chokes on #include <sodium.h>).
+build_walg_init() {
+	local incdir="$1"
+	local libdir="$2"
+	local gcc="${CC:-gcc}"
+
+	mkdir -p tmp/libsodium/src
+	cat > tmp/libsodium/src/walg_init.c <<-'WALGEOF'
+#include <sodium.h>
+#include <walg_config.h>
+
+int walg_sodium_init(void) { return sodium_init(); }
+int walg_secretstream_init_push(walg_secretstream_state *state, unsigned char *header, const unsigned char *key) {
+	return crypto_secretstream_xchacha20poly1305_init_push((crypto_secretstream_xchacha20poly1305_state *)state, header, key);
+}
+int walg_secretstream_init_pull(walg_secretstream_state *state, const unsigned char *header, const unsigned char *key) {
+	return crypto_secretstream_xchacha20poly1305_init_pull((crypto_secretstream_xchacha20poly1305_state *)state, header, key);
+}
+int walg_secretstream_push(walg_secretstream_state *state, unsigned char *out, unsigned long long *out_len, const unsigned char *in, unsigned long long in_len, const unsigned char *ad, unsigned long long ad_len, unsigned char tag) {
+	return crypto_secretstream_xchacha20poly1305_push((crypto_secretstream_xchacha20poly1305_state *)state, out, out_len, in, in_len, ad, ad_len, tag);
+}
+int walg_secretstream_pull(walg_secretstream_state *state, unsigned char *out, unsigned long long *out_len, unsigned char *tag, const unsigned char *in, unsigned long long in_len, const unsigned char *ad, unsigned long long ad_len) {
+	return crypto_secretstream_xchacha20poly1305_pull((crypto_secretstream_xchacha20poly1305_state *)state, out, out_len, tag, in, in_len, ad, ad_len);
+}
+WALGEOF
+
+	echo "info: compiling tmp/libsodium/src/walg_init.c -> tmp/libsodium/lib/walg_init.o"
+	if $gcc -I"$incdir" -I"$incdir/sodium" -c tmp/libsodium/src/walg_init.c -o tmp/libsodium/lib/walg_init.o -fPIC 2>/dev/null; then
+		if [ -f tmp/libsodium/lib/libsodium.a ]; then
+			echo "info: injecting walg_init.o into libsodium.a"
+			( cd tmp/libsodium/lib && ar rcs libsodium.a walg_init.o 2>/dev/null ) || true
+		else
+			echo "info: libsodium.a not found at link time; walg_init.o left standalone"
+			echo "info: compiler may need -lwalg_init or explicit walg_init.o"
+		fi
+	else
+		echo "WARNING: failed to compile walg_init.c; continuing (link step may fail)"
+	fi
 }
 
 # When a system libsodium-dev (or equivalent) package is installed,
@@ -181,6 +214,7 @@ EOT
 
 	cd "$CWD"
 	generate_walg_config "$INCDIR" "$LIBDIR"
+	build_walg_init "$INCDIR" "$LIBDIR"
 	exit 0
 fi
 
@@ -226,3 +260,4 @@ fi
 INCDIR=$(cd tmp/libsodium/include && pwd)
 LIBDIR=$(cd tmp/libsodium/lib && pwd)
 generate_walg_config "$INCDIR" "$LIBDIR"
+build_walg_init "$INCDIR" "$LIBDIR"

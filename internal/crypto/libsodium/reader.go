@@ -3,13 +3,10 @@
 
 package libsodium
 
-// NOTE: #cgo uses pkg-config to discover libsodium include/library paths.
-// The Makefile exports PKG_CONFIG_PATH (pointing at tmp/libsodium/lib/pkgconfig)
-// and link_libsodium.sh generates a libsodium.pc and walg_config.h there.
-// All C integration goes through walg_init.c + walg_config.h to avoid
-// #include <sodium.h> in the Go preamble (cgo DWARF issue under Go 1.25).
+// NOTE: CGO_CFLAGS/CGO_LDFLAGS and PKG_CONFIG_PATH are set by the Makefile
+// via $(SODIUM_CGO) prefix. No #cgo directives here to avoid cgo DWARF
+// analysis issues under Go 1.25 + -mod=vendor.
 
-// #cgo pkg-config: libsodium
 // #include <walg_config.h>
 
 import "C"
