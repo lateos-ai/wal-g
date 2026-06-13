@@ -1,59 +1,53 @@
-# Encryption Audit for WAL-G v0.14.1
+# WAL-G v0.14.1 — Encryption Audit Results
 
-## Overview
-This document summarizes the encryption implementations available in WAL-G v0.14.1, covering all supported storage backends and encryption methods.
+## Finding: Encryption Support Verified ✅
 
-## Storage Backend Encryption
+**Scope**: Backup encryption across cloud providers
 
-### Google Cloud Storage (GCS)
-- **CSEK (Customer-Supplied Encryption Keys)**: 256-bit AES client-side encryption
-- Keys managed by the user, not stored by Google
-- Implemented via `storage.EncryptionKey` option in GCS configuration
+### Summary
+WAL-G v0.14.1 provides production-grade encryption support:
+- GCS: Customer-Supplied Encryption Keys (256-bit AES)
+- AWS S3: Client-Side Encryption via KMS
+- Azure: Server-side encryption (mandatory)
+- General: OpenPGP envelope encryption
 
-### AWS S3
-- **CSE-KMS (Client-Side Encryption with KMS)**: Client encrypts data before upload using AWS KMS
-- **SSE-S3 (Server-Side Encryption with S3-Managed Keys)**: S3 manages encryption keys
-- **SSE-KMS (Server-Side Encryption with KMS)**: AWS KMS manages encryption keys
-- All three modes supported and production-ready
+### Details
 
-### Azure Blob Storage
-- **Built-in Server-Side Encryption**: Microsoft-managed keys (SSE)
-- **Customer-Managed Keys (CMK)**: Optional integration with Azure Key Vault
-- Enabled by default for all Azure storage accounts
+#### GCS Encryption
+- **Status**: ✅ IMPLEMENTED
+- **Method**: Customer-Supplied Encryption Keys (CSEK)
+- **Key Size**: 256-bit (32 bytes)
+- **Configuration**: GCS_ENCRYPTION_KEY (base64-encoded)
+- **Testing**: Verified in pkg/storages/gcs/folder_test.go (TestGSFolderWithEncryptionKey)
+- **Security**: Keys properly copied, not reused
 
-### OpenPGP / Envelope Encryption
-- **Envelope Encryption Pattern**: Data encrypted with data encryption key (DEK), DEK encrypted with key encryption key (KEK)
-- OpenPGP implementation for key management
-- Supports multiple recipients/keys for key rotation
-- Compatible with GPG/PGP tooling
+#### AWS S3 Encryption
+- **Status**: ✅ IMPLEMENTED
+- **Method**: Client-Side Encryption via AWS KMS
+- **Configuration**: WALG_CSE_KMS_ID + WALG_CSE_KMS_REGION
+- **Alternative**: S3 server-side encryption (SSE-S3/SSE-KMS)
+- **Testing**: Verified in internal/crypto/awskms/
 
-## Implementation Details
+#### Azure Encryption
+- **Status**: ✅ ACCEPTABLE
+- **Method**: Azure Blob Storage server-side encryption (AES-256)
+- **Note**: Encryption-at-rest is mandatory on Azure
+- **Client-side**: Not implemented (not required)
 
-### Key Management
-- All encryption keys handled via secure configuration
-- No keys logged or stored in plain text
-- Key rotation supported via configuration reload
+#### OpenPGP Support
+- **Status**: ✅ IMPLEMENTED
+- **Purpose**: General envelope encryption for portable use
 
-### Algorithm Standards
-- AES-256 for symmetric encryption
-- RSA-2048+ or ECC for asymmetric operations
-- AES-GCM for authenticated encryption where applicable
+### Recommendations
+1. Document encryption options in user guide (INSTALL.md)
+2. Add examples for GCS_ENCRYPTION_KEY configuration
+3. Add examples for AWS CSE-KMS setup
+4. Consider adding S3 SSE-S3 configuration guide
 
-## Testing & Validation
-- All encryption methods tested against respective cloud providers
-- Integration tests verify encryption/decryption round-trips
-- Tested with production-scale data volumes
-- No data loss or corruption observed in testing
+### Risk Assessment
+**LOW RISK** — Encryption is properly implemented across providers.
 
-## Risk Assessment
-**LOW RISK**: Encryption properly implemented across all storage backends.
-
-- No known vulnerabilities in current implementation
-- All encryption modes production-ready
-- Key management follows industry best practices
-- Regular security audits recommended
-
-## Compliance
-- Meets common regulatory requirements (GDPR, HIPAA, SOC 2)
-- Encryption at rest and in transit for all backends
-- Audit trails available via cloud provider logging
+---
+**Audited**: June 13, 2026
+**Auditor**: Lateos Security Team
+**Version**: v0.14.1
