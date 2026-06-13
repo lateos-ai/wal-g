@@ -8,6 +8,7 @@ package libsodium
 // analysis issues under Go 1.25 + -mod=vendor.
 
 // #include "gen/walg_config.h"
+// int sodium_init();
 
 import "C"
 
@@ -34,7 +35,7 @@ const (
 // libsodium should always be initialized
 
 func init() {
-	C.walg_sodium_init()
+	C.sodium_init()
 }
 
 // Crypter is libsodium Crypter implementation
