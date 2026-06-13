@@ -62,6 +62,7 @@ typedef struct { unsigned char d[${sz}]; } walg_secretstream_state;
    These avoid #include <sodium.h> in files processed by cgo's DWARF analyzer
    (Go 1.25 + -mod=vendor chokes on __attribute__((warn_unused_result))). */
 struct crypto_secretstream_xchacha20poly1305_state;
+typedef struct crypto_secretstream_xchacha20poly1305_state crypto_secretstream_xchacha20poly1305_state;
 int sodium_init(void);
 int crypto_secretstream_xchacha20poly1305_init_push(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, const unsigned char *);
 int crypto_secretstream_xchacha20poly1305_init_pull(struct crypto_secretstream_xchacha20poly1305_state *, const unsigned char *, const unsigned char *);
