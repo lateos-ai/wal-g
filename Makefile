@@ -364,7 +364,7 @@ clean_redis_features:
 etcd_test: deps etcd_build unlink_brotli etcd_integration_test
 
 etcd_build: $(CMD_FILES) $(PKG_FILES)
-	cd $(MAIN_ETCD_PATH) && $(SODIUM_CGO) go build -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/etcd.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/etcd.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/etcd.walgVersion=$(WALG_VERSION)"
+	cd $(MAIN_ETCD_PATH) && $(SODIUM_CGO) go build -x -mod vendor -tags "$(BUILD_TAGS)" -o wal-g -gcflags "$(BUILD_GCFLAGS)" -ldflags "-s -w -X $(PKG)/cmd/etcd.buildDate=$(BUILD_DATE) -X $(PKG)/cmd/etcd.gitRevision=$(GIT_REVISION) -X $(PKG)/cmd/etcd.walgVersion=$(WALG_VERSION)"
 
 etcd_install: etcd_build
 	mv $(MAIN_ETCD_PATH)/wal-g $(GOBIN)/wal-g
