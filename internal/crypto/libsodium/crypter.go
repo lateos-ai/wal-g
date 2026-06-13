@@ -8,6 +8,7 @@ package libsodium
 // analysis issues under Go 1.25 + -mod=vendor.
 
 // #include <walg_config.h>
+// int walg_sodium_init();
 
 import "C"
 

@@ -61,7 +61,7 @@ typedef struct { unsigned char d[${sz}]; } walg_secretstream_state;
 /* Wrapper function declarations (walg_init.c is compiled separately by
    link_libsodium.sh and baked into libsodium.a; only wrappers are needed
    here for cgo preamble analysis). */
-int walg_sodium_init(void);
+int walg_sodium_init();
 int walg_secretstream_init_push(walg_secretstream_state *, unsigned char *, const unsigned char *);
 int walg_secretstream_init_pull(walg_secretstream_state *, const unsigned char *, const unsigned char *);
 int walg_secretstream_push(walg_secretstream_state *, unsigned char *, unsigned long long *, const unsigned char *, unsigned long long, const unsigned char *, unsigned long long, unsigned char);
