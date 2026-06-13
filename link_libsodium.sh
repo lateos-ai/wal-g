@@ -58,6 +58,16 @@ typedef struct { unsigned char d[${sz}]; } walg_secretstream_state;
 #define crypto_secretstream_xchacha20poly1305_HEADERBYTES ${hbytes}U
 #define crypto_secretstream_xchacha20poly1305_TAG_FINAL ${tagf}U
 
+/* Forward declarations of libsodium types and functions used by walg_init.c.
+   These avoid #include <sodium.h> in files processed by cgo's DWARF analyzer
+   (Go 1.25 + -mod=vendor chokes on __attribute__((warn_unused_result))). */
+struct crypto_secretstream_xchacha20poly1305_state;
+int sodium_init(void);
+int crypto_secretstream_xchacha20poly1305_init_push(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, const unsigned char *);
+int crypto_secretstream_xchacha20poly1305_init_pull(struct crypto_secretstream_xchacha20poly1305_state *, const unsigned char *, const unsigned char *);
+int crypto_secretstream_xchacha20poly1305_push(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, unsigned long long *, const unsigned char *, unsigned long long, const unsigned char *, unsigned long long, unsigned char);
+int crypto_secretstream_xchacha20poly1305_pull(struct crypto_secretstream_xchacha20poly1305_state *, unsigned char *, unsigned long long *, unsigned char *, const unsigned char *, unsigned long long, const unsigned char *, unsigned long long);
+
 /* Wrapper function declarations */
 int walg_sodium_init(void);
 int walg_secretstream_init_push(walg_secretstream_state *, unsigned char *, const unsigned char *);

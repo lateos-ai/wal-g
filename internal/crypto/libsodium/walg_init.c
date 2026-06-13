@@ -1,4 +1,3 @@
-#include <sodium.h>
 #include <walg_config.h>
 
 int walg_sodium_init(void)
