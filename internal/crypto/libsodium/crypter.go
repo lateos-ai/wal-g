@@ -3,14 +3,16 @@
 
 package libsodium
 
-// NOTE: #cgo uses pkg-config to discover libsodium include/library paths.
-// The Makefile exports PKG_CONFIG_PATH (pointing at tmp/libsodium/lib/pkgconfig)
-// and link_libsodium.sh generates a libsodium.pc there. The Makefile
-// also exports CGO_ENABLED=1 CGO_CFLAGS/CGO_LDFLAGS for manual builds where
-// pkg-config is unavailable.
+// NOTE: #cgo pkg-config calls pkg-config to discover libsodium flags.
+// The Makefile exports PKG_CONFIG_PATH and CGO_* env vars.
+// sodium_init is called via a thin C wrapper (walg_init.c) to avoid
+// cgo analysis issues with __attribute__((warn_unused_result)) on
+// the sodium.h declaration. All other symbols (types, constants,
+// crypto_* functions) are resolved directly from <sodium.h>.
 
 // #cgo pkg-config: libsodium
 // #include <sodium.h>
+// int walg_sodium_init(void);
 
 import "C"
 
@@ -37,7 +39,7 @@ const (
 // libsodium should always be initialized
 
 func init() {
-	C.sodium_init()
+	C.walg_sodium_init()
 }
 
 // Crypter is libsodium Crypter implementation
