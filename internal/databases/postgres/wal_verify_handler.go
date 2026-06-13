@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type WalVerifyCheckType int
 
 const (
 	WalVerifyIntegrityCheck = iota + 1
+
 	WalVerifyTimelineCheck
 )
 
@@ -42,7 +44,9 @@ type WalVerifyCheckStatus int
 
 const (
 	StatusOk WalVerifyCheckStatus = iota + 1
+
 	StatusWarning
+
 	StatusFailure
 )
 
@@ -51,19 +55,24 @@ func (status WalVerifyCheckStatus) String() string {
 }
 
 // MarshalText marshals the WalVerifyCheckStatus enum as a string
+
 func (status WalVerifyCheckStatus) MarshalText() ([]byte, error) {
 	return utility.MarshalEnumToString(status)
 }
 
 // WalVerifyCheckRunner performs the check of WAL storage
+
 type WalVerifyCheckRunner interface {
 	Type() WalVerifyCheckType
+
 	Run() (WalVerifyCheckResult, error)
 }
 
 // WalVerifyCheckResult contains the result of some WalVerifyCheckRunner run
+
 type WalVerifyCheckResult struct {
-	Status  WalVerifyCheckStatus  `json:"status"`
+	Status WalVerifyCheckStatus `json:"status"`
+
 	Details WalVerifyCheckDetails `json:"details"`
 }
 
@@ -84,52 +93,76 @@ func (err NoCorrectBackupFoundError) Error() string {
 }
 
 type BackupSearchParams struct {
-	FindEarliestBackup  bool
+	FindEarliestBackup bool
+
 	SpecifiedBackupName *string
 }
 
 // QueryCurrentWalSegment() gets start WAL segment from Postgres cluster
+
 func QueryCurrentWalSegment() WalSegmentDescription {
 	// No request ctx plumbed to this entry point yet; revisit when callers thread ctx.
+
 	ctx := context.Background()
+
 	conn, err := Connect(ctx)
+
 	tracelog.ErrorLogger.FatalfOnError("Failed to establish a connection to Postgres cluster %v", err)
 
 	queryRunner, err := NewPgQueryRunner(ctx, conn)
+
 	tracelog.ErrorLogger.FatalfOnError("Failed to initialize PgQueryRunner %v", err)
 
 	currentSegmentNo, err := getCurrentWalSegmentNo(ctx, queryRunner)
+
 	tracelog.ErrorLogger.FatalfOnError("Failed to get current WAL segment number %v", err)
 
 	currentTimeline, err := queryRunner.ReadTimeline(ctx)
+
 	tracelog.ErrorLogger.FatalfOnError("Failed to get current timeline %v", err)
 
 	tracelog.InfoLogger.Printf("Current WAL segment: %s\n", currentSegmentNo.GetFilename(currentTimeline))
 
 	err = conn.Close(ctx)
+
 	tracelog.WarningLogger.PrintOnError(err)
 
 	// currentSegment is the current WAL segment of the cluster
+
 	return WalSegmentDescription{Timeline: currentTimeline, Number: currentSegmentNo}
 }
 
 func BuildWalVerifyCheckRunner(
+
 	checkType WalVerifyCheckType,
+
 	rootFolder storage.Folder,
+
 	walFolderFilenames []string,
+
 	currentWalSegment WalSegmentDescription,
+
 	backupSearchParams BackupSearchParams,
+
 ) (WalVerifyCheckRunner, error) {
 	var checkRunner WalVerifyCheckRunner
+
 	var err error
+
 	switch checkType {
 	case WalVerifyTimelineCheck:
+
 		checkRunner, err = NewTimelineCheckRunner(walFolderFilenames, currentWalSegment)
+
 	case WalVerifyIntegrityCheck:
+
 		checkRunner, err = NewIntegrityCheckRunner(rootFolder, walFolderFilenames, currentWalSegment, backupSearchParams)
+
 	default:
+
 		return nil, NewUnknownWalVerifyCheckError(checkType)
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -138,47 +171,69 @@ func BuildWalVerifyCheckRunner(
 }
 
 // HandleWalVerify builds a check runner for each check type
+
 // and writes the check results to the provided output writer
+
 func HandleWalVerify(
+
 	checkTypes []WalVerifyCheckType,
+
 	rootFolder storage.Folder,
+
 	currentWalSegment WalSegmentDescription,
+
 	backupSearchParams BackupSearchParams,
+
 	outputWriter WalVerifyOutputWriter,
+
 ) {
 	checkResults := make(map[WalVerifyCheckType]WalVerifyCheckResult, len(checkTypes))
 
 	// pre-fetch WAL folder filenames to reduce storage load
+
 	walFolderFilenames, err := getFolderFilenames(rootFolder.GetSubFolder(utility.WalPath))
+
 	tracelog.ErrorLogger.FatalfOnError("Failed to fetch WAL folder filenames: %v", err)
 
 	for _, checkType := range checkTypes {
 		tracelog.InfoLogger.Printf("Building check runner: %s\n", checkType)
+
 		runner, err := BuildWalVerifyCheckRunner(checkType, rootFolder, walFolderFilenames, currentWalSegment, backupSearchParams)
+
 		tracelog.ErrorLogger.FatalfOnError(
+
 			fmt.Sprintf("Failed to build check runner %s:", checkType), err)
 
 		tracelog.InfoLogger.Printf("Running the check: %s\n", runner.Type().String())
+
 		result, err := runner.Run()
+
 		tracelog.ErrorLogger.FatalfOnError(
+
 			fmt.Sprintf("Failed to run the check %s:", checkType), err)
 
 		checkResults[runner.Type()] = result
 	}
 
 	err = outputWriter.Write(checkResults)
+
 	tracelog.ErrorLogger.FatalOnError(err)
 }
 
 // get the current wal segment number of the cluster
+
 func getCurrentWalSegmentNo(ctx context.Context, queryRunner *PgQueryRunner) (WalSegmentNo, error) {
 	lsnStr, err := queryRunner.getCurrentLsn(ctx)
+
 	if err != nil {
 		return 0, err
 	}
+
 	lsn, err := ParseLSN(lsnStr)
+
 	if err != nil {
 		return 0, err
 	}
+
 	return NewWalSegmentNo(lsn - 1), nil
 }

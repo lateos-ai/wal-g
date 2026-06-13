@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"gopkg.in/ini.v1"
+
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 )
 
 const (

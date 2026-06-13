@@ -3,9 +3,10 @@ package greenplum
 import (
 	"strings"
 
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
-	"github.com/wal-g/tracelog"
 )
 
 const (
@@ -16,6 +17,7 @@ type RestoreDescMaker struct{}
 
 func (m RestoreDescMaker) Make(restoreParameters []string, names postgres.DatabasesByNames) (postgres.RestoreDesc, error) {
 	restoredDatabases, err := postgres.RegexpRestoreDescMaker{}.Make(restoreParameters, names)
+
 	if err != nil {
 		return nil, err
 	}
@@ -27,6 +29,7 @@ func (m RestoreDescMaker) Make(restoreParameters []string, names postgres.Databa
 			}
 		}
 	}
+
 	return restoredDatabases, nil
 }
 
@@ -36,7 +39,8 @@ func (m RestoreDescMaker) FromAoSegNamespace(tableName string) bool {
 
 type ExtractProviderDBSpec struct {
 	restoreParameters []string
-	restoreDescMaker  RestoreDescMaker
+
+	restoreDescMaker RestoreDescMaker
 }
 
 func NewExtractProviderDBSpec(restoreParameters []string) *ExtractProviderDBSpec {
@@ -44,17 +48,26 @@ func NewExtractProviderDBSpec(restoreParameters []string) *ExtractProviderDBSpec
 }
 
 func (p ExtractProviderDBSpec) Get(
+
 	backup postgres.Backup,
+
 	filesToUnwrap map[string]bool,
+
 	skipRedundantTars bool,
+
 	dbDataDir string,
+
 	createNewIncrementalFiles bool,
+
 ) (postgres.IncrementalTarInterpreter, []internal.ReaderMaker, []internal.ReaderMaker, error) {
 	_, filesMeta, err := backup.GetSentinelAndFilesMetadata()
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	desc, err := p.restoreDescMaker.Make(p.restoreParameters, filesMeta.DatabasesByNames)
+
 	tracelog.ErrorLogger.FatalOnError(err)
+
 	desc.FilterFilesToUnwrap(filesToUnwrap)
 
 	return ExtractProviderImpl{}.Get(backup, filesToUnwrap, skipRedundantTars, dbDataDir, createNewIncrementalFiles)

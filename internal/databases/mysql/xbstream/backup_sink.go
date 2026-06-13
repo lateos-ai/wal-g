@@ -6,43 +6,59 @@ import (
 	"os"
 	"sync"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 )
 
 // xbstream BackupSink will unpack archive to disk.
+
 // Note: files may be compressed(quicklz,lz4,zstd) / encrypted("NONE", "AES128", "AES192","AES256")
+
 func BackupSink(stream *Reader, output string, decompress bool) {
 	err := os.MkdirAll(output, 0777) // FIXME: permission & UMASK
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	spaceIDCollector, err := innodb.NewSpaceIDCollector(output)
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	factory := fileSinkFactory{
-		dataDir:          output,
-		incrementalDir:   "",
-		decompress:       decompress,
-		inplace:          false,
+		dataDir: output,
+
+		incrementalDir: "",
+
+		decompress: decompress,
+
+		inplace: false,
+
 		spaceIDCollector: spaceIDCollector,
 	}
 
 	sinks := make(map[string]fileSink)
+
 	for {
 		chunk, err := stream.Next()
+
 		if err == io.EOF {
 			break
 		}
+
 		tracelog.ErrorLogger.FatalfOnError("Cannot read next chunk: %v", err)
 
 		dsKey := factory.MapDataSinkKey(chunk.Path)
+
 		sink, ok := sinks[dsKey]
+
 		if !ok {
 			sink = factory.NewDataSink(chunk.Path)
+
 			sinks[dsKey] = sink
 		}
 
 		err = sink.Process(chunk)
+
 		if errors.Is(err, ErrSinkEOF) {
 			delete(sinks, dsKey)
 		} else if err != nil {
@@ -57,5 +73,6 @@ func BackupSink(stream *Reader, output string, decompress bool) {
 
 func AsyncBackupSink(wg *sync.WaitGroup, stream *Reader, dataDir string, decompress bool) {
 	defer wg.Done()
+
 	BackupSink(stream, dataDir, decompress)
 }

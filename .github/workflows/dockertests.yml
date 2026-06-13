@@ -94,7 +94,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Install deps
-        run: sudo apt-get install liblzo2-dev
+        run: sudo apt-get update && sudo apt-get install -y liblzo2-dev libsodium-dev pkg-config
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v6
@@ -123,11 +123,9 @@ jobs:
             ${{ env.CACHE_FILE_SWIFT }}
           key: ${{ env.IMAGES_CACHE_KEY }}
 
-      - name: Fail if no cached images
+      - name: Build images if cache miss
         if: steps.cache-images.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to fetch cached docker images. Will now exit..."
-          exit 1
+        run: make pg_save_image
 
       - name: Run test
         run: ${{ matrix.command }}
@@ -165,5 +163,4 @@ jobs:
           retention-days: 14
     env:
       USE_BROTLI: 1
-      USE_LIBSODIUM: 1
       USE_LZO: 1

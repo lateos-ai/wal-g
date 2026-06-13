@@ -1,18 +1,23 @@
 package st
 
 import (
-	"github.com/lateos-ai/wal-g/internal/storagetools/transfer"
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/storagetools/transfer"
 )
 
 const filesShortDescription = "Moves all files by a prefix from one storage to another without any special treatment"
 
 // filesCmd represents the files command
+
 var filesCmd = &cobra.Command{
-	Use:   "files prefix --source='source_storage' [--target='target_storage']",
+	Use: "files prefix --source='source_storage' [--target='target_storage']",
+
 	Short: filesShortDescription,
-	Args:  cobra.ExactArgs(1),
+
+	Args: cobra.ExactArgs(1),
+
 	Run: func(_ *cobra.Command, args []string) {
 		transferFiles(args[0])
 	},
@@ -22,17 +27,23 @@ func transferFiles(prefix string) {
 	separateFileLister := transfer.NewRegularFileLister(prefix, transferOverwrite, int(transferMaxFiles))
 
 	cfg := &transfer.HandlerConfig{
-		PreserveInSource:         transferPreserveInSource,
-		FailOnFirstErr:           transferFailFast,
-		Concurrency:              transferConcurrency,
-		AppearanceChecks:         transferAppearanceChecks,
+		PreserveInSource: transferPreserveInSource,
+
+		FailOnFirstErr: transferFailFast,
+
+		Concurrency: transferConcurrency,
+
+		AppearanceChecks: transferAppearanceChecks,
+
 		AppearanceChecksInterval: transferAppearanceChecksInterval,
 	}
 
 	handler, err := transfer.NewHandler(transferSourceStorage, targetStorage, separateFileLister, cfg)
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	err = handler.Handle()
+
 	tracelog.ErrorLogger.FatalOnError(err)
 }
 

@@ -3,9 +3,12 @@
 
 package libsodium
 
-// #cgo CFLAGS: -I../../../tmp/libsodium/include
-// #cgo LDFLAGS: -L../../../tmp/libsodium/lib -lsodium
-// #include <sodium.h>
+// NOTE: CGO_CFLAGS/CGO_LDFLAGS and PKG_CONFIG_PATH are set by the Makefile
+// via $(SODIUM_CGO) prefix. No #cgo directives here to avoid cgo DWARF
+// analysis issues under Go 1.25 + -mod=vendor.
+
+// #include <walg_config.h>
+
 import "C"
 
 import (
@@ -16,29 +19,37 @@ import (
 )
 
 // Writer wraps ordinary writer with libsodium encryption
+
 type Writer struct {
 	io.Writer
 
-	state C.crypto_secretstream_xchacha20poly1305_state
+	state C.walg_secretstream_state
 
-	in  []byte
+	in []byte
+
 	out []byte
 
 	inIdx int
 
 	// In case of using io.Pipe we can't write header until reader doesn't read, therefor we use these sync
+
 	onceHeader sync.Once
-	key        []byte
-	headerErr  error
+
+	key []byte
+
+	headerErr error
 }
 
 // NewWriter creates Writer from ordinary writer and key
+
 func NewWriter(writer io.Writer, key []byte) io.WriteCloser {
 	return &Writer{
 		Writer: writer,
 
-		in:  make([]byte, chunkSize),
+		in: make([]byte, chunkSize),
+
 		out: make([]byte, chunkSize+C.crypto_secretstream_xchacha20poly1305_ABYTES),
+
 		key: key,
 	}
 }
@@ -46,24 +57,31 @@ func NewWriter(writer io.Writer, key []byte) io.WriteCloser {
 func (writer *Writer) writeHeader() {
 	header := make([]byte, C.crypto_secretstream_xchacha20poly1305_HEADERBYTES)
 
-	var state C.crypto_secretstream_xchacha20poly1305_state
+	var state C.walg_secretstream_state
 
-	C.crypto_secretstream_xchacha20poly1305_init_push(
+	C.walg_secretstream_init_push(
+
 		&state,
+
 		(*C.uchar)(&header[0]),
+
 		(*C.uchar)(&writer.key[0]),
 	)
 
 	if _, err := writer.Writer.Write(header); err != nil {
 		writer.headerErr = errors.Wrap(err, "failed to write libsodium header")
+
 		return
 	}
+
 	writer.state = state
 }
 
 // Write implements io.Writer
+
 func (writer *Writer) Write(p []byte) (n int, err error) {
 	writer.onceHeader.Do(writer.writeHeader)
+
 	if writer.headerErr != nil {
 		return 0, err
 	}
@@ -72,6 +90,7 @@ func (writer *Writer) Write(p []byte) (n int, err error) {
 		count := copy(writer.in[writer.inIdx:], p[n:])
 
 		writer.inIdx += count
+
 		n += count
 
 		if writer.inIdx == len(writer.in) {
@@ -86,20 +105,29 @@ func (writer *Writer) Write(p []byte) (n int, err error) {
 
 func (writer *Writer) writeNextChunk(last bool) (err error) {
 	var outLen C.ulonglong
+
 	var tag C.uchar
 
 	if last {
 		tag = C.crypto_secretstream_xchacha20poly1305_TAG_FINAL
 	}
 
-	C.crypto_secretstream_xchacha20poly1305_push(
+	C.walg_secretstream_push(
+
 		&writer.state,
+
 		(*C.uchar)(&writer.out[0]),
+
 		&outLen,
+
 		(*C.uchar)(&writer.in[0]),
+
 		(C.ulonglong)(writer.inIdx),
+
 		(*C.uchar)(C.NULL),
+
 		(C.ulonglong)(0),
+
 		tag,
 	)
 
@@ -113,9 +141,11 @@ func (writer *Writer) writeNextChunk(last bool) (err error) {
 }
 
 // Close implements io.Closer
+
 func (writer *Writer) Close() (err error) {
 	if closer, ok := writer.Writer.(io.Closer); ok {
 		defer closer.Close()
 	}
+
 	return writer.writeNextChunk(true)
 }

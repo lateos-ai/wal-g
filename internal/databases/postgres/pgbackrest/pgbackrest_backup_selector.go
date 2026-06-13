@@ -3,9 +3,10 @@ package pgbackrest
 import (
 	"slices"
 
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/wal-g/tracelog"
 )
 
 type LatestBackupSelector struct {
@@ -14,14 +15,17 @@ type LatestBackupSelector struct {
 
 type NamedBackupSelector struct {
 	BackupName string
-	Stanza     string
+
+	Stanza string
 }
 
 func (selector LatestBackupSelector) Select(folder storage.Folder) (internal.Backup, error) {
 	backupList, err := GetBackupList(folder, selector.Stanza)
+
 	if err != nil {
 		return internal.Backup{}, err
 	}
+
 	slices.SortFunc(backupList, func(a, b internal.BackupTime) int {
 		return a.Time.Compare(b.Time)
 	})
@@ -33,23 +37,28 @@ func (selector LatestBackupSelector) Select(folder storage.Folder) (internal.Bac
 
 func (selector NamedBackupSelector) Select(folder storage.Folder) (internal.Backup, error) {
 	backupList, err := GetBackupList(folder, selector.Stanza)
+
 	if err != nil {
 		return internal.Backup{}, err
 	}
+
 	for _, backup := range backupList {
 		if backup.BackupName == selector.BackupName {
 			return internal.NewBackup(folder, backup.BackupName)
 		}
 	}
+
 	return internal.Backup{}, err
 }
 
 func NewBackupSelector(backupName string, stanza string) internal.BackupSelector {
 	if backupName == internal.LatestString {
 		tracelog.InfoLogger.Printf("Selecting the latest backup...\n")
+
 		return LatestBackupSelector{Stanza: stanza}
 	}
 
 	tracelog.InfoLogger.Printf("Selecting the backup with name %s...\n", backupName)
+
 	return NamedBackupSelector{BackupName: backupName, Stanza: stanza}
 }

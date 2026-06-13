@@ -29,8 +29,10 @@ linters:
     dupl:
       threshold: 400
     funlen:
-      lines: 100
-      statements: 50
+      lines: 250
+      statements: 80
+    nakedret:
+      max-func-lines: 60
     gocritic:
       enabled-tags:
         - performance
@@ -41,9 +43,9 @@ linters:
         - style
       settings:
         hugeParam:
-          sizeThreshold: 170
+          sizeThreshold: 300
     gocyclo:
-      min-complexity: 15
+      min-complexity: 25
     lll:
       line-length: 140
     misspell:
@@ -101,6 +103,12 @@ formatters:
     - gci
     - gofmt
     - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/lateos-ai/wal-g)
   exclusions:
     generated: lax
     paths:

@@ -7,78 +7,103 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/wal-g/tracelog"
+
 	. "github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	functests "github.com/lateos-ai/wal-g/internal/testutils"
 	"github.com/lateos-ai/wal-g/pkg/storages/fs"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/testtools"
-	"github.com/stretchr/testify/assert"
-	"github.com/wal-g/tracelog"
 )
 
 const (
 	RandomMult = 4463
+
 	RandomTerm = 6361
+
 	RandomBase = 1223
-	RandomMod  = 9973
+
+	RandomMod = 9973
 )
 
 func getByteSampleArray(size int) []byte {
 	out := make([]byte, size)
+
 	val := RandomBase
+
 	for i := 0; i < size; i++ {
 		out[i] = byte(val)
+
 		val = (val*RandomMult + RandomTerm) % RandomMod
 	}
+
 	return out
 }
 
 type TestWriter struct {
-	Result      []byte
+	Result []byte
+
 	CloseNotify chan struct{}
-	mtx         sync.Mutex
+
+	mtx sync.Mutex
 }
 
 func newTestWriter() *TestWriter {
 	return &TestWriter{
-		Result:      make([]byte, 0),
+		Result: make([]byte, 0),
+
 		CloseNotify: make(chan struct{}, 5),
 	}
 }
 
 func (t *TestWriter) Write(p []byte) (n int, err error) {
 	t.mtx.Lock()
+
 	defer t.mtx.Unlock()
+
 	t.Result = append(t.Result, p...)
+
 	tracelog.DebugLogger.Printf("Add %d length and result lenth is %d\n", len(p), len(t.Result))
+
 	return len(p), nil
 }
 
 func (t *TestWriter) Close() error {
 	tracelog.DebugLogger.Println("Close Test writer")
+
 	t.CloseNotify <- struct{}{}
+
 	return nil
 }
 
 func GetFolder(networkErrorAfterByteSize int) (storage.Folder, func() error, error) {
 	cwd, err := filepath.Abs("./")
+
 	if err != nil {
 		return nil, nil, err
 	}
+
 	// Create temp Directory.
+
 	tmpDir, err := os.MkdirTemp(cwd, "data")
+
 	if err != nil {
 		return nil, nil, err
 	}
+
 	err = os.Chmod(tmpDir, 0755)
+
 	if err != nil {
 		return nil, nil, err
 	}
 
 	folder := fs.NewFolder(tmpDir, "")
+
 	if networkErrorAfterByteSize != 0 {
 		return functests.NewNetworkErrorFolder(folder, networkErrorAfterByteSize),
+
 			func() error {
 				return os.RemoveAll(tmpDir)
 			}, nil
@@ -91,32 +116,46 @@ func GetFolder(networkErrorAfterByteSize int) (storage.Folder, func() error, err
 
 func checkPushAndFetchBackup(t *testing.T, partitions, blockSize, maxFileSize, networkErrorAfterByteSize, retryAttempts, sampleSize int) {
 	storageFolder, clear, err := GetFolder(networkErrorAfterByteSize)
+
 	defer clear()
+
 	compressor := compression.Compressors[compression.CompressingAlgorithms[0]]
+
 	uploader := NewSplitStreamUploader(
+
 		NewRegularUploader(compressor, storageFolder),
+
 		partitions,
+
 		blockSize,
+
 		maxFileSize,
 	)
 
 	sample := getByteSampleArray(sampleSize)
+
 	backupName, err := uploader.PushStream(t.Context(), bytes.NewReader(sample))
+
 	if err != nil {
 		return
 	}
 
 	writer := newTestWriter()
+
 	backup := Backup{
-		Name:   backupName,
+		Name: backupName,
+
 		Folder: storageFolder,
 	}
 
 	err = DownloadAndDecompressSplittedStream(backup, blockSize, compression.Decompressors[0].FileExtension(), writer, retryAttempts)
+
 	assert.NoError(t, err)
+
 	<-writer.CloseNotify
 
 	result := writer.Result
+
 	assert.Equal(t, sampleSize, len(result))
 
 	for i, val := range result {
@@ -154,6 +193,7 @@ func TestBackup_WithCommonValues(t *testing.T) {
 
 func TestBackup_BlockSize_Equal_SampleSize(t *testing.T) {
 	t.Skip("Broken")
+
 	checkPushAndFetchBackup(t, 3, 1009, 0, 0, 0, 1009)
 }
 
@@ -167,22 +207,30 @@ func TestSplitBackup_Retry_NetworkError(t *testing.T) {
 
 func GetS3Folder(networkErrorAfterByteSize int) (storage.Folder, func() error, error) {
 	cwd, err := filepath.Abs("./")
+
 	if err != nil {
 		return nil, nil, err
 	}
+
 	// Create temp Directory.
+
 	tmpDir, err := os.MkdirTemp(cwd, "data")
+
 	if err != nil {
 		return nil, nil, err
 	}
+
 	err = os.Chmod(tmpDir, 0755)
+
 	if err != nil {
 		return nil, nil, err
 	}
 
 	folder := fs.NewFolder(tmpDir, "")
+
 	if networkErrorAfterByteSize != 0 {
 		return functests.NewS3ErrorFolder(folder, networkErrorAfterByteSize),
+
 			func() error {
 				return os.RemoveAll(tmpDir)
 			}, nil
@@ -195,17 +243,26 @@ func GetS3Folder(networkErrorAfterByteSize int) (storage.Folder, func() error, e
 
 func checkSplitPush(t *testing.T, partitions, blockSize, maxFileSize, s3errorAfterByteSize, sampleSize int) {
 	compressor := &testtools.MockCompressor{}
+
 	folder, clearer, err := GetS3Folder(s3errorAfterByteSize)
+
 	defer clearer()
+
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	splitUploader := NewSplitStreamUploader(
+
 		NewRegularUploader(compressor, folder),
+
 		partitions,
+
 		blockSize,
+
 		maxFileSize,
 	)
+
 	splitUploader.PushStream(t.Context(), bytes.NewBuffer(getByteSampleArray(sampleSize)))
 }
 

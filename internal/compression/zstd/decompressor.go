@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/klauspost/compress/zstd"
+
 	"github.com/lateos-ai/wal-g/internal/compression/computils"
 )
 

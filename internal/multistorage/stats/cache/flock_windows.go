@@ -25,9 +25,8 @@ func lockFile(file *os.File, exclusive bool) (err error) {
 		how = winLockfileExclusiveLock
 	}
 
-	_, _, errno := syscall.Syscall6(
-		uintptr(procLockFileEx),
-		6,
+	_, _, errno := syscall.SyscallN(
+		procLockFileEx,
 		uintptr(syscall.Handle(file.Fd())),
 		uintptr(how),
 		uintptr(0), // reserved

@@ -5,9 +5,10 @@ import (
 	"context"
 	"os"
 
+	"golang.org/x/sync/errgroup"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/crypto"
-	"golang.org/x/sync/errgroup"
 )
 
 type RegularTarBallComposer struct {

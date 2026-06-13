@@ -14,12 +14,13 @@ import (
 
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 	mysqldriver "github.com/go-sql-driver/mysql"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/compression"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/wal-g/tracelog"
 )
 
 const BinlogPath = "binlog_" + utility.VersionStr + "/"
@@ -34,9 +35,9 @@ const (
 )
 
 var allowedMySQLVariables = map[string]bool{
-	"version":                true,
+	"version":                 true,
 	"version_compile_machine": true,
-	"version_compile_os":     true,
+	"version_compile_os":      true,
 }
 
 func fetchMySQLVariable(db *sql.DB, variable string) (string, error) {

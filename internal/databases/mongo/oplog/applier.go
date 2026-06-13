@@ -7,21 +7,24 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
-	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 	"github.com/mongodb/mongo-tools/common/db"
 	"github.com/mongodb/mongo-tools/common/txn"
 	"github.com/mongodb/mongo-tools/common/util"
 	"github.com/wal-g/tracelog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/client"
+	"github.com/lateos-ai/wal-g/internal/databases/mongo/models"
 )
 
 const NamespaceNotFoundError int32 = 26
 
 type TypeAssertionError struct {
 	etype string
-	key   string
+
+	key string
+
 	value interface{}
 }
 
@@ -34,7 +37,8 @@ func (e *TypeAssertionError) Error() string {
 }
 
 type OpHandleError struct {
-	op  interface{}
+	op interface{}
+
 	err error
 }
 
@@ -47,27 +51,37 @@ func (e *OpHandleError) Error() string {
 }
 
 var (
-	jsonBegin     = []byte("[\n")
+	jsonBegin = []byte("[\n")
+
 	jsonDelimiter = []byte(",\n")
-	jsonEnd       = []byte("\n]\n")
+
+	jsonEnd = []byte("\n]\n")
 
 	_ = []Applier{&DBApplier{}, &JSONApplier{}, &BSONApplier{}, &BSONRawApplier{}}
 )
 
 // Applier defines interface to apply given oplog records.
+
 type Applier interface {
 	Apply(ctx context.Context, opr models.Oplog) error
+
 	Close(ctx context.Context) error
 }
 
 // NewWriteApplier builds one of write appliers
+
 func NewWriteApplier(format string, wc io.WriteCloser) (Applier, error) {
 	switch format {
 	case "json":
+
 		return NewJSONApplier(wc), nil
+
 	case "bson":
+
 		return NewBSONApplier(wc), nil
+
 	case "bson-raw":
+
 		return NewBSONRawApplier(wc), nil
 	}
 
@@ -75,35 +89,54 @@ func NewWriteApplier(format string, wc io.WriteCloser) (Applier, error) {
 }
 
 // DBApplier implements Applier interface for mongodb.
+
 type DBApplier struct {
-	db                    client.MongoDriver
-	txnBuffer             *txn.Buffer
-	preserveUUID          bool
-	partial               bool
+	db client.MongoDriver
+
+	txnBuffer *txn.Buffer
+
+	preserveUUID bool
+
+	partial bool
+
 	applyIgnoreErrorCodes map[string][]int32
-	lastOpTime            models.OpTime
-	catchUp               bool
-	initMongo             bool
+
+	lastOpTime models.OpTime
+
+	catchUp bool
+
+	initMongo bool
 }
 
 type DBApplierArgs struct {
-	PreserveUUID   bool
-	Partial        bool
-	Reconfig       bool
-	InitMongo      bool
+	PreserveUUID bool
+
+	Partial bool
+
+	Reconfig bool
+
+	InitMongo bool
+
 	IgnoreErrCodes map[string][]int32
 }
 
 // NewDBApplier builds DBApplier with given args.
+
 func NewDBApplier(m client.MongoDriver, args DBApplierArgs) *DBApplier {
 	return &DBApplier{
-		db:                    m,
-		txnBuffer:             txn.NewBuffer(),
-		preserveUUID:          args.PreserveUUID,
-		partial:               args.Partial,
-		catchUp:               args.Reconfig,
+		db: m,
+
+		txnBuffer: txn.NewBuffer(),
+
+		preserveUUID: args.PreserveUUID,
+
+		partial: args.Partial,
+
+		catchUp: args.Reconfig,
+
 		applyIgnoreErrorCodes: args.IgnoreErrCodes,
-		initMongo:             args.InitMongo,
+
+		initMongo: args.InitMongo,
 	}
 }
 
@@ -113,6 +146,7 @@ func (ap *DBApplier) IsPartial() bool {
 
 func (ap *DBApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	op := db.Oplog{}
+
 	if err := bson.Unmarshal(opr.Data, &op); err != nil {
 		return fmt.Errorf("can not unmarshal oplog entry: %w", err)
 	}
@@ -120,11 +154,13 @@ func (ap *DBApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	if !ap.catchUp {
 		if err := ap.shouldSkip(&op); err != nil {
 			tracelog.DebugLogger.Printf("skipping op %+v due to: %+v", op, err)
+
 			return nil
 		}
 	}
 
 	meta, err := txn.NewMeta(op)
+
 	if err != nil {
 		return fmt.Errorf("can not extract op metadata: %w", err)
 	}
@@ -138,10 +174,13 @@ func (ap *DBApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	if err != nil {
 		return err
 	}
+
 	var term int64
+
 	if op.Term != nil {
 		term = *op.Term
 	}
+
 	ap.lastOpTime = models.OpTime{TS: models.TimestampFromBson(op.Timestamp), Term: term}
 
 	return nil
@@ -172,14 +211,22 @@ func (ap *DBApplier) shouldSkip(oplog *db.Oplog) error {
 
 	if oplog.Operation == "c" && len(oplog.Object) > 0 {
 		if oplog.Object[0].Key == "startIndexBuild" ||
+
 			oplog.Object[0].Key == "abortIndexBuild" {
 			/* See
+
 			https://github.com/mongodb/docs/blob/37910658a80979a82ceabf792618d96976e1bfeb/source/core/index-creation.txt#L183
+
 			for startIndexBuild
+
 			and
+
 			https://github.com/mongodb/docs/blob/37910658a80979a82ceabf792618d96976e1bfeb/source/core/index-creation.txt#L202
+
 			for abortIndexBuild details
+
 			*/
+
 			return fmt.Errorf("%s operation is not supported in applyOps mode", oplog.Object[0].Key)
 		}
 	}
@@ -192,8 +239,10 @@ func (ap *DBApplier) shouldSkip(oplog *db.Oplog) error {
 }
 
 // shouldIgnore checks if error should be ignored
+
 func (ap *DBApplier) shouldIgnore(op string, err error) bool {
 	ce, ok := err.(mongo.CommandError)
+
 	if !ok {
 		return false
 	}
@@ -203,6 +252,7 @@ func (ap *DBApplier) shouldIgnore(op string, err error) bool {
 	}
 
 	ignoreErrorCodes, ok := ap.applyIgnoreErrorCodes[op]
+
 	if !ok {
 		return false
 	}
@@ -212,28 +262,43 @@ func (ap *DBApplier) shouldIgnore(op string, err error) bool {
 
 var ConfigCollectionsToKeep = []string{
 	"chunks",
+
 	"collections",
+
 	"databases",
+
 	"settings",
+
 	"shards",
+
 	"tags",
+
 	"version",
 }
 
 var selectedNSSupportedCommands = map[string]struct{}{
-	"create":           {},
-	"drop":             {},
-	"createIndexes":    {},
-	"deleteIndex":      {},
-	"deleteIndexes":    {},
-	"dropIndex":        {},
-	"dropIndexes":      {},
-	"collMod":          {},
+	"create": {},
+
+	"drop": {},
+
+	"createIndexes": {},
+
+	"deleteIndex": {},
+
+	"deleteIndexes": {},
+
+	"dropIndex": {},
+
+	"dropIndexes": {},
+
+	"collMod": {},
+
 	"commitIndexBuild": {},
 }
 
 func isOpAllowedInconfigDB(oplog *db.Oplog) bool {
 	coll, ok := strings.CutPrefix(oplog.Namespace, "config.")
+
 	if !ok {
 		return true // OK: not a "config" database. allow any ops
 	}
@@ -248,11 +313,14 @@ func isOpAllowedInconfigDB(oplog *db.Oplog) bool {
 
 	if len(oplog.Object) > 0 {
 		op := oplog.Object[0].Key
+
 		if op == "applyOps" {
 			return true // internal ops of applyOps are checked one by one later
 		}
+
 		if _, ok := selectedNSSupportedCommands[op]; ok {
 			s, _ := oplog.Object[0].Value.(string)
+
 			return slices.Contains(ConfigCollectionsToKeep, s)
 		}
 	}
@@ -261,71 +329,104 @@ func isOpAllowedInconfigDB(oplog *db.Oplog) bool {
 }
 
 // handleNonTxnOp tries to apply given oplog record.
+
 //
+
 //nolint:gocyclo
+
 func (ap *DBApplier) handleNonTxnOp(ctx context.Context, op *db.Oplog) error {
 	if !ap.preserveUUID {
 		var err error
+
 		_, err = filterUUIDs(op)
+
 		if err != nil {
 			return fmt.Errorf("can not filter UUIDs from op '%+v', error: %+v", op, err)
 		}
 	}
 
 	// TODO: wait for index building
+
 	// TODO: if we wait for index building, we can stop ignoring a BackgroundOperation... error in DropIndexes
+
 	if op.Operation == "c" && len(op.Object) > 0 && op.Object[0].Key == "commitIndexBuild" {
 		collName, indexes, err := indexSpecFromCommitIndexBuilds(op)
+
 		if err != nil {
 			return NewOpHandleError(op, err)
 		}
+
 		dbName, _ := util.SplitNamespace(op.Namespace)
+
 		return ap.db.CreateIndexes(ctx, dbName, collName, indexes)
 	}
+
 	if op.Operation == "c" && len(op.Object) > 0 && op.Object[0].Key == "createIndexes" {
 		collName, indexes, err := indexSpecsFromCreateIndexes(op)
+
 		if err != nil {
 			return NewOpHandleError(*op, err)
 		}
+
 		dbName, _ := util.SplitNamespace(op.Namespace)
+
 		return ap.db.CreateIndexes(ctx, dbName, collName,
+
 			[]client.IndexDocument{indexes})
 	}
+
 	if op.Operation == "c" && len(op.Object) > 0 && op.Object[0].Key == "dropIndexes" {
 		dbName, _ := util.SplitNamespace(op.Namespace)
+
 		return ap.db.DropIndexes(ctx, dbName, op.Object)
 	}
 
 	//tracelog.DebugLogger.Printf("applying op: %+v", *op)
+
 	if err := ap.db.ApplyOp(ctx, op); err != nil {
 		tracelog.DebugLogger.Printf("error handling op: %v; op: %v", err, *op)
+
 		// we ignore some errors (for example 'duplicate key error')
+
 		// TODO: check after TOOLS-2041
+
 		if !ap.shouldIgnore(op.Operation, err) {
 			return NewOpHandleError(*op, err)
 		}
+
 		tracelog.WarningLogger.Printf("apply error is skipped: %+v\nop:\n%+v", err, *op)
 	}
+
 	return nil
 }
 
 func indexSpecsFromCreateIndexes(op *db.Oplog) (string, client.IndexDocument, error) {
 	index := client.IndexDocument{Options: bson.M{}}
+
 	var collName string
+
 	var elem bson.E
+
 	var ok bool
+
 	for i := range op.Object {
 		elem = op.Object[i]
+
 		switch elem.Key {
 		case "createIndexes":
+
 			if collName, ok = elem.Value.(string); !ok {
 				return "", client.IndexDocument{}, NewTypeAssertionError("string", "createIndexes", elem.Value)
 			}
+
 		case "key":
+
 			if index.Key, ok = elem.Value.(bson.D); !ok {
 				return "", client.IndexDocument{}, NewTypeAssertionError("bson.D", "key", elem.Value)
 			}
+
 		default:
+
 			index.Options[elem.Key] = elem.Value
 		}
 	}
@@ -335,10 +436,14 @@ func indexSpecsFromCreateIndexes(op *db.Oplog) (string, client.IndexDocument, er
 
 func indexSpecFromCommitIndexBuilds(op *db.Oplog) (string, []client.IndexDocument, error) {
 	var collName string
+
 	var ok bool
+
 	var elemE bson.E
+
 	for i := range op.Object {
 		elemE = op.Object[i]
+
 		if elemE.Key == "commitIndexBuild" {
 			if collName, ok = elemE.Value.(string); !ok {
 				return "", nil, NewTypeAssertionError("string", "commitIndexBuild", elemE.Value)
@@ -348,22 +453,28 @@ func indexSpecFromCommitIndexBuilds(op *db.Oplog) (string, []client.IndexDocumen
 
 	for i := range op.Object {
 		elemE = op.Object[i]
+
 		if elemE.Key == "indexes" {
 			indexes, ok := elemE.Value.(bson.A)
+
 			if !ok {
 				return "", nil, NewTypeAssertionError("bson.A", "indexes", elemE.Value)
 			}
 
 			indexSpecs := make([]client.IndexDocument, len(indexes))
+
 			for i := range indexes {
 				indexSpecs[i].Options = bson.M{}
+
 				elements, ok := indexes[i].(bson.D)
+
 				if !ok {
 					return "", nil, NewTypeAssertionError("bson.D", fmt.Sprintf("indexes[%d]", i), elemE.Value)
 				}
 
 				for j := range elements {
 					elemE = elements[j]
+
 					if elemE.Key == "key" {
 						if indexSpecs[i].Key, ok = elemE.Value.(bson.D); !ok {
 							return "", nil, NewTypeAssertionError("bson.D", "key", elemE.Value)
@@ -373,6 +484,7 @@ func indexSpecFromCommitIndexBuilds(op *db.Oplog) (string, []client.IndexDocumen
 					}
 				}
 			}
+
 			return collName, indexSpecs, nil
 		}
 	}
@@ -381,13 +493,16 @@ func indexSpecFromCommitIndexBuilds(op *db.Oplog) (string, []client.IndexDocumen
 }
 
 // handleTxnOp handles oplog record with transaction attributes.
+
 // TODO: unit test
+
 func (ap *DBApplier) handleTxnOp(ctx context.Context, meta txn.Meta, op *db.Oplog) error {
 	if meta.IsAbort() {
 		if err := ap.txnBuffer.PurgeTxn(meta); err != nil {
 			return fmt.Errorf("can not clean txn buffer after rollback cmd: %w", err)
 		}
 	}
+
 	if err := ap.txnBuffer.AddOp(meta, *op); err != nil {
 		return fmt.Errorf("can not append command to txn buffer: %w", err)
 	}
@@ -409,44 +524,57 @@ func (ap *DBApplier) handleTxnOp(ctx context.Context, meta txn.Meta, op *db.Oplo
 
 func (ap *DBApplier) applyTxn(ctx context.Context, meta txn.Meta) error {
 	opc, errc := ap.txnBuffer.GetTxnStream(meta)
+
 	for {
 		select {
 		case op, ok := <-opc:
+
 			if !ok {
 				return nil
 			}
+
 			if err := ap.handleNonTxnOp(ctx, &op); err != nil {
 				return err
 			}
+
 		case err, ok := <-errc:
+
 			if ok {
 				return err
 			}
+
 		case <-ctx.Done():
+
 			// opc and errc channels will be closed in PurgeTxn or Stop calls
+
 			return nil
 		}
 	}
 }
 
 // JSONApplier implements Applier interface for debugging.
+
 type JSONApplier struct {
-	writer  io.WriteCloser
+	writer io.WriteCloser
+
 	started bool
 }
 
 // NewJSONApplier builds JSONApplier with given args.
+
 func NewJSONApplier(w io.WriteCloser) *JSONApplier {
 	return &JSONApplier{writer: w, started: false}
 }
 
 func (ap *JSONApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	op := db.Oplog{}
+
 	if err := bson.Unmarshal(opr.Data, &op); err != nil {
 		return fmt.Errorf("can not unmarshal oplog entry: %w", err)
 	}
 
 	jsonData, err := bson.MarshalExtJSON(op, true, true)
+
 	if err != nil {
 		return fmt.Errorf("can not convert to json: %w", err)
 	}
@@ -455,6 +583,7 @@ func (ap *JSONApplier) Apply(ctx context.Context, opr models.Oplog) error {
 		if _, err := ap.writer.Write(jsonBegin); err != nil {
 			return fmt.Errorf("can not write begin mark: %w", err)
 		}
+
 		ap.started = true
 	} else if _, err := ap.writer.Write(jsonDelimiter); err != nil {
 		return fmt.Errorf("can not write delimiter: %w", err)
@@ -473,26 +602,31 @@ func (ap *JSONApplier) Close(ctx context.Context) error {
 			return fmt.Errorf("can not write end mark: %w", err)
 		}
 	}
+
 	return ap.writer.Close()
 }
 
 // BSONApplier implements Applier interface for debugging.
+
 type BSONApplier struct {
 	writer io.WriteCloser
 }
 
 // NewBSONApplier builds BSONApplier with given args.
+
 func NewBSONApplier(w io.WriteCloser) *BSONApplier {
 	return &BSONApplier{writer: w}
 }
 
 func (ap *BSONApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	op := db.Oplog{}
+
 	if err := bson.Unmarshal(opr.Data, &op); err != nil {
 		return fmt.Errorf("can not unmarshal oplog entry: %w", err)
 	}
 
 	bsonBytes, err := bson.Marshal(op)
+
 	if err != nil {
 		return fmt.Errorf("can not marshal oplog entry: %w", err)
 	}
@@ -509,11 +643,13 @@ func (ap *BSONApplier) Close(ctx context.Context) error {
 }
 
 // BSONRawApplier implements Applier interface for debugging.
+
 type BSONRawApplier struct {
 	writer io.WriteCloser
 }
 
 // NewBSONRawApplier builds BSONRawApplier with given args.
+
 func NewBSONRawApplier(w io.WriteCloser) *BSONRawApplier {
 	return &BSONRawApplier{writer: w}
 }
@@ -522,6 +658,7 @@ func (ap *BSONRawApplier) Apply(ctx context.Context, opr models.Oplog) error {
 	if _, err := ap.writer.Write(opr.Data); err != nil {
 		return fmt.Errorf("can not write raw bson data: %w", err)
 	}
+
 	return nil
 }
 

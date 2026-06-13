@@ -4,11 +4,12 @@
 package internal
 
 import (
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/crypto"
 	"github.com/lateos-ai/wal-g/internal/crypto/libsodium"
-	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 )
 
 func configureLibsodiumCrypter(config *viper.Viper) (crypto.Crypter, error) {

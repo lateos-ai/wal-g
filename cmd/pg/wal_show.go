@@ -3,49 +3,70 @@ package pg
 import (
 	"os"
 
-	"github.com/lateos-ai/wal-g/internal"
-	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/spf13/cobra"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal"
+	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 )
 
 const (
-	WalShowUsage            = "wal-show"
+	WalShowUsage = "wal-show"
+
 	WalShowShortDescription = "Show storage WAL segments info grouped by timelines."
-	WalShowLongDescription  = "Show information such as missing segments for each timeline found in storage. " +
+
+	WalShowLongDescription = "Show information such as missing segments for each timeline found in storage. " +
+
 		"Optionally, show available backups for each timeline."
 
-	detailedOutputFlag        = "detailed-json"
+	detailedOutputFlag = "detailed-json"
+
 	detailedOutputDescription = "Output detailed information in JSON format."
 
-	disableBackupsLookupFlag        = "without-backups"
+	disableBackupsLookupFlag = "without-backups"
+
 	disableBackupsLookupDescription = "Disable backups lookup for each timeline."
 )
 
 var (
+
 	// walShowCmd represents the walShow command
+
 	walShowCmd = &cobra.Command{
-		Use:   WalShowUsage,
+		Use: WalShowUsage,
+
 		Short: WalShowShortDescription,
-		Long:  WalShowLongDescription,
-		Args:  cobra.NoArgs,
+
+		Long: WalShowLongDescription,
+
+		Args: cobra.NoArgs,
+
 		Run: func(cmd *cobra.Command, args []string) {
 			storage, err := internal.ConfigureStorage()
+
 			tracelog.ErrorLogger.FatalOnError(err)
+
 			outputType := postgres.TableOutput
+
 			if detailedJSONOutput {
 				outputType = postgres.JSONOutput
 			}
+
 			outputWriter := postgres.NewWalShowOutputWriter(outputType, os.Stdout, !disableBackupsLookup)
+
 			postgres.HandleWalShow(storage.RootFolder(), !disableBackupsLookup, outputWriter)
 		},
 	}
-	detailedJSONOutput   bool
+
+	detailedJSONOutput bool
+
 	disableBackupsLookup bool
 )
 
 func init() {
 	Cmd.AddCommand(walShowCmd)
+
 	walShowCmd.Flags().BoolVar(&detailedJSONOutput, detailedOutputFlag, false, detailedOutputDescription)
+
 	walShowCmd.Flags().BoolVar(&disableBackupsLookup, disableBackupsLookupFlag, false, disableBackupsLookupDescription)
 }

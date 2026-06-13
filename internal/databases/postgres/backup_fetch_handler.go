@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/pkg/errors"
-	"github.com/wal-g/tracelog"
 )
 
 type NonEmptyDBDataDirectoryError struct {
@@ -38,10 +39,13 @@ func (err PgControlNotFoundError) Error() string {
 
 func readRestoreSpec(path string, spec *TablespaceSpec) (err error) {
 	data, err := os.ReadFile(path)
+
 	if err != nil {
 		return fmt.Errorf("unable to read file: %v", err)
 	}
+
 	err = json.Unmarshal(data, spec)
+
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal json: %v\n Full json data:\n %s", err, data)
 	}
@@ -50,25 +54,34 @@ func readRestoreSpec(path string, spec *TablespaceSpec) (err error) {
 }
 
 // If specified - choose specified, else choose from latest sentinelDto
+
 func chooseTablespaceSpecification(sentinelDtoSpec, spec *TablespaceSpec) *TablespaceSpec {
 	// spec is preferred over sentinelDtoSpec.TablespaceSpec if it is non-nil
+
 	if spec != nil {
 		return spec
 	} else if sentinelDtoSpec == nil {
 		return &TablespaceSpec{}
 	}
+
 	return sentinelDtoSpec
 }
 
 // TODO : unit tests
+
 // deltaFetchRecursion function composes Backup object and recursively searches for necessary base backup
+
 func deltaFetchRecursionOld(backup Backup, rootFolder storage.Folder, dbDataDirectory string,
+
 	tablespaceSpec *TablespaceSpec, filesToUnwrap map[string]bool, extractProv ExtractProvider) error {
 	sentinelDto, filesMetaDto, err := backup.GetSentinelAndFilesMetadata()
+
 	if err != nil {
 		return err
 	}
+
 	tablespaceSpec = chooseTablespaceSpecification(sentinelDto.TablespaceSpec, tablespaceSpec)
+
 	if sentinelDto.TablespaceSpec == nil {
 		sentinelDto.TablespaceSpec = tablespaceSpec
 	} else {
@@ -77,26 +90,40 @@ func deltaFetchRecursionOld(backup Backup, rootFolder storage.Folder, dbDataDire
 
 	if sentinelDto.IsIncremental() {
 		tracelog.InfoLogger.Printf("Delta from %v at LSN %s \n", *(sentinelDto.IncrementFrom),
+
 			*(sentinelDto.IncrementFromLSN))
+
 		baseFilesToUnwrap, err := GetBaseFilesToUnwrap(filesMetaDto.Files, filesToUnwrap)
+
 		if err != nil {
 			return err
 		}
+
 		incrementFrom, err := NewBackupInStorage(
+
 			rootFolder.GetSubFolder(utility.BaseBackupPath),
+
 			*sentinelDto.IncrementFrom,
+
 			backup.GetStorageName(),
 		)
+
 		if err != nil {
 			return err
 		}
+
 		err = deltaFetchRecursionOld(incrementFrom, rootFolder, dbDataDirectory, tablespaceSpec, baseFilesToUnwrap, extractProv)
+
 		if err != nil {
 			return err
 		}
+
 		tracelog.InfoLogger.Printf("%v fetched. Upgrading from LSN %s to LSN %s \n",
+
 			*(sentinelDto.IncrementFrom),
+
 			*(sentinelDto.IncrementFromLSN),
+
 			*(sentinelDto.BackupStartLSN))
 	}
 
@@ -106,36 +133,49 @@ func deltaFetchRecursionOld(backup Backup, rootFolder storage.Folder, dbDataDire
 func GetFetcherOld(dbDataDirectory, fileMask, restoreSpecPath string, extractProv ExtractProvider) internal.Fetcher {
 	return func(rootFolder storage.Folder, backup internal.Backup) {
 		pgBackup := ToPgBackup(backup)
+
 		filesToUnwrap, err := pgBackup.GetFilesToUnwrap(fileMask)
+
 		tracelog.ErrorLogger.FatalfOnError("Failed to fetch backup: %v\n", err)
 
 		var spec *TablespaceSpec
+
 		if restoreSpecPath != "" {
 			delete(filesToUnwrap, TablespaceMapFilename)
+
 			spec = &TablespaceSpec{}
+
 			err := readRestoreSpec(restoreSpecPath, spec)
+
 			errMessage := fmt.Sprintf("Invalid restore specification path %s\n", restoreSpecPath)
+
 			tracelog.ErrorLogger.FatalfOnError(errMessage, err)
 		}
 
 		err = deltaFetchRecursionOld(pgBackup, rootFolder, utility.ResolveSymlink(dbDataDirectory), spec, filesToUnwrap, extractProv)
+
 		tracelog.ErrorLogger.FatalfOnError("Failed to fetch backup: %v\n", err)
 	}
 }
 
 func GetBaseFilesToUnwrap(backupFileStates internal.BackupFileList, currentFilesToUnwrap map[string]bool) (map[string]bool, error) {
 	baseFilesToUnwrap := make(map[string]bool)
+
 	for file := range currentFilesToUnwrap {
 		fileDescription, hasDescription := backupFileStates[file]
+
 		if !hasDescription {
 			if _, ok := UtilityFilePaths[file]; !ok {
 				tracelog.ErrorLogger.Panicf("Wanted to fetch increment for file: '%s', but didn't find one in base", file)
 			}
+
 			continue
 		}
+
 		if fileDescription.IsSkipped || fileDescription.IsIncremented {
 			baseFilesToUnwrap[file] = true
 		}
 	}
+
 	return baseFilesToUnwrap, nil
 }

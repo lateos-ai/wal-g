@@ -1,17 +1,19 @@
 package pg
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 )
 
 const pgbackrestCommandDescription = "Interact with pgbackrest backups (beta)"
 
 var pgbackrestCmd = &cobra.Command{
-	Use:   "pgbackrest",
+	Use: "pgbackrest",
+
 	Short: pgbackrestCommandDescription,
 }
 
@@ -21,7 +23,10 @@ func init() {
 
 func configurePgbackrestSettings() (folder storage.Folder, stanza string) {
 	st, err := internal.ConfigureStorage()
+
 	tracelog.ErrorLogger.FatalOnError(err)
+
 	stanza, _ = conf.GetSetting(conf.PgBackRestStanza)
+
 	return st.RootFolder(), stanza
 }

@@ -6,46 +6,65 @@ import (
 	"os"
 	"sync"
 
-	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/databases/mysql/innodb"
 )
 
 // DiffBackupSink doesn't try to replicate sophisticated xtrabackup logic
+
 // instead, we do following:
+
 // * extract all non-diff files to incrementalDir
+
 // * apply diff-files to dataDir 'inplace' + add truncated versions of diff-files to incrementalDir
+
 // * let xtrabackup do its job
+
 func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
 	err := os.MkdirAll(dataDir, 0777) // FIXME: permission & UMASK
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	spaceIDCollector, err := innodb.NewSpaceIDCollector(dataDir)
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	factory := fileSinkFactory{
-		dataDir:          dataDir,
-		incrementalDir:   incrementalDir,
-		decompress:       true, // always decompress files when diff-files applied
-		inplace:          true,
+		dataDir: dataDir,
+
+		incrementalDir: incrementalDir,
+
+		decompress: true, // always decompress files when diff-files applied
+
+		inplace: true,
+
 		spaceIDCollector: spaceIDCollector,
 	}
 
 	sinks := make(map[string]fileSink)
+
 	for {
 		chunk, err := stream.Next()
+
 		if err == io.EOF {
 			break
 		}
+
 		tracelog.ErrorLogger.FatalfOnError("Cannot read next chunk: %v", err)
 
 		dsKey := factory.MapDataSinkKey(chunk.Path)
+
 		sink, ok := sinks[dsKey]
+
 		if !ok {
 			sink = factory.NewDataSink(chunk.Path)
+
 			sinks[dsKey] = sink
 		}
 
 		err = sink.Process(chunk)
+
 		if errors.Is(err, ErrSinkEOF) {
 			delete(sinks, dsKey)
 		} else if err != nil {
@@ -59,7 +78,9 @@ func DiffBackupSink(stream *Reader, dataDir string, incrementalDir string) {
 }
 
 // Deprecated: name doesnt match actual behavior
+
 func AsyncDiffBackupSink(wg *sync.WaitGroup, stream *Reader, dataDir string, incrementalDir string) {
 	defer wg.Done()
+
 	DiffBackupSink(stream, dataDir, incrementalDir)
 }

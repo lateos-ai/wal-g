@@ -3,39 +3,53 @@ package internal
 import (
 	"context"
 
+	"github.com/spf13/viper"
+	"github.com/wal-g/tracelog"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/spf13/viper"
-	"github.com/wal-g/tracelog"
 )
 
 type ConcurrentUploader struct {
 	uploader Uploader
-	bundle   *Bundle
+
+	bundle *Bundle
 
 	UncompressedSize int64
-	CompressedSize   int64
+
+	CompressedSize int64
 }
 
 type CreateConcurrentUploaderArgs struct {
-	Uploader             Uploader
-	BackupName           string
-	Directory            string
-	SkipFileNotExists    bool
+	Uploader Uploader
+
+	BackupName string
+
+	Directory string
+
+	SkipFileNotExists bool
+
 	TarBallComposerMaker TarBallComposerMaker
 }
 
 func CreateConcurrentUploader(
+
 	args CreateConcurrentUploaderArgs,
+
 ) (*ConcurrentUploader, error) {
 	crypter := ConfigureCrypter()
+
 	tarSizeThreshold := viper.GetInt64(conf.TarSizeThresholdSetting)
+
 	bundle := NewBundle(args.Directory, crypter, tarSizeThreshold, map[string]utility.Empty{})
 
 	tracelog.InfoLogger.Println("Starting a new tar bundle")
+
 	tarBallMaker := NewStorageTarBallMaker(args.BackupName, args.Uploader)
+
 	err := bundle.StartQueue(tarBallMaker)
+
 	if err != nil {
 		return nil, err
 	}
@@ -45,19 +59,22 @@ func CreateConcurrentUploader(
 	}
 
 	err = bundle.SetupComposer(args.TarBallComposerMaker)
+
 	if err != nil {
 		return nil, err
 	}
 
 	return &ConcurrentUploader{
 		uploader: args.Uploader,
-		bundle:   bundle,
+
+		bundle: bundle,
 	}, nil
 }
 
 func (concurrentUploader *ConcurrentUploader) UploadBackupFiles(backupFiles []*BackupFileMeta) error {
 	for _, backupFileMeta := range backupFiles {
 		err := concurrentUploader.Upload(backupFileMeta)
+
 		if err != nil {
 			return err
 		}
@@ -76,19 +93,25 @@ func (concurrentUploader *ConcurrentUploader) Upload(backupFile *BackupFileMeta)
 
 func (concurrentUploader *ConcurrentUploader) Finalize() (TarFileSets, error) {
 	tracelog.InfoLogger.Println("Packing ...")
+
 	tarFileSets, err := concurrentUploader.bundle.FinishComposing()
+
 	if err != nil {
 		return nil, err
 	}
 
 	tracelog.DebugLogger.Println("Finishing queue ...")
+
 	err = concurrentUploader.bundle.FinishQueue()
+
 	if err != nil {
 		return nil, err
 	}
 
 	concurrentUploader.UncompressedSize = concurrentUploader.bundle.TarBallQueue.AllTarballsSize.Load()
+
 	concurrentUploader.CompressedSize, err = concurrentUploader.uploader.UploadedDataSize()
+
 	return tarFileSets, err
 }
 

@@ -6,8 +6,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/lateos-ai/wal-g/internal/crypto"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 type PathFilter func(path string) bool

@@ -28,5 +28,4 @@ func TestComputeMongoStartTimeout(t *testing.T) {
 	assert.Equal(t, 10*time.Minute, ComputeMongoStartTimeout(256*gb))
 	assert.Equal(t, 10*time.Minute, ComputeMongoStartTimeout(20*gb))
 	assert.Equal(t, 10*time.Minute, ComputeMongoStartTimeout(gb))
-
 }

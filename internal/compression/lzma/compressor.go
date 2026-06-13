@@ -3,12 +3,14 @@ package lzma
 import (
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/ioextensions"
 	"github.com/ulikunitz/xz/lzma"
+
+	"github.com/lateos-ai/wal-g/internal/ioextensions"
 )
 
 const (
 	AlgorithmName = "lzma"
+
 	FileExtension = "lzma"
 )
 

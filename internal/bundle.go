@@ -6,10 +6,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal/crypto"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/crypto"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type TarSizeError struct {
@@ -22,10 +23,12 @@ func newTarSizeError(packedFileSize, expectedSize int64) TarSizeError {
 
 type Bundle struct {
 	Directory string
-	Sentinel  *Sentinel
+
+	Sentinel *Sentinel
 
 	TarBallComposer TarBallComposer
-	TarBallQueue    *TarBallQueue
+
+	TarBallQueue *TarBallQueue
 
 	Crypter crypto.Crypter
 
@@ -37,28 +40,38 @@ type Bundle struct {
 }
 
 func NewBundle(
+
 	directory string, crypter crypto.Crypter,
+
 	tarSizeThreshold int64, excludedFilenames map[string]utility.Empty) *Bundle {
 	return &Bundle{
-		Directory:         directory,
-		Crypter:           crypter,
-		TarSizeThreshold:  tarSizeThreshold,
+		Directory: directory,
+
+		Crypter: crypter,
+
+		TarSizeThreshold: tarSizeThreshold,
+
 		ExcludedFilenames: excludedFilenames,
-		FilesFilter:       &CommonFilesFilter{},
+
+		FilesFilter: &CommonFilesFilter{},
 	}
 }
 
 func (bundle *Bundle) StartQueue(tarBallMaker TarBallMaker) error {
 	bundle.TarBallQueue = NewTarBallQueue(bundle.TarSizeThreshold, tarBallMaker)
+
 	return bundle.TarBallQueue.StartQueue()
 }
 
 func (bundle *Bundle) SetupComposer(composerMaker TarBallComposerMaker) (err error) {
 	tarBallComposer, err := composerMaker.Make(bundle)
+
 	if err != nil {
 		return err
 	}
+
 	bundle.TarBallComposer = tarBallComposer
+
 	return nil
 }
 
@@ -70,19 +83,25 @@ func (bundle *Bundle) AddToBundle(path string, info os.FileInfo, err error) erro
 	if err != nil {
 		if os.IsNotExist(err) {
 			tracelog.WarningLogger.Println(path, " deleted during filepath walk")
+
 			return nil
 		}
+
 		return errors.Wrap(err, "HandleWalkedFSObject: walk failed")
 	}
 
 	fileName := info.Name()
+
 	_, excluded := bundle.ExcludedFilenames[fileName]
+
 	isDir := info.IsDir()
 
 	if excluded && !isDir {
 		return nil
 	}
+
 	fileInfoHeader, err := bundle.createTarFileInfoHeader(path, info)
+
 	if err != nil {
 		return err
 	}
@@ -93,9 +112,11 @@ func (bundle *Bundle) AddToBundle(path string, info os.FileInfo, err error) erro
 		bundle.TarBallComposer.AddFile(NewComposeFileInfo(path, info, false, false, fileInfoHeader))
 	} else {
 		err := bundle.TarBallComposer.AddHeader(fileInfoHeader, info)
+
 		if err != nil {
 			return err
 		}
+
 		if excluded && isDir {
 			return filepath.SkipDir
 		}
@@ -112,15 +133,18 @@ func (bundle *Bundle) GetFileRelPath(fileAbsPath string) string {
 	if strings.HasPrefix(fileAbsPath, bundle.Directory) {
 		return "/" + utility.GetSubdirectoryRelativePath(fileAbsPath, bundle.Directory)
 	}
+
 	return fileAbsPath
 }
 
 func (bundle *Bundle) createTarFileInfoHeader(path string, info os.FileInfo) (header *tar.Header, err error) {
 	header, err = tar.FileInfoHeader(info, path)
+
 	if err != nil {
 		return nil, errors.Wrap(err, "addToBundle: could not grab header info")
 	}
 
 	header.Name = bundle.GetFileRelPath(path)
+
 	return
 }

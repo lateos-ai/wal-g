@@ -3,9 +3,12 @@
 
 package libsodium
 
-// #cgo CFLAGS: -I../../../tmp/libsodium/include
-// #cgo LDFLAGS: -L../../../tmp/libsodium/lib -lsodium
-// #include <sodium.h>
+// NOTE: CGO_CFLAGS/CGO_LDFLAGS and PKG_CONFIG_PATH are set by the Makefile
+// via $(SODIUM_CGO) prefix. No #cgo directives here to avoid cgo DWARF
+// analysis issues under Go 1.25 + -mod=vendor.
+
+// #include <walg_config.h>
+
 import "C"
 
 import (
@@ -16,17 +19,22 @@ import (
 )
 
 const KeyTransformBase64 = "base64"
+
 const KeyTransformHex = "hex"
+
 const KeyTransformNone = "none"
 
 type keyTransformRegEntry struct {
 	typ string
+
 	fun func(userInput string) ([]byte, error)
 }
 
 var keyTransformReg = []keyTransformRegEntry{
 	{typ: KeyTransformBase64, fun: keyTransformBase64},
+
 	{typ: KeyTransformHex, fun: keyTransformHex},
+
 	{typ: KeyTransformNone, fun: keyTransformNone},
 }
 
@@ -34,6 +42,7 @@ func keyTransform(userInput string, transformType string, expectedLen int) ([]by
 	for _, entry := range keyTransformReg {
 		if entry.typ == transformType {
 			decoded, err := entry.fun(userInput)
+
 			if err != nil {
 				return nil, err
 			}
@@ -47,7 +56,9 @@ func keyTransform(userInput string, transformType string, expectedLen int) ([]by
 	}
 
 	// unknown transform
+
 	var builder strings.Builder
+
 	for idx, entry := range keyTransformReg {
 		if idx > 0 {
 			if idx+1 == len(keyTransformReg) {
@@ -65,6 +76,7 @@ func keyTransform(userInput string, transformType string, expectedLen int) ([]by
 
 func keyTransformBase64(userInput string) ([]byte, error) {
 	decoded, err := base64.StdEncoding.DecodeString(userInput)
+
 	if err != nil {
 		return nil, fmt.Errorf("while base64 decoding key: %v", err)
 	}
@@ -74,6 +86,7 @@ func keyTransformBase64(userInput string) ([]byte, error) {
 
 func keyTransformHex(userInput string) ([]byte, error) {
 	decoded, err := hex.DecodeString(userInput)
+
 	if err != nil {
 		return nil, fmt.Errorf("while hex decoding key: %v", err)
 	}
@@ -82,6 +95,7 @@ func keyTransformHex(userInput string) ([]byte, error) {
 }
 
 // Mimics the behavior of older versions of wal-g.
+
 func keyTransformNone(userInput string) ([]byte, error) {
 	if len(userInput) < minimalKeyLength {
 		return nil, newErrShortKey(len(userInput))
@@ -93,7 +107,9 @@ func keyTransformNone(userInput string) ([]byte, error) {
 
 	if len(userInput) < libsodiumKeybytes {
 		buf := make([]byte, libsodiumKeybytes)
+
 		copy(buf[:libsodiumKeybytes], userInput)
+
 		return buf, nil
 	}
 

@@ -7,43 +7,58 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/wal-g/tracelog"
+	"go.uber.org/mock/gomock"
+
 	"github.com/lateos-ai/wal-g/internal/multistorage"
 	"github.com/lateos-ai/wal-g/internal/multistorage/policies"
 	"github.com/lateos-ai/wal-g/internal/multistorage/stats"
 	"github.com/lateos-ai/wal-g/pkg/storages/memory"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/wal-g/tracelog"
-	"go.uber.org/mock/gomock"
 )
 
 func TestHandleDetailedBackupList(t *testing.T) {
 	curTime := time.Time{}
+
 	curTimeFunc := func() time.Time {
 		return curTime.UTC()
 	}
 
 	t.Run("print correct backup details in correct order", func(t *testing.T) {
 		folder := memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc)))
+
 		curTime = time.Unix(1690000000, 0)
+
 		_ = folder.PutObject("base_111_backup_stop_sentinel.json", &bytes.Buffer{})
+
 		_ = folder.PutObject("base_111/metadata.json", bytes.NewBufferString("{}"))
+
 		curTime = curTime.Add(time.Second)
+
 		_ = folder.PutObject("base_222_backup_stop_sentinel.json", &bytes.Buffer{})
+
 		_ = folder.PutObject("base_222/metadata.json", bytes.NewBufferString("{}"))
+
 		curTime = curTime.Add(time.Second)
+
 		_ = folder.PutObject("base_333_backup_stop_sentinel.json", &bytes.Buffer{})
+
 		_ = folder.PutObject("base_333/metadata.json", bytes.NewBufferString("{}"))
 
 		rescueStdout := os.Stdout
+
 		r, w, _ := os.Pipe()
+
 		os.Stdout = w
+
 		defer func() { os.Stdout = rescueStdout }()
 
 		HandleDetailedBackupList(folder, true, true)
 
 		_ = w.Close()
+
 		captured, _ := io.ReadAll(r)
 
 		want := `[
@@ -103,42 +118,63 @@ func TestHandleDetailedBackupList(t *testing.T) {
     }
 ]
 `
+
 		assert.Equal(t, want, string(captured))
 	})
 
 	t.Run("print backups from different storages", func(t *testing.T) {
 		mockCtrl := gomock.NewController(t)
+
 		t.Cleanup(mockCtrl.Finish)
+
 		collectorMock := stats.NewMockCollector(mockCtrl)
+
 		collectorMock.EXPECT().AllAliveStorages().Return([]string{"storage_1", "storage_2"}, nil)
+
 		collectorMock.EXPECT().SpecificStorage("storage_1").Return(true, nil)
+
 		collectorMock.EXPECT().SpecificStorage("storage_2").Return(true, nil)
+
 		collectorMock.EXPECT().ReportOperationResult(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 		memFolders := map[string]storage.Folder{
 			"storage_1": memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc))),
+
 			"storage_2": memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc))),
 		}
+
 		multiFolder := multistorage.NewFolder(memFolders, collectorMock).(storage.Folder)
+
 		multiFolder = multistorage.SetPolicies(multiFolder, policies.UniteAllStorages)
+
 		multiFolder, err := multistorage.UseAllAliveStorages(multiFolder)
+
 		require.NoError(t, err)
 
 		curTime = time.Unix(1690000000, 0)
+
 		_ = memFolders["storage_1"].PutObject("base_111_backup_stop_sentinel.json", &bytes.Buffer{})
+
 		_ = memFolders["storage_1"].PutObject("base_111/metadata.json", bytes.NewBufferString("{}"))
+
 		curTime = curTime.Add(time.Second)
+
 		_ = memFolders["storage_2"].PutObject("base_111_backup_stop_sentinel.json", &bytes.Buffer{})
+
 		_ = memFolders["storage_2"].PutObject("base_111/metadata.json", bytes.NewBufferString("{}"))
 
 		rescueStdout := os.Stdout
+
 		r, w, _ := os.Pipe()
+
 		os.Stdout = w
+
 		defer func() { os.Stdout = rescueStdout }()
 
 		HandleDetailedBackupList(multiFolder, true, true)
 
 		_ = w.Close()
+
 		captured, _ := io.ReadAll(r)
 
 		want := `[
@@ -180,6 +216,7 @@ func TestHandleDetailedBackupList(t *testing.T) {
     }
 ]
 `
+
 		assert.Equal(t, want, string(captured))
 	})
 
@@ -187,21 +224,29 @@ func TestHandleDetailedBackupList(t *testing.T) {
 		folder := memory.NewFolder("", memory.NewKVS(memory.WithCustomTime(curTimeFunc)))
 
 		infoOutput := new(bytes.Buffer)
+
 		rescueInfoOutput := tracelog.InfoLogger.Writer()
+
 		tracelog.InfoLogger.SetOutput(infoOutput)
+
 		defer func() { tracelog.InfoLogger.SetOutput(rescueInfoOutput) }()
 
 		rescueStdout := os.Stdout
+
 		r, w, _ := os.Pipe()
+
 		os.Stdout = w
+
 		defer func() { os.Stdout = rescueStdout }()
 
 		HandleDetailedBackupList(folder, true, false)
 
 		_ = w.Close()
+
 		captured, _ := io.ReadAll(r)
 
 		assert.Empty(t, string(captured))
+
 		assert.Contains(t, infoOutput.String(), "No backups found")
 	})
 }

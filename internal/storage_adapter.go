@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"github.com/spf13/viper"
+
 	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/lateos-ai/wal-g/pkg/storages/azure"
 	"github.com/lateos-ai/wal-g/pkg/storages/fs"
@@ -10,19 +12,24 @@ import (
 	"github.com/lateos-ai/wal-g/pkg/storages/sh"
 	"github.com/lateos-ai/wal-g/pkg/storages/storage"
 	"github.com/lateos-ai/wal-g/pkg/storages/swift"
-	"github.com/spf13/viper"
 )
 
 type StorageAdapter struct {
-	storageType  string
+	storageType string
+
 	settingNames []string
-	configure    ConfigureStorageFunc
+
+	configure ConfigureStorageFunc
 }
 
 type ConfigureStorageFunc func(
+
 	prefix string,
+
 	settings map[string]string,
+
 	rootWraps ...storage.WrapRootFolder,
+
 ) (storage.HashableStorage, error)
 
 func (adapter *StorageAdapter) PrefixSettingKey() string {
@@ -34,29 +41,41 @@ func (adapter *StorageAdapter) loadSettings(config *viper.Viper) map[string]stri
 
 	for _, settingName := range adapter.settingNames {
 		settingValue := config.GetString(settingName)
+
 		if config.IsSet(settingName) {
 			settings[settingName] = settingValue
+
 			/* prefer config values */
+
 			continue
 		}
 
 		settingValue, ok := conf.GetWaleCompatibleSettingFrom(settingName, config)
+
 		if !ok {
 			settingValue, ok = conf.GetSetting(settingName)
 		}
+
 		if ok {
 			settings[settingName] = settingValue
 		}
 	}
+
 	return settings
 }
 
 var StorageAdapters = []StorageAdapter{
 	{"OSS", oss.SettingList, oss.ConfigureStorage},
+
 	{"S3", s3.SettingList, s3.ConfigureStorage},
+
 	{"FILE", nil, fs.ConfigureStorage},
+
 	{"GS", gcs.SettingList, gcs.ConfigureStorage},
+
 	{"AZ", azure.SettingList, azure.ConfigureStorage},
+
 	{"SWIFT", swift.SettingList, swift.ConfigureStorage},
+
 	{"SSH", sh.SettingList, sh.ConfigureStorage},
 }

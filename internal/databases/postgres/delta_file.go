@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/lateos-ai/wal-g/internal/walparser"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal/walparser"
 )
 
 type NilWalParserError struct {
@@ -23,6 +24,7 @@ func (err NilWalParserError) Error() string {
 
 type DeltaFile struct {
 	Locations []walparser.BlockLocation
+
 	WalParser *walparser.WalParser
 }
 
@@ -30,25 +32,32 @@ func NewDeltaFile(walParser *walparser.WalParser) (*DeltaFile, error) {
 	if walParser == nil {
 		return nil, newNilWalParserError()
 	}
+
 	return &DeltaFile{nil, walParser}, nil
 }
 
 func (deltaFile *DeltaFile) Save(writer io.Writer) error {
 	err := walparser.WriteLocationsTo(writer, append(deltaFile.Locations, walparser.TerminalLocation))
+
 	if err != nil {
 		return err
 	}
+
 	return deltaFile.WalParser.Save(writer)
 }
 
 func LoadDeltaFile(reader io.Reader) (*DeltaFile, error) {
 	locations, err := walparser.ReadLocationsFrom(reader)
+
 	if err != nil {
 		return nil, err
 	}
+
 	walParser, err := walparser.LoadWalParser(reader)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &DeltaFile{locations, walParser}, nil
 }

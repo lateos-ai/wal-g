@@ -5,10 +5,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal"
-	conf "github.com/lateos-ai/wal-g/internal/config"
 	"github.com/spf13/viper"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal"
+	conf "github.com/lateos-ai/wal-g/internal/config"
 )
 
 type WalPrefetcher interface {
@@ -19,7 +20,6 @@ type NopPrefetcher struct {
 }
 
 func (p NopPrefetcher) Prefetch(reader internal.StorageFolderReader, walFileName string, location string) {
-
 }
 
 type RegularPrefetcher struct {
@@ -29,18 +29,27 @@ func (p RegularPrefetcher) Prefetch(_ internal.StorageFolderReader, walFileName 
 	if !checkPrefetchPossible(walFileName) {
 		return
 	}
+
 	prefetchArgs := []string{"wal-prefetch", walFileName, location}
+
 	if conf.CfgFile != "" {
 		prefetchArgs = append(prefetchArgs, "--config", conf.CfgFile)
 	}
+
 	storagePrefix := viper.GetString(conf.StoragePrefixSetting)
+
 	if storagePrefix != "" {
 		prefetchArgs = append(prefetchArgs, "--walg-storage-prefix", storagePrefix)
 	}
+
 	cmd := exec.Command(os.Args[0], prefetchArgs...)
+
 	cmd.Env = os.Environ()
+
 	cmd.Stdout = os.Stdout
+
 	cmd.Stderr = os.Stderr
+
 	err := cmd.Start()
 
 	if err != nil {
@@ -58,7 +67,9 @@ func (p DaemonPrefetcher) Prefetch(reader internal.StorageFolderReader, walFileN
 
 	go func() {
 		tracelog.DebugLogger.Printf("Invoking daemon WAL-prefetch (%s)", walFileName)
+
 		err := HandleWALPrefetch(reader, walFileName, location)
+
 		if err != nil {
 			tracelog.ErrorLogger.Printf("WAL-prefetch (%s): %v", walFileName, err)
 		}
@@ -67,11 +78,16 @@ func (p DaemonPrefetcher) Prefetch(reader internal.StorageFolderReader, walFileN
 
 func checkPrefetchPossible(walFileName string) bool {
 	concurrency, err := conf.GetMaxDownloadConcurrency()
+
 	if err != nil {
 		tracelog.ErrorLogger.Printf("WAL-prefetch: get max concurrency: %v", err)
+
 		return false
 	}
+
 	return !strings.Contains(walFileName, "history") &&
+
 		!strings.Contains(walFileName, "partial") &&
+
 		concurrency != 1 // There will be nothing to prefetch anyway
 }

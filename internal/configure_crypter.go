@@ -4,15 +4,19 @@
 package internal
 
 // This file contains functions that should configure crypters,
+
 // in order to be able to build wal-g without specific implementations of the crypter.
+
 // And the configure_crypter_<crypter>.go files must have a real implementation of the function.
+
 // If there is a tag, we can configure the correct implementation of crypter.
 
 import (
-	conf "github.com/lateos-ai/wal-g/internal/config"
-	"github.com/lateos-ai/wal-g/internal/crypto"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
+
+	conf "github.com/lateos-ai/wal-g/internal/config"
+	"github.com/lateos-ai/wal-g/internal/crypto"
 )
 
 func configureLibsodiumCrypter(config *viper.Viper) (crypto.Crypter, error) {

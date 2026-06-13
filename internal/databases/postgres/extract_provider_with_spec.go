@@ -6,14 +6,17 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lateos-ai/wal-g/internal"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/internal"
 )
 
 const (
 	defaultTbspPrefix = "/" + DefaultTablespace + "/"
-	customTbspPrefix  = "/" + TablespaceFolder + "/"
-	systemIDLimit     = 16384
+
+	customTbspPrefix = "/" + TablespaceFolder + "/"
+
+	systemIDLimit = 16384
 )
 
 type RestoreDesc map[uint32]map[uint32]uint32
@@ -22,14 +25,17 @@ func (desc RestoreDesc) Add(database, filenode, oid uint32) {
 	if _, ok := desc[database]; !ok {
 		desc[database] = make(map[uint32]uint32)
 	}
+
 	desc[database][filenode] = oid
 }
 
 func (desc RestoreDesc) IsFull(database uint32) bool {
 	if _, ok := desc[database]; ok {
 		_, ok1 := desc[database][0]
+
 		return ok1
 	}
+
 	return false
 }
 
@@ -37,22 +43,29 @@ func (desc RestoreDesc) IsSkipped(database, tableFile uint32) bool {
 	if database < systemIDLimit /*|| desc.IsFull(database)*/ {
 		return false
 	}
+
 	if db, ok := desc[database]; ok { // database should always exist, so this check is just in case
 		_, found := db[tableFile]
+
 		return !found
 	}
+
 	return true
 }
 
 func (desc RestoreDesc) FilterFilesToUnwrap(filesToUnwrap map[string]bool) {
 	filesToDelete := make([]string, 0)
+
 	for file := range filesToUnwrap {
 		isDB, dbID, tableFileID := TryGetOidPair(file)
 
 		if isDB && desc.IsSkipped(dbID, tableFileID) && tableFileID != 0 {
 			//delete(filesToUnwrap, file)
+
 			filesToDelete = append(filesToDelete, file)
+
 			_, ok := filesToUnwrap[file]
+
 			if ok {
 				tracelog.InfoLogger.Printf("will skip  %s", file)
 			}
@@ -63,11 +76,15 @@ func (desc RestoreDesc) FilterFilesToUnwrap(filesToUnwrap map[string]bool) {
 
 	for _, file := range filesToDelete {
 		_, ok := filesToUnwrap[file]
+
 		if ok {
 			tracelog.InfoLogger.Printf("deleting %s", file)
 		}
+
 		delete(filesToUnwrap, file)
+
 		_, ok = filesToUnwrap[file]
+
 		if ok {
 			tracelog.InfoLogger.Printf("skipped %s", file)
 		}
@@ -75,13 +92,14 @@ func (desc RestoreDesc) FilterFilesToUnwrap(filesToUnwrap map[string]bool) {
 }
 
 func TryGetOidPair(file string) (bool, uint32, uint32) {
-	// nolint : staticcheck
-	if !(strings.HasPrefix(file, defaultTbspPrefix) || strings.HasPrefix(file, customTbspPrefix)) {
+	if !strings.HasPrefix(file, defaultTbspPrefix) && !strings.HasPrefix(file, customTbspPrefix) {
 		return false, 0, 0
 	}
+
 	var tableID, dbID uint32
 
 	file, tableID = cutIntegerBase(file)
+
 	_, dbID = cutIntegerBase(file)
 
 	return true, dbID, tableID
@@ -89,8 +107,11 @@ func TryGetOidPair(file string) (bool, uint32, uint32) {
 
 func cutIntegerBase(file string) (string, uint32) {
 	parent, base := path.Dir(file), path.Base(file)
+
 	base, _, _ = strings.Cut(base, ".")
+
 	base, _, _ = strings.Cut(base, "_")
+
 	integerResult, _ := strconv.ParseUint(base, 10, 0)
 
 	return parent, uint32(integerResult)
@@ -107,6 +128,7 @@ func (m DefaultRestoreDescMaker) Make(restoreParameters []string, names Database
 
 	for _, parameter := range restoreParameters {
 		dbID, tableID, err := names.Resolve(parameter)
+
 		if err != nil {
 			return nil, err
 		}
@@ -128,6 +150,7 @@ func (m RegexpRestoreDescMaker) Make(restoreParameters []string, names Databases
 
 	for _, parameter := range restoreParameters {
 		oids, err := names.ResolveRegexp(parameter)
+
 		if err != nil {
 			return nil, err
 		}
@@ -144,7 +167,8 @@ func (m RegexpRestoreDescMaker) Make(restoreParameters []string, names Databases
 
 type ExtractProviderDBSpec struct {
 	RestoreParameters []string
-	restoreDescMaker  RestoreDescMaker
+
+	restoreDescMaker RestoreDescMaker
 }
 
 func NewExtractProviderDBSpec(restoreParameters []string) *ExtractProviderDBSpec {
@@ -152,17 +176,26 @@ func NewExtractProviderDBSpec(restoreParameters []string) *ExtractProviderDBSpec
 }
 
 func (p ExtractProviderDBSpec) Get(
+
 	backup Backup,
+
 	filesToUnwrap map[string]bool,
+
 	skipRedundantTars bool,
+
 	dbDataDir string,
+
 	createNewIncrementalFiles bool,
+
 ) (IncrementalTarInterpreter, []internal.ReaderMaker, []internal.ReaderMaker, error) {
 	_, filesMeta, err := backup.GetSentinelAndFilesMetadata()
+
 	tracelog.ErrorLogger.FatalOnError(err)
 
 	desc, err := p.restoreDescMaker.Make(p.RestoreParameters, filesMeta.DatabasesByNames)
+
 	tracelog.ErrorLogger.FatalOnError(err)
+
 	desc.FilterFilesToUnwrap(filesToUnwrap)
 
 	return ExtractProviderImpl{}.Get(backup, filesToUnwrap, skipRedundantTars, dbDataDir, createNewIncrementalFiles)

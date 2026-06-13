@@ -101,3 +101,76 @@ jobs:
             wal-g-${{ matrix.db }}-${{ matrix.os }}-${{ steps.determine-arch.outputs.arch }}.tar.gz.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-standalone:
+    needs: create-release
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            goos: linux
+            goarch: amd64
+            bin_name: wal-g-linux-amd64
+          - os: ubuntu-24.04-arm
+            goos: linux
+            goarch: arm64
+            bin_name: wal-g-linux-arm64
+          - os: macos-13
+            goos: darwin
+            goarch: amd64
+            bin_name: wal-g-darwin-amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            bin_name: wal-g-darwin-arm64
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y liblzo2-dev brotli libsodium-dev cmake build-essential tzdata
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install lzo brotli libsodium cmake
+
+      - name: Get dependencies
+        run: go get -v -t ./...
+
+      - name: Mark repo and submodule as safe
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config --global --add safe.directory $GITHUB_WORKSPACE/submodules/brotli
+
+      - name: Make deps
+        run: make deps
+
+      - name: Build WAL-G
+        run: |
+          make pg_build
+          mv main/pg/wal-g ${{ matrix.bin_name }}
+
+      - name: Calculate checksum
+        run: |
+          if command -v sha256sum &>/dev/null; then
+            sha256sum ${{ matrix.bin_name }} > ${{ matrix.bin_name }}.sha256
+          else
+            shasum -a 256 ${{ matrix.bin_name }} > ${{ matrix.bin_name }}.sha256
+          fi
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            ${{ matrix.bin_name }}
+            ${{ matrix.bin_name }}.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

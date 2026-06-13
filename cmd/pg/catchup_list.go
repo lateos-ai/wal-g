@@ -1,11 +1,12 @@
 package pg
 
 import (
+	"github.com/spf13/cobra"
+	"github.com/wal-g/tracelog"
+
 	"github.com/lateos-ai/wal-g/internal"
 	"github.com/lateos-ai/wal-g/internal/databases/postgres"
 	"github.com/lateos-ai/wal-g/utility"
-	"github.com/spf13/cobra"
-	"github.com/wal-g/tracelog"
 )
 
 const (
@@ -13,14 +14,21 @@ const (
 )
 
 var (
+
 	// catchupListCmd represents the catchupList command
+
 	catchupListCmd = &cobra.Command{
-		Use:   "catchup-list",
+		Use: "catchup-list",
+
 		Short: catchupListShortDescription, // TODO : improve description
-		Args:  cobra.NoArgs,
+
+		Args: cobra.NoArgs,
+
 		Run: func(cmd *cobra.Command, args []string) {
 			storage, err := internal.ConfigureStorage()
+
 			tracelog.ErrorLogger.FatalOnError(err)
+
 			if detail {
 				postgres.HandleDetailedBackupList(storage.RootFolder().GetSubFolder(utility.CatchupPath), pretty, json)
 			} else {
@@ -34,6 +42,8 @@ func init() {
 	Cmd.AddCommand(catchupListCmd)
 
 	catchupListCmd.Flags().BoolVar(&pretty, PrettyFlag, false, "Prints more readable output")
+
 	catchupListCmd.Flags().BoolVar(&json, JSONFlag, false, "Prints output in json format")
+
 	catchupListCmd.Flags().BoolVar(&detail, DetailFlag, false, "Prints extra backup details")
 }

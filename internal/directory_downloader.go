@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"github.com/lateos-ai/wal-g/pkg/storages/storage"
-	"github.com/lateos-ai/wal-g/utility"
 	"github.com/pkg/errors"
 	"github.com/wal-g/tracelog"
+
+	"github.com/lateos-ai/wal-g/pkg/storages/storage"
+	"github.com/lateos-ai/wal-g/utility"
 )
 
 type DirectoryDownloader interface {
@@ -16,7 +17,8 @@ type DirectoryIsNotEmptyError struct {
 }
 
 type CommonDirectoryDownloader struct {
-	Folder     storage.Folder
+	Folder storage.Folder
+
 	BackupName string
 }
 
@@ -30,11 +32,13 @@ func NewDirectoryIsNotEmptyError(path string) DirectoryIsNotEmptyError {
 
 func (downloader *CommonDirectoryDownloader) DownloadDirectory(pathToRestore string) error {
 	tarsToExtract, err := downloader.getTarsToExtract()
+
 	if err != nil {
 		return err
 	}
 
 	isEmpty, err := utility.IsDirectoryEmpty(pathToRestore, nil)
+
 	if err != nil {
 		return err
 	}
@@ -52,12 +56,15 @@ func (downloader *CommonDirectoryDownloader) getTarPartitionFolder() storage.Fol
 
 func (downloader *CommonDirectoryDownloader) getTarNames() (names []string, err error) {
 	tarPartitionFolder := downloader.getTarPartitionFolder()
+
 	objects, _, err := tarPartitionFolder.ListFolder()
+
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to list backup '%s' for deletion", downloader.BackupName)
 	}
 
 	result := make([]string, len(objects))
+
 	for id, object := range objects {
 		result[id] = object.GetName()
 	}
@@ -67,14 +74,18 @@ func (downloader *CommonDirectoryDownloader) getTarNames() (names []string, err 
 
 func (downloader *CommonDirectoryDownloader) getTarsToExtract() (tarsToExtract []ReaderMaker, err error) {
 	tarNames, err := downloader.getTarNames()
+
 	if err != nil {
 		return nil, err
 	}
+
 	tracelog.DebugLogger.Printf("Tars to extract: '%+v'\n", tarNames)
+
 	tarsToExtract = make([]ReaderMaker, 0, len(tarNames))
 
 	for _, tarName := range tarNames {
 		tarToExtract := NewStorageReaderMaker(downloader.getTarPartitionFolder(), tarName)
+
 		tarsToExtract = append(tarsToExtract, tarToExtract)
 	}
 

@@ -22,6 +22,10 @@ tests_func/staging
 tests_func/wal-g
 
 tmp/
+
+# auto-generated walg_config.h copy for cgo preamble lookup
+internal/crypto/libsodium/gen/
+
 *.xml
 *.iml
 *.so
