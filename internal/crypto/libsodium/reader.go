@@ -5,12 +5,12 @@ package libsodium
 
 // NOTE: #cgo uses pkg-config to discover libsodium include/library paths.
 // The Makefile exports PKG_CONFIG_PATH (pointing at tmp/libsodium/lib/pkgconfig)
-// and link_libsodium.sh generates a libsodium.pc there. The Makefile
-// also exports CGO_ENABLED=1 CGO_CFLAGS/CGO_LDFLAGS for manual builds where
-// pkg-config is unavailable.
+// and link_libsodium.sh generates a libsodium.pc and walg_config.h there.
+// All C integration goes through walg_init.c + walg_config.h to avoid
+// #include <sodium.h> in the Go preamble (cgo DWARF issue under Go 1.25).
 
 // #cgo pkg-config: libsodium
-// #include <sodium.h>
+// #include <walg_config.h>
 
 import "C"
 
@@ -26,7 +26,7 @@ import (
 type Reader struct {
 	io.Reader
 
-	state C.crypto_secretstream_xchacha20poly1305_state
+	state C.walg_secretstream_state
 
 	in []byte
 
@@ -68,9 +68,9 @@ func (reader *Reader) readHeader() {
 		return
 	}
 
-	var state C.crypto_secretstream_xchacha20poly1305_state
+	var state C.walg_secretstream_state
 
-	returnCode := C.crypto_secretstream_xchacha20poly1305_init_pull(
+	returnCode := C.walg_secretstream_init_pull(
 
 		&state,
 
@@ -121,7 +121,7 @@ func (reader *Reader) readNextChunk() error {
 
 	var tag C.uchar
 
-	returnCode := C.crypto_secretstream_xchacha20poly1305_pull(
+	returnCode := C.walg_secretstream_pull(
 
 		&reader.state,
 
