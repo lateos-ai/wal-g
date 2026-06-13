@@ -7,8 +7,7 @@ package libsodium
 // via $(SODIUM_CGO) prefix. No #cgo directives here to avoid cgo DWARF
 // analysis issues under Go 1.25 + -mod=vendor.
 
-// #include <walg_config.h>
-// int walg_sodium_init();
+// #include "gen/walg_config.h"
 
 import "C"
 

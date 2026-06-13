@@ -70,6 +70,12 @@ int walg_secretstream_pull(walg_secretstream_state *, unsigned char *, unsigned 
 #endif
 WALGEOF
 	echo "info: generated tmp/libsodium/include/walg_config.h"
+	# Copy into the Go package directory so cgo can #include "walg_config.h"
+	# using current-directory lookup, avoiding CGO_CFLAGS include paths that
+	# Go 1.25 may sanitize under -mod=vendor.
+	mkdir -p internal/crypto/libsodium/gen
+	cp tmp/libsodium/include/walg_config.h internal/crypto/libsodium/gen/walg_config.h
+	echo "info: copied to internal/crypto/libsodium/gen/walg_config.h for cgo preamble"
 }
 
 # Compile and embed walg_init.c into libsodium.a, removing the .c file
