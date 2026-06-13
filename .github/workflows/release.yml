@@ -13,6 +13,9 @@ env:
   USE_LZO: 1
   DEBIAN_FRONTEND: noninteractive
 
+permissions:
+  contents: write
+
 jobs:
   # Prevents race conditions by creating the release only once before uploads.
   create-release:
