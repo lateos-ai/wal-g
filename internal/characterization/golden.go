@@ -4,19 +4,19 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 )
 
 // BackupSnapshot captures the essential characteristics of a backup
 type BackupSnapshot struct {
-	Provider       string `json:"provider"`        // s3, gcs, azure
-	Database       string `json:"database"`        // postgres, mysql, mongo
-	BackupType     string `json:"backup_type"`     // full, incremental
-	BackupSize     int64  `json:"backup_size"`     // bytes
+	Provider       string `json:"provider"`    // s3, gcs, azure
+	Database       string `json:"database"`    // postgres, mysql, mongo
+	BackupType     string `json:"backup_type"` // full, incremental
+	BackupSize     int64  `json:"backup_size"` // bytes
 	FilesBackedUp  int    `json:"files_backed"`
-	Compression    string `json:"compression"`     // lz4, xz, brotli
-	Encryption     string `json:"encryption"`      // aes-256, kms, csek
+	Compression    string `json:"compression"` // lz4, xz, brotli
+	Encryption     string `json:"encryption"`  // aes-256, kms, csek
 	ChecksumSHA256 string `json:"checksum"`
 }
 
@@ -30,7 +30,7 @@ type GoldenFile struct {
 // VerifyBackupSnapshot compares actual backup against golden file
 func VerifyBackupSnapshot(t *testing.T, golden *GoldenFile, actual BackupSnapshot, scenario string) {
 	// Load golden file
-	data, err := ioutil.ReadFile(golden.Path)
+	data, err := os.ReadFile(golden.Path)
 	if err != nil {
 		// First run: create golden file
 		saveGoldenFile(t, golden.Path, actual, scenario)
@@ -66,7 +66,8 @@ func VerifyBackupSnapshot(t *testing.T, golden *GoldenFile, actual BackupSnapsho
 	}
 
 	// Size and file count can vary slightly, but check within 10%
-	if diff := int64(float64(expected.BackupSize) * 0.1); actual.BackupSize < expected.BackupSize-diff || actual.BackupSize > expected.BackupSize+diff {
+	diff := int64(float64(expected.BackupSize) * 0.1)
+	if actual.BackupSize < expected.BackupSize-diff || actual.BackupSize > expected.BackupSize+diff {
 		t.Logf("BackupSize drift: expected ~%d, got %d (±10%% acceptable)", expected.BackupSize, actual.BackupSize)
 	}
 }
@@ -78,7 +79,7 @@ func saveGoldenFile(t *testing.T, path string, snapshot BackupSnapshot, scenario
 	}
 
 	data, _ := json.MarshalIndent(snapshots, "", "  ")
-	if err := ioutil.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0644); err != nil {
 		t.Fatalf("Failed to save golden file: %v", err)
 	}
 }
